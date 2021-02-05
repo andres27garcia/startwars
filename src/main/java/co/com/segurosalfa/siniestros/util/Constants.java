@@ -1,0 +1,11 @@
+package co.com.segurosalfa.siniestros.util;
+
+public class Constants {
+	private Constants() {
+		
+	}
+	
+	public static final String SINIESTROS_BUSINESS_UNIT = "PREVISIONAL";
+	public static final String SINIESTORS_MICROSERVICES = "SINIESTROS";
+	
+}

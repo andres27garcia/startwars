@@ -1,0 +1,88 @@
+package co.com.segurosalfa.siniestros.controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import co.com.segurosalfa.siniestros.dto.SnrHilDatoInicialDTO;
+import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
+import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
+import co.com.segurosalfa.siniestros.exception.SiprenException;
+import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
+import co.com.sipren.common.util.ParametrosMensajes;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@RestController
+@RequestMapping("/v1/historiasLaborales")
+public class DatosInicialesHlController {
+
+	@Autowired
+	private IHilDatoInicialService service;
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@ApiOperation(value = "Operación de servicio que consulta el listado de todos las historias laborales", notes = "La operación retorna todas las historias laborales registradas en la base de datos")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping
+	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar() throws SiprenException {
+		List<SnrHilDatoInicialDTO> lista = service.listar().stream()
+				.map(n -> this.modelMapper.map(n, SnrHilDatoInicialDTO.class)).collect(Collectors.toList());
+		if (lista != null && lista.isEmpty())
+			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Operación de servicio que consulta el detalle de una historia laboral por su ID", notes = "La operación retorna una historia laboral por su ID registrada en la base de datos")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping("/{id}")
+	public ResponseEntity<SnrHilDatoInicialDTO> listarPorId(@PathVariable("id") Integer id) throws SiprenException {
+		SnrHilDatoInicialDTO obj = this.modelMapper.map(service.listarPorId(id), SnrHilDatoInicialDTO.class);
+		if (obj == null) {
+			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
+		}
+		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
+	}
+
+	@ApiOperation(value = "Operación de servicio que registra una nueva historia laboral", notes = "La operación registra la historia laboral en base de datos y retorna el registro")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@PostMapping
+	public ResponseEntity<SnrHilDatoInicialDTO> registrar(@Valid @RequestBody SnrHilDatoInicialDTO dto)
+			throws SiprenException {
+		SnrHilDatoInicial objSave = service.registrar(this.modelMapper.map(dto, SnrHilDatoInicial.class));
+		SnrHilDatoInicialDTO obj = this.modelMapper.map(objSave, SnrHilDatoInicialDTO.class);
+
+		return new ResponseEntity<>(obj, HttpStatus.CREATED);
+	}
+
+	@ApiOperation(value = "Operación de servicio que actualiza una nueva historia laboral", notes = "La operación actualiza una nueva historia laboral en base de datos y retorna el registro")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@PutMapping
+	public ResponseEntity<SnrHilDatoInicialDTO> modificar(@Valid @RequestBody SnrHilDatoInicialDTO dto)
+			throws SiprenException {
+		SnrHilDatoInicial objSave = service.modificar(this.modelMapper.map(dto, SnrHilDatoInicial.class));
+		SnrHilDatoInicialDTO obj = this.modelMapper.map(objSave, SnrHilDatoInicialDTO.class);
+		return new ResponseEntity<>(obj, HttpStatus.OK);
+	}
+}
