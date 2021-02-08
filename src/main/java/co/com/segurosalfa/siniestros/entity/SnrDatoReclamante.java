@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "SNR_DATO_RECLAMANTE")
 public class SnrDatoReclamante implements Serializable {
 
-	private static final long serialVersionUID = 1059261110948124507L;	
-	
+	private static final long serialVersionUID = 1059261110948124507L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqReclamante")
 	@SequenceGenerator(name = "idSeqReclamante", sequenceName = "SQ_SNR_DATOS_RECLAMANTES", schema = "NUEVO_SIPREN")
@@ -34,7 +34,7 @@ public class SnrDatoReclamante implements Serializable {
 	private SnrDatoTramite tramite;
 
 	@Column(name = "num_persona")
-	private Long persona;
+	private Long numPersona;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_ESTADO_RECLAMANTE", insertable = false, updatable = false)

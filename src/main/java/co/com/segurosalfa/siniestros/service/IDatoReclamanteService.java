@@ -10,15 +10,14 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 
 public interface IDatoReclamanteService extends ICRUD<SnrDatoReclamante, Long> {
 
-	List<ListadoReclamantesDTO> listarPorTramite( Long numTramite) throws SiprenException;
+	List<ListadoReclamantesDTO> listarPorTramite(Long numTramite) throws SiprenException;
 
-	SnrDatoReclamante listarPorTramitePersona(Long numTramite, Long numPersona)
-			throws SiprenException;
+	SnrDatoReclamante listarPorTramitePersona(Long numTramite, Long numPersona) throws SiprenException;
 
 	void insertarReclamante(SnrDatoReclamante dto) throws SiprenException;
-	
+
 	void crearDatosReclamante(ProcesarPendientesDTO dto) throws SiprenException;
-	
+
 	List<ReprocesoReclamantesDTO> consultaReprocesoReclamante(Long tramite, Long documento) throws SiprenException;
 
 }

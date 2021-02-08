@@ -18,7 +18,7 @@ import co.com.segurosalfa.siniestros.service.ISnrDatosBasicosService;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 
 @Service
-public class SnrDatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> implements ISnrDatosBasicosService {
+public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> implements ISnrDatosBasicosService {
 
 	private final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 

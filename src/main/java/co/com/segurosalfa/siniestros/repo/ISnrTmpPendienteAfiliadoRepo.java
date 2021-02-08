@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.entity.SnrTmpPendienteAfiliado;
 
-public interface IPendienteAfiliadoRepo extends IGenericRepo<SnrTmpPendienteAfiliado, Long>{
+public interface ISnrTmpPendienteAfiliadoRepo extends IGenericRepo<SnrTmpPendienteAfiliado, Long>{
 		
 
 	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento, td.nombre, pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, pa.codTipoSolicitudAfp, ge.abreviaturaTipoIdAfp) FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipoSolicitudAfp ts ON pa.codTipoSolicitudAfp = ts.codTipoSolicitudAfp"

@@ -15,7 +15,7 @@ import co.com.segurosalfa.siniestros.dto.ReprocesoReclamantesDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
-import co.com.segurosalfa.siniestros.repo.ISnrDatosReclamanteRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrDatoReclamanteRepo;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IDatoReclamanteService;
 import co.com.sipren.common.util.ParametroGeneralUtil;
@@ -24,11 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long>
-		implements IDatoReclamanteService {
+public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long> implements IDatoReclamanteService {
 
 	@Autowired
-	private ISnrDatosReclamanteRepo repo;
+	private ISnrDatoReclamanteRepo repo;
 
 	@Autowired
 	private IClienteUnicoService clienteUnicoService;
@@ -52,7 +51,7 @@ public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long>
 				tmp.setIdtramite(reclamante.getTramite().getIdTramite());
 				tmp.setCodEstadoReclamante(reclamante.getEstadoReclamante().getId());
 				tmp.setEstadoReclamante(reclamante.getEstadoReclamante().getNombre());
-				tmp.setPersona(reclamante.getPersona());
+				tmp.setNumPersona(reclamante.getNumPersona());
 				tmp.setNombres(dto.getPrimerNombre() + " " + dto.getSegundoNombre() + " " + dto.getPrimerApell() + " "
 						+ dto.getSegundoApell());
 				tmp.setCodInv(dto.getCondicionInvalidez().equalsIgnoreCase("") ? "N" : dto.getCondicionInvalidez());
@@ -68,14 +67,13 @@ public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long>
 	public ClienteUnicoDTO getInfoPersona(SnrDatoReclamante datosBasicos)
 			throws SiprenException, ServiceException, JsonProcessingException {
 
-		return clienteUnicoService.consumirRestClienteUnico(
-				String.valueOf(datosBasicos.getPersona()));
+		return clienteUnicoService.consumirRestClienteUnico(String.valueOf(datosBasicos.getNumPersona()));
 	}
 
 	@Override
 	public void insertarReclamante(SnrDatoReclamante dto) throws SiprenException {
 
-		repo.insertarReclamante(dto.getTramite().getIdTramite(), dto.getPersona(),
+		repo.insertarReclamante(dto.getTramite().getIdTramite(), dto.getNumPersona(),
 				dto.getEstadoReclamante().getId());
 	}
 

@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.entity.SnrTmpPendienteReclamante;
 
-public interface IPendienteReclamanteRepo extends IGenericRepo<SnrTmpPendienteReclamante, Long>{
+public interface ISnrTmpPendienteReclamanteRepo extends IGenericRepo<SnrTmpPendienteReclamante, Long>{
 
 	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pr.idPendienteReclamante, pr.codTipoIdentificacion, gps.numIdentificacion, pr.nidNumeroIdentificacion, pr.idSiniestro, pr.idTramite, dt.fecRadicacionAlfa) "
 			+ "FROM SnrTmpPendienteReclamante pr "

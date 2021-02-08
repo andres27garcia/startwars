@@ -9,7 +9,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrCausaSiniestroRepo;
 import co.com.segurosalfa.siniestros.service.ICausaSiniestroService;
 
 @Service
-public class SnrCausaSiniestroImpl extends CRUDImpl<SnrCausaSiniestro, Integer> implements ICausaSiniestroService{
+public class CausaSiniestroImpl extends CRUDImpl<SnrCausaSiniestro, Integer> implements ICausaSiniestroService{
 
 	@Autowired
 	private ISnrCausaSiniestroRepo repo;

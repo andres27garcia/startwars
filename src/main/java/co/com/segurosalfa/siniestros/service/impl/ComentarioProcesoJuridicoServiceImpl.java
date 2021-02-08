@@ -12,7 +12,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioProcesoJuridicoRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioProcesoJuridicoService;
 
 @Service
-public class SnrComentariosProcesosJuridicosServiceImpl extends CRUDImpl<SnrComentarioProcesoJur, Long> implements IComentarioProcesoJuridicoService{
+public class ComentarioProcesoJuridicoServiceImpl extends CRUDImpl<SnrComentarioProcesoJur, Long> implements IComentarioProcesoJuridicoService{
 
 	@Autowired
 	private ISnrComentarioProcesoJuridicoRepo repo;

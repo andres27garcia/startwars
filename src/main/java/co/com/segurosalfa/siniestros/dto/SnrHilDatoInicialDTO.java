@@ -14,11 +14,11 @@ public class SnrHilDatoInicialDTO {
 	private Integer peridoCotizacion;
 	private LocalDateTime fecInicialCot;
 	private LocalDateTime fecFinalCot;
-	private HilAportantesDTO aportante;
+	private SnrHilAportanteDTO aportante;
 	private Integer vlrSalario;
 	private Integer numDiasCot;
 	private String blnMensualizado;
-	private HilOrigenesHistoriasDTO origenesHil;
+	private SnrHilOrigenHistoriaDTO origenesHil;
 	private String blnRegistroInvalido;
 
 }

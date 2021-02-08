@@ -9,7 +9,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrEstadoRepo;
 import co.com.segurosalfa.siniestros.service.ISnrEstadoService;
 
 @Service
-public class SnrEstadosImpl extends CRUDImpl<SnrEstado, Integer> implements ISnrEstadoService {
+public class EstadosImpl extends CRUDImpl<SnrEstado, Integer> implements ISnrEstadoService {
 
 	@Autowired
 	private ISnrEstadoRepo repo;

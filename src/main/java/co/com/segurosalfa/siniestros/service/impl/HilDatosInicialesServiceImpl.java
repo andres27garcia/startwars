@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
-import co.com.segurosalfa.siniestros.repo.IHilDatoInicialRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrHilDatoInicialRepo;
 import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
 
 @Service
 public class HilDatosInicialesServiceImpl extends CRUDImpl<SnrHilDatoInicial, Integer> implements IHilDatoInicialService{
 
 	@Autowired
-	private IHilDatoInicialRepo repo;
+	private ISnrHilDatoInicialRepo repo;
 	
 	@Override
 	protected IGenericRepo<SnrHilDatoInicial, Integer> getRepo(){

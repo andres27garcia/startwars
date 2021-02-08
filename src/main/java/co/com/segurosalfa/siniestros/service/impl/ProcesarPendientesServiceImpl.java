@@ -16,9 +16,9 @@ import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.ComparacionPersonaDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
-import co.com.segurosalfa.siniestros.repo.IPendienteAfiliadoRepo;
-import co.com.segurosalfa.siniestros.repo.IPendienteInfoAdicionalRepo;
-import co.com.segurosalfa.siniestros.repo.IPendienteReclamanteRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrTmpPendienteAfiliadoRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrTmpPendienteInfoAdicionalRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrTmpPendienteReclamanteRepo;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IProcesarPendientesService;
 import co.com.sipren.common.util.ComparacionObject;
@@ -30,14 +30,14 @@ import lombok.extern.log4j.Log4j2;
 public class ProcesarPendientesServiceImpl implements IProcesarPendientesService {
 
 	@Autowired
-	private IPendienteAfiliadoRepo repoAfiliado;
+	private ISnrTmpPendienteAfiliadoRepo repoAfiliado;
 
 	@Autowired
-	private IPendienteReclamanteRepo repoReclamante;
+	private ISnrTmpPendienteReclamanteRepo repoReclamante;
 
 	@Autowired
-	private IPendienteInfoAdicionalRepo repoInfoAdicional;
-	
+	private ISnrTmpPendienteInfoAdicionalRepo repoInfoAdicional;
+
 	@Autowired
 	private IClienteUnicoService clienteUnicoService;
 
@@ -51,7 +51,8 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 			throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> listaPendientes = repoAfiliado.consultarPendientePorCedula(tipoDoc, documento);
 		for (ProcesarPendientesDTO procesarPendientesDTO : listaPendientes) {
-			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(tipoDoc), String.valueOf(documento));
+			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(tipoDoc),
+					String.valueOf(documento));
 			procesarPendientesDTO.setPrimerNombre(afiliado.getPrimerNombre());
 			procesarPendientesDTO.setSegundoNombre(afiliado.getSegundoNombre());
 			procesarPendientesDTO.setPrimerApellido(afiliado.getPrimerApell());

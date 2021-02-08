@@ -11,7 +11,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrResulPrcCreacionSiniestroRepo;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 
 @Service
-public class SnrResulPrcCreacionSiniestrosImpl extends CRUDImpl<SnrResulPrcCreacionSiniestro, Integer> implements IResulPrcCreacionSiniestroService {
+public class ResulPrcCreacionSiniestrosImpl extends CRUDImpl<SnrResulPrcCreacionSiniestro, Integer> implements IResulPrcCreacionSiniestroService {
 
 	@Autowired
 	private ISnrResulPrcCreacionSiniestroRepo repo;

@@ -8,7 +8,7 @@ import co.com.segurosalfa.siniestros.entity.SnrParametrica;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 
 @Repository
-public interface IGnrParametricasRepo extends IGenericRepo<SnrParametrica, Integer>{
+public interface ISnrParametricasRepo extends IGenericRepo<SnrParametrica, Integer>{
 
 	@Query("FROM GnrParametricas gp where gp.nombre= :nombre")
 	SnrParametrica parametroXNombre(@Param("nombre") String nombre) throws SiprenException;

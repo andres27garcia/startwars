@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 import co.com.segurosalfa.siniestros.entity.SnrParametrica;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
-import co.com.segurosalfa.siniestros.repo.IGnrParametricasRepo;
+import co.com.segurosalfa.siniestros.repo.ISnrParametricasRepo;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 
 @Service
-public class CuParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implements IParametricasService {
+public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implements IParametricasService {
 
 	@Autowired
-	private IGnrParametricasRepo repo;
+	private ISnrParametricasRepo repo;
 
 	@Override
 	protected IGenericRepo<SnrParametrica, Integer> getRepo() {

@@ -6,6 +6,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CargueSiniestrosDTO implements Serializable {
 
@@ -39,62 +42,6 @@ public class CargueSiniestrosDTO implements Serializable {
 
 	public CargueSiniestrosDTO() {
 		super();
-	}
-
-	public String getEstadoRegistro() {
-		return estadoRegistro;
-	}
-
-	public void setEstadoRegistro(String estadoRegistro) {
-		this.estadoRegistro = estadoRegistro;
-	}
-
-	public String getDetalleError() {
-		return detalleError;
-	}
-
-	public void setDetalleError(String detalleError) {
-		this.detalleError = detalleError;
-	}
-
-	public String getNumeroRegistro() {
-		return numeroRegistro;
-	}
-
-	public void setNumeroRegistro(String numeroRegistro) {
-		this.numeroRegistro = numeroRegistro;
-	}
-
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
-
-	public String getTipoSolicitud() {
-		return tipoSolicitud;
-	}
-
-	public void setTipoSolicitud(String tipoSolicitud) {
-		this.tipoSolicitud = tipoSolicitud;
-	}
-
-	public String getFechaInicioConsulta() {
-		return fechaInicioConsulta;
-	}
-
-	public void setFechaInicioConsulta(String fechaInicioConsulta) {
-		this.fechaInicioConsulta = fechaInicioConsulta;
 	}
 
 }

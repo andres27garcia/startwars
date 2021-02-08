@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class SnrDatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrevisional, Long> implements ISnrDatoBasicoPrevisionalService {
+public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrevisional, Long> implements ISnrDatoBasicoPrevisionalService {
 
 
 	@Autowired

@@ -15,7 +15,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioTramiteRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioTramiteService;
 
 @Service
-public class SnrComentarioTramiteServiceImpl extends CRUDImpl<SnrComentarioTramite, Long>
+public class ComentarioTramiteServiceImpl extends CRUDImpl<SnrComentarioTramite, Long>
 		implements IComentarioTramiteService {
 
 	@Autowired

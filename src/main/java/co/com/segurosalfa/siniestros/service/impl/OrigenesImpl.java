@@ -9,7 +9,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrOrigenesRepo;
 import co.com.segurosalfa.siniestros.service.IOrigenesService;
 
 @Service
-public class SnrOrigenesImpl extends CRUDImpl<SnrOrigen, Integer> implements IOrigenesService{
+public class OrigenesImpl extends CRUDImpl<SnrOrigen, Integer> implements IOrigenesService{
 
 	@Autowired
 	private ISnrOrigenesRepo repo;

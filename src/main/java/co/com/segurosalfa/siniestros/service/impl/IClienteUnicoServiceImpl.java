@@ -16,14 +16,14 @@ import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ServiceException;
 
 @Service
-public class IClienteUnicoServiceImpl implements IClienteUnicoService{
-	
+public class IClienteUnicoServiceImpl implements IClienteUnicoService {
+
 	@Autowired
 	private ClienteRestGenerico service;
-	
+
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	@Autowired
 	private IParametricasService paramService;
 
@@ -39,7 +39,7 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService{
 		String json = mapper.writeValueAsString(response);
 		return mapper.readValue(json, ClienteUnicoDTO.class);
 	}
-	
+
 	@Override
 	public ClienteUnicoDTO consumirRestClienteUnico(String tipoDocumento, String numeroDocumento)
 			throws ServiceException, SiprenException, JsonProcessingException {

@@ -11,7 +11,7 @@ import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
 @Repository
 public interface ISnrResulPrcCreacionSiniestroRepo extends IGenericRepo<SnrResulPrcCreacionSiniestro, Integer> {
 
-	@Query("FROM GnrResulPrcCreacionSiniestro gr WHERE gr.flgProceso = :proceso")
+	@Query("FROM SnrResulPrcCreacionSiniestro gr WHERE gr.flgProceso = :proceso")
 	public List<SnrResulPrcCreacionSiniestro> consultarPorProceso(@Param("proceso") String proceso);
 
 }

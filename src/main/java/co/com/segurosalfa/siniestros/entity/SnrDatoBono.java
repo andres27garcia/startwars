@@ -22,7 +22,7 @@ public class SnrDatoBono implements Serializable {
 
 	@Id
 	@Column(name = "NUM_PERSONA", nullable = false)
-	private Long persona;
+	private Long numPersona;
 
 	@Column(name = "FEC_TRASLADO")
 	private LocalDateTime fecTraslado;

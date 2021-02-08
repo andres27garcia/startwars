@@ -12,7 +12,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioReclamanteRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioReclamanteService;
 
 @Service
-public class SnrComentariosReclamantesServiceImpl extends CRUDImpl<SnrComentarioReclamante, Long>
+public class ComentarioReclamanteServiceImpl extends CRUDImpl<SnrComentarioReclamante, Long>
 		implements IComentarioReclamanteService {
 
 	@Autowired

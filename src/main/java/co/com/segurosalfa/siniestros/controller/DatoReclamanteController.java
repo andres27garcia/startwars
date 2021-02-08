@@ -3,6 +3,7 @@ package co.com.segurosalfa.siniestros.controller;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -26,6 +27,7 @@ import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.ListadoReclamantesDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ReprocesoReclamantesDTO;
+import co.com.segurosalfa.siniestros.dto.SnrComentarioReclamanteDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoReclamanteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrComentarioReclamante;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
@@ -46,20 +48,20 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/datosReclamantes")
-public class DatosReclamantesController {
+@RequestMapping("/v1/datosReclamantes")
+public class DatoReclamanteController {
 
 	@Autowired
-	private IDatoReclamanteService service;
+	IDatoReclamanteService service;
 
 	@Autowired
-	private IDatoTramiteService tramiteService;
+	IDatoTramiteService tramiteService;
 
 	@Autowired
-	private IClienteUnicoService clienteUnicoService;
+	IClienteUnicoService clienteUnicoService;
 
 	@Autowired
-	private IComentarioReclamanteService comentariosService;
+	IComentarioReclamanteService comentariosService;
 
 	@Autowired
 	EmailUtil emailU;
@@ -68,7 +70,7 @@ public class DatosReclamantesController {
 	IParametricasService paramService;
 
 	@Autowired
-	private ModelMapper modelMapper;
+	ModelMapper modelMapper;
 
 	@ApiOperation(value = "Operación de servicio que consulta un datos de reclamantes por numero de siniestro y numero de tramite", notes = "La operación retorna un datos de reclamantes por numero de siniestro y numero de tramite registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -92,8 +94,7 @@ public class DatosReclamantesController {
 
 		SnrDatoReclamante ent = modelMapper.map(dto, SnrDatoReclamante.class);
 
-		SnrDatoReclamante obj = service.listarPorTramitePersona(ent.getTramite().getIdTramite(),
-				ent.getPersona());
+		SnrDatoReclamante obj = service.listarPorTramitePersona(ent.getTramite().getIdTramite(), ent.getNumPersona());
 
 		if (obj != null) {
 			throw new SiprenException(ParametrosMensajes.ERROR_EXISTS_DATA);
@@ -124,7 +125,7 @@ public class DatosReclamantesController {
 			try {
 
 				ClienteUnicoDTO dtoCu = clienteUnicoService.consumirRestClienteUnico(
-						String.valueOf(dto.getNumPersona()));
+						String.valueOf(dto.getIdTipoDocumento()), String.valueOf(dto.getIdentificacionReclamante()));
 
 				obj.forEach(x -> x.setNombreReclamante(dtoCu));
 
@@ -167,9 +168,10 @@ public class DatosReclamantesController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PutMapping
-	public ResponseEntity<SnrDatoReclamante> modificar(@Valid @RequestBody SnrDatoReclamanteDTO dto)
+	public ResponseEntity<SnrDatoReclamanteDTO> modificar(@Valid @RequestBody SnrDatoReclamanteDTO dto)
 			throws SiprenException {
-		SnrDatoReclamante obj = service.modificar(modelMapper.map(dto, SnrDatoReclamante.class));
+		SnrDatoReclamanteDTO obj = modelMapper.map(service.modificar(modelMapper.map(dto, SnrDatoReclamante.class)),
+				SnrDatoReclamanteDTO.class);
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
@@ -178,9 +180,10 @@ public class DatosReclamantesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/comentarios/{idReclamante}")
-	public ResponseEntity<List<SnrComentarioReclamante>> listarComentarios(
+	public ResponseEntity<List<SnrComentarioReclamanteDTO>> listarComentarios(
 			@PathVariable("idReclamante") Long idReclamante) throws SiprenException {
-		List<SnrComentarioReclamante> obj = comentariosService.listarDatosPorReclamante(idReclamante);
+		List<SnrComentarioReclamanteDTO> obj = comentariosService.listarDatosPorReclamante(idReclamante).stream()
+				.map(n -> this.modelMapper.map(n, SnrComentarioReclamanteDTO.class)).collect(Collectors.toList());
 		if (obj == null || obj.isEmpty()) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}

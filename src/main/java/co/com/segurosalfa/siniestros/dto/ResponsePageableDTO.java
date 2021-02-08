@@ -1,10 +1,8 @@
 package co.com.segurosalfa.siniestros.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class ResponsePageableDTO {
 
 	private Object content;
@@ -29,5 +27,4 @@ public class ResponsePageableDTO {
 		this.empty = empty;
 	}
 
-	
 }
