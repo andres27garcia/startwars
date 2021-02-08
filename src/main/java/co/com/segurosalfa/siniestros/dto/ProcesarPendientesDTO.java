@@ -134,17 +134,14 @@ public class ProcesarPendientesDTO implements Serializable {
 	 * @param idTramite
 	 * @param fechaRadicacionAlfa
 	 */
-	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, 
+	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, Long identificacionAfiliado,
 			Long idSiniestro, Long idTramite, LocalDate fechaRadicacionAlfa,
 			String primerNombre, String segundoNombre, String primerApellido, String segundoApellido,
-			Integer solicitudAfp, Integer estadoReclamante) {
+			Integer solicitudAfp, Long numPersona, Integer estadoReclamante) {
 		super();
 		this.id = id;
 		this.idTipoDocumento = idTipoDocumento;
-		if (Objects.nonNull(identificacionAfiliado))
-			this.identificacionAfiliado = identificacionAfiliado.longValue();
-		else
-			this.identificacionAfiliado = (long) 0;
+		this.identificacionAfiliado = identificacionAfiliado;
 		this.idSiniestro = idSiniestro;
 		this.idTramite = idTramite;
 		if (Objects.nonNull(fechaRadicacionAlfa))
@@ -156,6 +153,7 @@ public class ProcesarPendientesDTO implements Serializable {
 		this.idSolicitudAfp = solicitudAfp;
 		this.estadoReclamante = estadoReclamante;
 		this.tipoDocumento = tipoDocumento;
+		this.numPersona = numPersona;
 	}
 
 	/**

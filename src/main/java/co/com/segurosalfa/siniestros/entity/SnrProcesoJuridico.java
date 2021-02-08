@@ -71,7 +71,8 @@ public class SnrProcesoJuridico implements Serializable {
 	@Column(name = "BLN_FIDELIDAD")
 	private String blnFidelidad;
 	
-	@Column(name = "ID_TIPO_JUZGADO", insertable = false, updatable = false, nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "ID_TIPO_JUZGADO", insertable = false, updatable = false, nullable = false)
 	private SnrTipo juzgado;
 
 }

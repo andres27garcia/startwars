@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
-import co.com.segurosalfa.siniestros.entity.GnrEquivalenciaTipos;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
-import co.com.segurosalfa.siniestros.repo.IGnrEquivalenciaTiposRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrDatosBasicosRepo;
 import co.com.segurosalfa.siniestros.service.ISnrDatosBasicosService;
 import co.com.sipren.common.util.ParametroGeneralUtil;
@@ -24,8 +22,7 @@ public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> impl
 
 	@Autowired
 	private ISnrDatosBasicosRepo repo;
-	@Autowired
-	private IGnrEquivalenciaTiposRepo repoEquivalencias;
+	
 
 	@Override
 	protected IGenericRepo<SnrDatoBasico, Integer> getRepo() {
@@ -59,8 +56,8 @@ public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> impl
 	@Override
 	public void consultaPorvenirPorAfiliado(String usuario, String proceso, Long documento, String tipoDoc,
 			Integer tipoSolicitud, Date fechaProceso) throws SiprenException, ParseException {
-		GnrEquivalenciaTipos gnrEquivalencias = repoEquivalencias.obtenerEquivalenciaAfp(tipoDoc);
-		tipoDoc = gnrEquivalencias != null ? gnrEquivalencias.getAbreviaturaTipoIdAfp() : "";
+//		GnrEquivalenciaTipos gnrEquivalencias = repoEquivalencias.obtenerEquivalenciaAfp(tipoDoc);
+//		tipoDoc = gnrEquivalencias != null ? gnrEquivalencias.getAbreviaturaTipoIdAfp() : "";
 		repo.consultaPorvenirPorAfiliado(usuario, proceso, documento, tipoDoc, tipoSolicitud, fechaProceso);
 
 	}

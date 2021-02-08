@@ -9,7 +9,7 @@ import co.com.segurosalfa.siniestros.entity.SnrProcesoJuridico;
 public interface ISnrProcesoJuridicoRepo extends IGenericRepo<SnrProcesoJuridico, Integer> {
 
 	@Query("SELECT pj FROM SnrProcesoJuridico pj JOIN "
-			+ "pj.tramite t JOIN t.siniestro s JOIN s.persona p "
-			+ "WHERE p.numPersona = :numPersona ")
+			+ "pj.tramite t JOIN t.siniestro s "
+			+ "WHERE s.persona = :numPersona ")
 	public List<SnrProcesoJuridico> listarPorPersona(Long numPersona);
 }

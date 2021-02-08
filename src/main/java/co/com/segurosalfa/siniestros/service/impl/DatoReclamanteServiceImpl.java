@@ -89,9 +89,21 @@ public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long>
 	}
 
 	@Override
-	public List<ReprocesoReclamantesDTO> consultaReprocesoReclamante(Long tramite, Long documento)
-			throws SiprenException {
-		return repo.consultaReprocesoReclamante(tramite, documento.intValue());
+	public List<ReprocesoReclamantesDTO> consultaReprocesoReclamante(Long tramite, Long numPersona)
+			throws SiprenException, JsonProcessingException, ServiceException {
+		List<ReprocesoReclamantesDTO> listReclamantes = repo.consultaReprocesoReclamante(tramite, numPersona);
+		for (ReprocesoReclamantesDTO reprocesoReclamantesDTO : listReclamantes) {
+			ClienteUnicoDTO reclamante = clienteUnicoService.consumirRestClienteUnico(
+					String.valueOf(reprocesoReclamantesDTO.getNumPersonaReclamante()));
+			reprocesoReclamantesDTO.setNombreReclamante(reclamante);
+			reprocesoReclamantesDTO.setTipoDocAfiliado(reclamante.getTipoDoc());
+			reprocesoReclamantesDTO.setTipoDocReclamante(reclamante.getCedula());
+			
+			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(
+					String.valueOf(reprocesoReclamantesDTO.getNumPersonaAfiliado()));
+			reprocesoReclamantesDTO.setDocumentoAfil(Integer.parseInt(afiliado.getCedula()));
+		}
+		return listReclamantes;
 	}
 
 }

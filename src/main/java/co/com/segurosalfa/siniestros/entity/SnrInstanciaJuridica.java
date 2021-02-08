@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +25,7 @@ public class SnrInstanciaJuridica implements Serializable {
 	@EmbeddedId
 	private SnrInstanciaJuridicaId id;
 	@NotNull(message = "El campo ID_TIPO_FALLO no puede ser nulo o vacio")
+	@ManyToOne
 	@JoinColumn(name = "ID_TIPO_FALLO")
 	private SnrTipo fallo;
 	@NotNull(message = "El campo FECHA_FALLO no puede ser nulo o vacio")

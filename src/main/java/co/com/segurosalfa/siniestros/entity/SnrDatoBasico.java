@@ -31,7 +31,6 @@ public class SnrDatoBasico implements Serializable  {
 	@Column(name = "ID_SINIESTRO")
 	private Integer idSiniestro;
 
-	@ManyToOne
 	@Column(name = "NUM_PERSONA")
 	private Long persona;
 

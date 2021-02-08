@@ -18,7 +18,7 @@ public interface ISnrDatoReclamanteRepo extends IGenericRepo<SnrDatoReclamante, 
 	@Query("FROM SnrDatoReclamante o where o.tramite.idTramite = :numTramite")
 	List<SnrDatoReclamante> listarPorTramite(@Param("numTramite") Long numTramite) throws SiprenException;
 
-	@Query("FROM SnrDatoReclamante o where o.tramite.idTramite = :numTramite and o.persona.numPersona = :numPersona")
+	@Query("FROM SnrDatoReclamante o where o.tramite.idTramite = :numTramite and o.numPersona = :numPersona")
 	SnrDatoReclamante listarPorTramitePersona(@Param("numTramite") Long numTramite,
 			@Param("numPersona") Long numPersona) throws SiprenException;
 
@@ -32,12 +32,12 @@ public interface ISnrDatoReclamanteRepo extends IGenericRepo<SnrDatoReclamante, 
 	void crearDatosReclamante(@Param("siniestro") Long siniestro, @Param("tramite") Long tramite,
 			@Param("solicitudAfp") Integer solicitudAfp, @Param("usuario") String usuario,
 			@Param("origen") String origen);
-
-	@Query("select new co.com.siniestros.dto.ReprocesoReclamantesDTO(s.persona.tipoDocumento.nombre,s.persona.numIdentificacion, dt.idTramite, sr.persona.numPersona)"
+					   
+	@Query("select new co.com.segurosalfa.siniestros.dto.ReprocesoReclamantesDTO(s.persona, dt.idTramite, sr.numPersona)"
 			+ " FROM SnrDatoTramite dt  LEFt JOIN SnrDatoReclamante sr ON sr.tramite.idTramite = dt.idTramite "
 			+ " LEFT JOIN SnrDatoBasico s ON s.idSiniestro = dt.siniestro.idSiniestro "
-			+ " WHERE dt.idTramite = :tramite AND gp.numIdentificacion = :documento")
+			+ " WHERE dt.idTramite = :tramite AND sr.numPersona = :numPersona")
 	List<ReprocesoReclamantesDTO> consultaReprocesoReclamante(@Param("tramite") Long tramite,
-			@Param("documento") Integer documento) throws SiprenException;
+			@Param("numPersona") Long numPersona) throws SiprenException;
 
 }

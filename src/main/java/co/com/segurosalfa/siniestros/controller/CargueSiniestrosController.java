@@ -34,12 +34,7 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
-import co.com.segurosalfa.siniestros.util.Constants;
 import co.com.sipren.common.bus.dto.Mail;
-import co.com.sipren.common.log.LogService;
-import co.com.sipren.common.log.LogServiceEnum;
-import co.com.sipren.common.log.LogServiceHandler;
-import co.com.sipren.common.log.LogServiceUtil;
 import co.com.sipren.common.util.ClienteRestGenerico;
 import co.com.sipren.common.util.DetalleArchivoResponse;
 import co.com.sipren.common.util.DetalleCargueArchivoResponse;
@@ -77,8 +72,8 @@ public class CargueSiniestrosController {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@Autowired
-	private LogServiceUtil logServiceUtil;
+//	@Autowired
+//	private LogServiceUtil logServiceUtil;
 
 	@ApiOperation(value = "Operacion para el cargue de siniestros para su creacion automatica", notes = "La operación realiza el cague en el gestor de archivos y posteriormente realiza su sincronizacion con la BD")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -88,12 +83,12 @@ public class CargueSiniestrosController {
 	public ResponseEntity<Void> guardarArchivo(@RequestParam("adjunto") MultipartFile file,
 			@RequestParam(name = "usuario") String usuario) throws SiprenException {
 
-		LogService logService = new LogService();
-		logService.setService(Constants.SINIESTROS_BUSINESS_UNIT, Constants.SINIESTORS_MICROSERVICES);
-		logService.setServiceName("/carguesSiniestros/enviarArchivo");
-		logService.setIp("192.168.0.1");
-		logService.setAction(LogServiceEnum.GET);
-		logService.setUser("TEST");
+//		LogService logService = new LogService();
+//		logService.setService(Constants.SINIESTROS_BUSINESS_UNIT, Constants.SINIESTORS_MICROSERVICES);
+//		logService.setServiceName("/carguesSiniestros/enviarArchivo");
+//		logService.setIp("192.168.0.1");
+//		logService.setAction(LogServiceEnum.GET);
+//		logService.setUser("TEST");
 
 		try {
 
@@ -225,11 +220,11 @@ public class CargueSiniestrosController {
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
 		} finally {
-			try {
+			/*try {
 				logServiceUtil.sendLog("", logService);
 			} catch (LogServiceHandler e) {
 				log.error("Sucedio un error al registrar el evento de log", e);
-			}
+			}*/
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);

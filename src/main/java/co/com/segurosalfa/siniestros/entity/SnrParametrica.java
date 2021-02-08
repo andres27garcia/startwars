@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "gnr_parametricas")
+@Table(name = "SNR_PARAMETRICA")
 public class SnrParametrica implements Serializable {
 
 	private static final long serialVersionUID = -2538217260641616473L;

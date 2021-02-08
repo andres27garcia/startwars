@@ -16,13 +16,13 @@ public class ReprocesoReclamantesDTO implements Serializable {
 	private String tipoDocReclamante;
 	private Integer documentoReclamante;
 	private String nombreReclamante;
-	private Long numPersonaReclamante;
+	private Long numPersonaReclamante;	
+	private Long numPersonaAfiliado;
 
-	public ReprocesoReclamantesDTO(String tipoDocAfiliado, Integer documentoAfil, Long idTramite,
+	public ReprocesoReclamantesDTO(Long numPersonaAfiLiado, Long idTramite,			
 			Long numPersonaReclamante) {
 		super();
-		this.tipoDocAfiliado = tipoDocAfiliado;
-		this.documentoAfil = documentoAfil;
+		this.numPersonaAfiliado = numPersonaAfiLiado;
 		this.idTramite = idTramite;
 		this.numPersonaReclamante = numPersonaReclamante;
 	}

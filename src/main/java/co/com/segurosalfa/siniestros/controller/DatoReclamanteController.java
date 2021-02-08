@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.ListadoReclamantesDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
@@ -43,6 +45,7 @@ import co.com.sipren.common.bus.dto.Mail;
 import co.com.sipren.common.util.EmailUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
+import co.com.sipren.common.util.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -110,7 +113,7 @@ public class DatoReclamanteController {
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/crearDatosReclamantes")
 	public ResponseEntity<Void> crearDatosReclamantes(@Valid @RequestBody ProcesarPendientesDTO dto)
-			throws SiprenException {
+			throws SiprenException, JsonProcessingException, ServiceException {
 
 		SnrDatoTramite tmpTramite = tramiteService.listarPorId(dto.getIdTramite());
 		dto.setIdSolicitudAfp(tmpTramite.getIdSolicitudAfp());
@@ -118,17 +121,12 @@ public class DatoReclamanteController {
 		service.crearDatosReclamante(dto);
 
 		List<ReprocesoReclamantesDTO> obj = service.consultaReprocesoReclamante(dto.getIdTramite(),
-				dto.getIdentificacionReclamante());
+				dto.getNumPersona());
 
 		if (obj != null && !obj.isEmpty()) {
 
 			try {
-
-				ClienteUnicoDTO dtoCu = clienteUnicoService.consumirRestClienteUnico(
-						String.valueOf(dto.getIdTipoDocumento()), String.valueOf(dto.getIdentificacionReclamante()));
-
-				obj.forEach(x -> x.setNombreReclamante(dtoCu));
-
+				
 				ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 				InputStream isConv = EnvioCorreoController.class.getResourceAsStream(paramService

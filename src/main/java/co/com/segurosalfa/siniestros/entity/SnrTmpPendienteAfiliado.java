@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +31,7 @@ public class SnrTmpPendienteAfiliado implements Serializable {
 	@Column(name = "ID_SOLICITUD_AFP", insertable = false, updatable = false)
 	private Integer idSolicitudAfp;
 	@Column(name = "FEC_SOLICITUD", insertable = false, updatable = false)
-	private Date fecSolicitud;
+	private LocalDate fecSolicitud;
 	@Column(name = "PRIMER_NOMBRE_AFP", insertable = false, updatable = false)
 	private String primerNombre;
 	@Column(name = "SEGUNDO_NOMBRE_AFP", insertable = false, updatable = false)

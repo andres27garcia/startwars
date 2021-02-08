@@ -12,16 +12,15 @@ import co.com.segurosalfa.siniestros.entity.SnrTmpPendienteAfiliado;
 
 public interface ISnrTmpPendienteAfiliadoRepo extends IGenericRepo<SnrTmpPendienteAfiliado, Long>{
 		
-
-	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento, pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, pa.codTipoSolicitudAfp) "
-			+ " FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo"
-			+ " JOIN GnrTiposDocumentos td ON td.id = pa.codTipoDocumento "
+						
+	@Query("select new co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento, pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, pa.codTipoSolicitudAfp) "
+			+ " FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo "
 			+ "order by pa.idPendienteAfiliado asc")
 	public List<ProcesarPendientesDTO> listarPendientesAfiliados();
 	
-	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento,  pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, "
+	@Query("select new co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento,  pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, "
 			+ "pa.primerNombre, pa.segundoNombre, pa.primerApellido, pa.segundoApellido, pa.codTipoSolicitudAfp) "
-			+ "FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo"
+			+ "FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo "
 			+ "where pa.codTipoDocumento = :tipoDoc and pa.numeroDocumento = :documento")
 	public List<ProcesarPendientesDTO> consultarPendientePorCedula(@Param("tipoDoc") Integer tipoDoc, @Param("documento") Long documento);
 	

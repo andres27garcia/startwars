@@ -24,7 +24,6 @@ public class SnrHilAportante implements Serializable {
 	@Column(name = "ID_APORTANTE")
 	private Integer idAportante;
 
-	@ManyToOne
 	@Column(name = "COD_TIPO_IDENTIFICACION")
 	private Long tipoIdentificacion;
 

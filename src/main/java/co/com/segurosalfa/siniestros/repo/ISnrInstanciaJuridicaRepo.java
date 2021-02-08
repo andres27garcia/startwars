@@ -15,7 +15,7 @@ public interface ISnrInstanciaJuridicaRepo extends IGenericRepo<SnrInstanciaJuri
 	List<SnrInstanciaJuridica> listarPorProcesoJuridico(@Param("idProcesoJuridico") Long idProcesoJuridico)
 			throws SiprenException;
 
-	@Query("FROM SnrInstanciaJuridica o where o.id.procesoJuridico.idProcesoJuridico = :idProcesoJuridico and o.tipoInstancia.id = :idTipoInstancia")
+	@Query("FROM SnrInstanciaJuridica o where o.id.procesoJuridico.idProcesoJuridico = :idProcesoJuridico and o.id.instanciaJuridica.codigo = :idTipoInstancia")
 	List<SnrInstanciaJuridica> listarPorProcesoJuridicoTipoInstancia(
 			@Param("idProcesoJuridico") Long idProcesoJuridico, @Param("idTipoInstancia") Long idTipoInstancia)
 			throws SiprenException;

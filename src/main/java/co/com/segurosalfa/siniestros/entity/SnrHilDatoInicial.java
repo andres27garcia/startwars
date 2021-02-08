@@ -27,7 +27,6 @@ public class SnrHilDatoInicial implements Serializable {
 	@Column(name = "ID_DETALLE_HIL")
 	private Integer idDetalleHil;
 
-	@ManyToOne
 	@JoinColumn(name = "NUM_PERSONA", insertable = false, updatable = false)
 	private Long persona;
 

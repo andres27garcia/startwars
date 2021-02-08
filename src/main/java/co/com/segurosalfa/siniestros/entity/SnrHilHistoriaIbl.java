@@ -25,8 +25,7 @@ public class SnrHilHistoriaIbl implements Serializable {
 	@Column(name = "ID_HISTORIA_IBL")
 	private Long idHistoriaHil;
 
-	@ManyToOne
-	@JoinColumn(name = "NUM_PERSONA", nullable = false, insertable = false, updatable = false)
+	@Column(name = "NUM_PERSONA")
 	private Long persona;
 
 	@Column(name = "FEC_INICIAL")

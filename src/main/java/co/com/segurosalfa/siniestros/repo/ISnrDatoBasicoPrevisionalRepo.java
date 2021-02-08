@@ -22,7 +22,7 @@ public interface ISnrDatoBasicoPrevisionalRepo extends IGenericRepo<SnrDatoBasic
 	@Procedure(procedureName = "SINIESTROS.PKG_CREACION_SINIESTRO.PRC_ELIMINAR_INFO_PORVENIR_CARGUE")
 	void limpiarTemporalesCargue(@Param("usuario") String usuario, @Param("proceso") String proceso);
 	
-	@Query("SELECT MAX(o.idSiniestro) FROM SnrDatoBasicoPrevisional o where o.siniestro.persona.numPersona = :numPersona")
+	@Query("SELECT MAX(o.siniestro.idSiniestro) FROM SnrDatoBasicoPrevisional o where o.siniestro.persona = :numPersona")
 	Long consultaUltSiniestroPorAfiliado(@Param("numPersona") Long numPersona) throws SiprenException;
 	
 	@Procedure(procedureName = "SINIESTROS.PKG_CREACION_SINIESTRO.PRC_CONSULTA_INFO_PORVENIR_CARGUE")
@@ -32,7 +32,7 @@ public interface ISnrDatoBasicoPrevisionalRepo extends IGenericRepo<SnrDatoBasic
 	
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE SNR_DATOS_BASICOS SET COD_ESTADO_SINIESTRO =:codEstado WHERE ID_SINIESTRO =:numSiniestro", nativeQuery = true)
+	@Query(value = "UPDATE SNR_DATO_BASICO SET ID_ESTADO_SINIESTRO =:codEstado WHERE ID_SINIESTRO =:numSiniestro", nativeQuery = true)
 	void actualizaEstadoSiniestro(@Param("numSiniestro") Long numSiniestro, @Param("codEstado") Integer codEstado)
 			throws SiprenException;
 	

@@ -10,7 +10,7 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 
 public interface ISnrHilHistoriaIblRepo extends IGenericRepo<SnrHilHistoriaIbl, Long>{
 	
-	@Query("FROM SnrHilHistoriaIbl hi where hi.persona.numPersona = :numPersona")
+	@Query("FROM SnrHilHistoriaIbl hi where hi.persona = :numPersona")
 	List<SnrHilHistoriaIbl> listarPorPersona(@Param("numPersona") Long numPersona) throws SiprenException;
 
 }
