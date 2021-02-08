@@ -107,18 +107,48 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	}
 
 	@Override
-	public List<ProcesarPendientesDTO> listarPendientesInfoAdicional() {
-		return repoInfoAdicional.listarPendientesInfoAdicional();
+	public List<ProcesarPendientesDTO> listarPendientesInfoAdicional() throws JsonProcessingException, ServiceException, SiprenException {
+		List<ProcesarPendientesDTO> listPendientes = repoInfoAdicional.listarPendientesInfoAdicional();
+		for (ProcesarPendientesDTO procesarPendientesDTO : listPendientes) {
+			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(procesarPendientesDTO.getNumPersona()));
+			procesarPendientesDTO.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));
+			procesarPendientesDTO.setTipoDocumento(afiliado.getTipoDocumento());
+	
+		}
+		return listPendientes;
 	}
 
 	@Override
-	public List<ProcesarPendientesDTO> listarPendientesreclamante() {
-		return repoReclamante.listarPendientesreclamante();
+	public List<ProcesarPendientesDTO> listarPendientesreclamante() throws JsonProcessingException, ServiceException, SiprenException {
+		List<ProcesarPendientesDTO> listpendientes = repoReclamante.listarPendientesreclamante();
+		for (ProcesarPendientesDTO procesarPendientesDTO : listpendientes) {
+			if(Objects.nonNull(procesarPendientesDTO.getNumPersona())) {
+				ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(procesarPendientesDTO.getNumPersona().toString());
+				if(Objects.nonNull(afiliado)) {
+					procesarPendientesDTO.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));					
+				}
+			}			
+			
+		}
+		return listpendientes;
 	}
 
 	@Override
-	public List<ProcesarPendientesDTO> consultarReclamantePorCedula(Integer tipoDoc, Long documento) {
-		return repoReclamante.consultarReclamantePorCedula(tipoDoc, documento);
+	public List<ProcesarPendientesDTO> consultarReclamantePorCedula(Integer tipoDoc, Long documento) throws JsonProcessingException, ServiceException, SiprenException {
+		List<ProcesarPendientesDTO> listpendientes = repoReclamante.consultarReclamantePorCedula(tipoDoc, documento);
+		for (ProcesarPendientesDTO procesarPendientesDTO : listpendientes) {
+			if(Objects.nonNull(procesarPendientesDTO.getNumPersona())) {
+				ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(procesarPendientesDTO.getNumPersona().toString());
+				if(Objects.nonNull(afiliado)) {
+					procesarPendientesDTO.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));					
+				}
+			}
+			ClienteUnicoDTO reclamante = clienteUnicoService.consumirRestClienteUnico(procesarPendientesDTO.getIdTipoDocumento().toString(), 
+					procesarPendientesDTO.getIdentificacionReclamante().toString());
+			procesarPendientesDTO.setNumPersona(reclamante.getNumPersona());
+			
+		}
+		return listpendientes;
 	}
 
 	@Override
@@ -128,8 +158,15 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	}
 
 	@Override
-	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento) {
-		return repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
+	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento) throws JsonProcessingException, ServiceException, SiprenException {
+		List<ProcesarPendientesDTO> listPendientes = repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
+		for (ProcesarPendientesDTO procesarPendientesDTO : listPendientes) {
+			ClienteUnicoDTO persona = clienteUnicoService.consumirRestClienteUnico(String.valueOf(tipoDoc), String.valueOf(documento));
+			procesarPendientesDTO.setEpsDesc(persona.getEps());
+			procesarPendientesDTO.setEstadoCivilDesc(persona.getEstadoCivil());
+			procesarPendientesDTO.setOcupacionDesc(persona.getCodOcupacion());
+		}
+		return listPendientes;
 	}
 
 }

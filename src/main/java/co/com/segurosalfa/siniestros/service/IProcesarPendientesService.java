@@ -20,13 +20,13 @@ public interface IProcesarPendientesService {
 	public List<ComparacionPersonaDTO> procesarPendientes(ClienteUnicoDTO clienteUnico, ClienteUnicoDTO afiliadoAfp,
 			Boolean comparaAfp) throws SiprenException;
 
-	public List<ProcesarPendientesDTO> listarPendientesInfoAdicional();
+	public List<ProcesarPendientesDTO> listarPendientesInfoAdicional() throws JsonProcessingException, ServiceException, SiprenException;
 
-	public List<ProcesarPendientesDTO> listarPendientesreclamante();
+	public List<ProcesarPendientesDTO> listarPendientesreclamante() throws SiprenException, JsonProcessingException, ServiceException;
 
-	public List<ProcesarPendientesDTO> consultarReclamantePorCedula(Integer tipoDoc, Long documento);
+	public List<ProcesarPendientesDTO> consultarReclamantePorCedula(Integer tipoDoc, Long documento) throws SiprenException, JsonProcessingException, ServiceException;
 
-	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento);
+	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento) throws JsonProcessingException, ServiceException, SiprenException ;
 
 	public void eliminarPendientePorCedula(Integer tipoDoc, Long documento);
 }

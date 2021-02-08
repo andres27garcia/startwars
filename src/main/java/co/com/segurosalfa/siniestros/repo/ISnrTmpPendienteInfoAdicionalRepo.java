@@ -10,20 +10,17 @@ import co.com.segurosalfa.siniestros.entity.SnrTmpPendInfoAdicional;
 
 public interface ISnrTmpPendienteInfoAdicionalRepo extends IGenericRepo<SnrTmpPendInfoAdicional, Long>{
 	
-	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idInfoAdicional, td.nombre, pa.nidNumeroIdentificacion, pa.idSiniestro, pa.idTramite, dt.fecRadicacionAfp, pa.tipoRolPersona, pa.codTipoIdentificacion, sin.persona.numIdentificacion) "
+	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idInfoAdicional, pa.nidNumeroIdentificacion, pa.idSiniestro, pa.idTramite, dt.fecRadicacionAfp, pa.tipoRolPersona, pa.codTipoIdentificacion, sin.persona.numPersona) "
 			+ "FROM SnrTmpPendInfoAdicional pa "
-			+ "LEFT JOIN SnrDatosTramites dt ON pa.idTramite = dt.idTramite "	
-			+ "LEFT JOIN SnrDatosBasicos sin ON sin.idSiniestro = pa.idSiniestro "	
-			+ "JOIN GnrTiposDocumentos td ON td.id = pa.codTipoIdentificacion order by pa.idInfoAdicional asc")
+			+ "LEFT JOIN SnrDatoTramite dt ON pa.idTramite = dt.idTramite "	
+			+ "LEFT JOIN SnrDatoBasico sin ON sin.idSiniestro = pa.idSiniestro "	
+			+ "order by pa.idInfoAdicional asc")
 	List<ProcesarPendientesDTO> listarPendientesInfoAdicional();
 	
-	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idInfoAdicional, td.nombre, pa.nidNumeroIdentificacion, pa.idSiniestro, pa.idTramite, dt.fecRadicacionAfp, pa.tipoRolPersona,"
-			+ "pa.genero, pa.codEstadoCivil, ge.nombre, pa.fechaNacimiento, pa.codEps, e.razonSocial, pa.fechaMuerte, pa.codTipoIdentificacion) "
+	@Query("select new co.com.siniestros.dto.ProcesarPendientesDTO(pa.idInfoAdicional, pa.nidNumeroIdentificacion, pa.idSiniestro, pa.idTramite, dt.fecRadicacionAfp, pa.tipoRolPersona,"
+			+ "pa.genero, pa.codEstadoCivil, pa.fechaNacimiento, pa.codEps, pa.fechaMuerte, pa.codTipoIdentificacion) "
 			+ "FROM SnrTmpPendInfoAdicional pa "
-			+ "LEFT JOIN SnrDatosTramites dt ON pa.idTramite = dt.idTramite "
-			+ "JOIN GnrTiposDocumentos td ON td.id = pa.codTipoIdentificacion "
-			+ "LEFT JOIN GnrEps e ON e.idEps = pa.codEps "
-			+ "LEFT JOIN GnrEstadosCiviles ge ON ge.id = pa.codEstadoCivil "
+			+ "LEFT JOIN SnrDatoTramite dt ON pa.idTramite = dt.idTramite "
 			+ "WHERE pa.codTipoIdentificacion = :tipoDoc and pa.nidNumeroIdentificacion = :documento")
 	List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(@Param("tipoDoc") Integer tipoDoc, @Param("documento") Long documento);
 

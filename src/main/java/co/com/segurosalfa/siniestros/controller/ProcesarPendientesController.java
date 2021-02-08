@@ -25,6 +25,7 @@ import co.com.segurosalfa.siniestros.service.IProcesarPendientesService;
 import co.com.sipren.common.bus.dto.ErrorResponse;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
+import co.com.sipren.common.util.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -65,7 +66,7 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/reclamantes")
-	public ResponseEntity<List<ProcesarPendientesDTO>> listarReclamantesPendientes() {
+	public ResponseEntity<List<ProcesarPendientesDTO>> listarReclamantesPendientes() throws JsonProcessingException, SiprenException, ServiceException {
 		List<ProcesarPendientesDTO> listaReclamantespendientes = pendientesService.listarPendientesreclamante();
 
 		if (listaReclamantespendientes != null && listaReclamantespendientes.isEmpty())
@@ -79,7 +80,7 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/infoAdicional")
-	public ResponseEntity<List<ProcesarPendientesDTO>> listarInfoAdicional() {
+	public ResponseEntity<List<ProcesarPendientesDTO>> listarInfoAdicional() throws JsonProcessingException, ServiceException, SiprenException {
 		List<ProcesarPendientesDTO> listaInfoAdicional = pendientesService.listarPendientesInfoAdicional();
 
 		if (listaInfoAdicional != null && listaInfoAdicional.isEmpty())
@@ -96,7 +97,7 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/compararAfiliado/{tipoDoc}/{documento}")
 	public ResponseEntity<ProcesarPendientesDTO> compararAfiliadoPendiente(@PathVariable("tipoDoc") Integer tipoDoc,
-			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException {
+			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> afiliados = pendientesService.consultarPendientePorCedula(tipoDoc, documento);
 		ProcesarPendientesDTO afiliado = new ProcesarPendientesDTO();
 		if (Objects.nonNull(afiliados) && !afiliados.isEmpty()) {
@@ -145,7 +146,7 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/compararReclamante/{tipoDoc}/{documento}")
 	public ResponseEntity<ProcesarPendientesDTO> compararReclamantePendiente(@PathVariable("tipoDoc") Integer tipoDoc,
-			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException {
+			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> afiliados = pendientesService.consultarReclamantePorCedula(tipoDoc, documento);
 		ProcesarPendientesDTO afiliado = new ProcesarPendientesDTO();
 		if (Objects.nonNull(afiliados) && !afiliados.isEmpty()) {
@@ -194,7 +195,7 @@ public class ProcesarPendientesController {
 	@GetMapping("/compararInfoAdicional/{tipoDoc}/{documento}")
 	public ResponseEntity<ProcesarPendientesDTO> compararInfoAdicionalPendiente(
 			@PathVariable("tipoDoc") Integer tipoDoc, @PathVariable("documento") Long documento)
-			throws SiprenException, JsonProcessingException {
+			throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> afiliados = pendientesService.consultarPendientesInfoAdicionalPorCedula(tipoDoc,
 				documento);
 		ProcesarPendientesDTO afiliado = new ProcesarPendientesDTO();
