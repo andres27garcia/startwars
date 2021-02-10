@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/procesarPendientes")
+@RequestMapping("/v1/procesarPendientes")
 public class ProcesarPendientesController {
 
 	@Autowired
@@ -217,7 +217,7 @@ public class ProcesarPendientesController {
 			afiliadoAfp.setEstadoCivil(afiliado.getEstadoCivilDesc() == null ? "" : afiliado.getEstadoCivilDesc());
 			afiliadoAfp.setFecNacimiento(
 					afiliado.getFecNacimiento() == null ? "" : afiliado.getFecNacimiento().format(formatter));
-			afiliadoAfp.setEps(afiliado.getEpsDesc() == null ? "" : afiliado.getEpsDesc().trim());
+			afiliadoAfp.setEpsDescripcion(afiliado.getEpsDesc() == null ? "" : afiliado.getEpsDesc().trim());
 			afiliadoAfp.setFecMuerte(afiliado.getFecMuerte() == null ? "" : afiliado.getFecMuerte());
 
 			comparacionPersona = pendientesService.procesarPendientes(

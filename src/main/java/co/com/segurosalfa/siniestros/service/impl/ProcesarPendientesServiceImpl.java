@@ -49,15 +49,6 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	@Override
 	public List<ProcesarPendientesDTO> consultarPendientePorCedula(Integer tipoDoc, Long documento)
 			throws SiprenException, JsonProcessingException, ServiceException {
-		List<ProcesarPendientesDTO> listaPendientes = repoAfiliado.consultarPendientePorCedula(tipoDoc, documento);
-		for (ProcesarPendientesDTO procesarPendientesDTO : listaPendientes) {
-			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(tipoDoc),
-					String.valueOf(documento));
-			procesarPendientesDTO.setPrimerNombre(afiliado.getPrimerNombre());
-			procesarPendientesDTO.setSegundoNombre(afiliado.getSegundoNombre());
-			procesarPendientesDTO.setPrimerApellido(afiliado.getPrimerApell());
-			procesarPendientesDTO.setSegundoApellido(afiliado.getSegundoApell());
-		}
 		return repoAfiliado.consultarPendientePorCedula(tipoDoc, documento);
 	}
 
@@ -159,14 +150,8 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 
 	@Override
 	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento) throws JsonProcessingException, ServiceException, SiprenException {
-		List<ProcesarPendientesDTO> listPendientes = repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
-		for (ProcesarPendientesDTO procesarPendientesDTO : listPendientes) {
-			ClienteUnicoDTO persona = clienteUnicoService.consumirRestClienteUnico(String.valueOf(tipoDoc), String.valueOf(documento));
-			procesarPendientesDTO.setEpsDesc(persona.getEps());
-			procesarPendientesDTO.setEstadoCivilDesc(persona.getEstadoCivil());
-			procesarPendientesDTO.setOcupacionDesc(persona.getCodOcupacion());
-		}
-		return listPendientes;
+		return repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
+		
 	}
 
 }

@@ -14,14 +14,14 @@ public interface ISnrTmpPendienteAfiliadoRepo extends IGenericRepo<SnrTmpPendien
 		
 						
 	@Query("select new co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento, pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, pa.codTipoSolicitudAfp) "
-			+ " FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo "
+			+ " FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo WHERE ts.clase = co.com.sipren.common.util.ParametroGeneralUtil.GRAL_SOLICITUD_AFP "
 			+ "order by pa.idPendienteAfiliado asc")
 	public List<ProcesarPendientesDTO> listarPendientesAfiliados();
 	
 	@Query("select new co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO(pa.idPendienteAfiliado, pa.codTipoDocumento,  pa.numeroDocumento, ts.nombre, pa.idSolicitudAfp, pa.fecSolicitud, "
 			+ "pa.primerNombre, pa.segundoNombre, pa.primerApellido, pa.segundoApellido, pa.codTipoSolicitudAfp) "
 			+ "FROM SnrTmpPendienteAfiliado pa LEFT JOIN SnrTipo ts ON pa.codTipoSolicitudAfp = ts.codigo "
-			+ "where pa.codTipoDocumento = :tipoDoc and pa.numeroDocumento = :documento")
+			+ "where pa.codTipoDocumento = :tipoDoc and pa.numeroDocumento = :documento and ts.clase = co.com.sipren.common.util.ParametroGeneralUtil.GRAL_SOLICITUD_AFP ")
 	public List<ProcesarPendientesDTO> consultarPendientePorCedula(@Param("tipoDoc") Integer tipoDoc, @Param("documento") Long documento);
 	
 	@Transactional

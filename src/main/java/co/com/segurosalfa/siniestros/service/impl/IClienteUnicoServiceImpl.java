@@ -32,8 +32,8 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 			throws ServiceException, SiprenException, JsonProcessingException {
 		Object response;
 		response = service.executeApi(null, HttpMethod.GET,
-				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_SINIESTROS).getValor(),
-				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_SINIESTROS_CLIENTE_U).getValor()
+				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_PERSONA).getValor()
 						.replace("{numPersona}", numPersona),
 				5000);
 		String json = mapper.writeValueAsString(response);
@@ -45,9 +45,9 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 			throws ServiceException, SiprenException, JsonProcessingException {
 		Object response;
 		response = service.executeApi(null, HttpMethod.GET,
-				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_SINIESTROS).getValor(),
-				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_SINIESTROS_CLIENTE_U).getValor()
-						.replace("{tipoDoc}", tipoDocumento).replace("doc", numeroDocumento),
+				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+				paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_AFIL).getValor()
+						.replace("{tipoDoc}", tipoDocumento).replace("{doc}", numeroDocumento),
 				5000);
 		String json = mapper.writeValueAsString(response);
 		return mapper.readValue(json, ClienteUnicoDTO.class);

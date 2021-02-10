@@ -1,11 +1,12 @@
+
 package co.com.segurosalfa.siniestros.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -28,10 +29,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import co.com.segurosalfa.siniestros.dto.ActualizaEstadoSiniestroDTO;
 import co.com.segurosalfa.siniestros.dto.FiltroSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
+import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoPrevisionalDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
@@ -44,6 +48,7 @@ import co.com.sipren.common.bus.dto.Mail;
 import co.com.sipren.common.util.EmailUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
+import co.com.sipren.common.util.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -68,9 +73,8 @@ public class DatosBasicosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrDatoBasicoPrevisionalDTO>> listar() throws SiprenException {
-		List<SnrDatoBasicoPrevisionalDTO> lista = service.listar().stream()
-				.map(n -> this.modelMapper.map(n, SnrDatoBasicoPrevisionalDTO.class)).collect(Collectors.toList());
+	public ResponseEntity<List<SnrDatoBasicoDTO>> listar() throws SiprenException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		List<SnrDatoBasicoDTO> lista = service.listarSiniestros();
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 
@@ -82,13 +86,13 @@ public class DatosBasicosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/{id}")
-	public ResponseEntity<SnrDatoBasicoPrevisionalDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException {
-		SnrDatoBasicoPrevisional datoBasicoPrevisional = service.listarPorId(id);
-		if (datoBasicoPrevisional == null) {
+	public ResponseEntity<SnrDatoBasicoDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException, JsonProcessingException, IllegalAccessException, InstantiationException, 
+		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ServiceException {
+		SnrDatoBasicoDTO siniestro = service.listarPorSiniestro(id);
+		if (siniestro == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-		}
-		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(datoBasicoPrevisional, SnrDatoBasicoPrevisionalDTO.class);
-		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
+		}		
+		return new ResponseEntity<>(siniestro, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros paginados por parametros de size y page", notes = "La operación retorna todos los siniestros registradas en la base de datos que cumplan con las condiciones de paginado")

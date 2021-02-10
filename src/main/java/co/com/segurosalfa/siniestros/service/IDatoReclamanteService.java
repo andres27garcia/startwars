@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import co.com.segurosalfa.siniestros.dto.ListadoReclamantesDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ReprocesoReclamantesDTO;
+import co.com.segurosalfa.siniestros.dto.SnrDatoReclamanteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.sipren.common.util.ServiceException;
@@ -20,6 +21,8 @@ public interface IDatoReclamanteService extends ICRUD<SnrDatoReclamante, Long> {
 	void insertarReclamante(SnrDatoReclamante dto) throws SiprenException;
 
 	void crearDatosReclamante(ProcesarPendientesDTO dto) throws SiprenException;
+
+	void guardarReclamante(SnrDatoReclamanteDTO datoReclamanteDTO) throws SiprenException;
 
 	List<ReprocesoReclamantesDTO> consultaReprocesoReclamante(Long tramite, Long numPersona) throws SiprenException,  JsonProcessingException, ServiceException ;
 

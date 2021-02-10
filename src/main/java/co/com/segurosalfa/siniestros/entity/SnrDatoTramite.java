@@ -34,11 +34,7 @@ public class SnrDatoTramite implements Serializable  {
 
 	@ManyToOne
 	@JoinColumn(name = "ID_SINIESTRO", insertable = false, updatable = false, nullable = false)
-	private SnrDatoBasico siniestro;
-
-	@NotNull(message = "El campo NUM_POLIZA no puede ser nulo o vacio")
-	@Column(name = "NUM_POLIZA")
-	private Integer numPoliza;
+	private SnrDatoBasico siniestro;	
 
 	@ManyToOne
 	@JoinColumn(name = "ID_TIPO_TRAMITE", insertable = false, updatable = false, nullable = false)

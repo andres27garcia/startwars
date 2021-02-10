@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.ListadoReclamantesDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ReprocesoReclamantesDTO;
@@ -74,6 +74,8 @@ public class DatoReclamanteController {
 
 	@Autowired
 	ModelMapper modelMapper;
+	
+	
 
 	@ApiOperation(value = "Operación de servicio que consulta un datos de reclamantes por numero de siniestro y numero de tramite", notes = "La operación retorna un datos de reclamantes por numero de siniestro y numero de tramite registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -95,15 +97,7 @@ public class DatoReclamanteController {
 	@PostMapping
 	public ResponseEntity<Void> registrar(@Valid @RequestBody SnrDatoReclamanteDTO dto) throws SiprenException {
 
-		SnrDatoReclamante ent = modelMapper.map(dto, SnrDatoReclamante.class);
-
-		SnrDatoReclamante obj = service.listarPorTramitePersona(ent.getTramite().getIdTramite(), ent.getNumPersona());
-
-		if (obj != null) {
-			throw new SiprenException(ParametrosMensajes.ERROR_EXISTS_DATA);
-		}
-
-		service.insertarReclamante(ent);
+		service.guardarReclamante(dto);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -168,9 +162,13 @@ public class DatoReclamanteController {
 	@PutMapping
 	public ResponseEntity<SnrDatoReclamanteDTO> modificar(@Valid @RequestBody SnrDatoReclamanteDTO dto)
 			throws SiprenException {
-		SnrDatoReclamanteDTO obj = modelMapper.map(service.modificar(modelMapper.map(dto, SnrDatoReclamante.class)),
+		
+		SnrDatoReclamante datoReclamante = modelMapper.map(dto, SnrDatoReclamante.class);
+		datoReclamante.setNumPersona(dto.getPersona().getNumPersona());
+		SnrDatoReclamanteDTO datoReclamanteDTO = modelMapper.map(service.modificar(datoReclamante),
 				SnrDatoReclamanteDTO.class);
-		return new ResponseEntity<>(obj, HttpStatus.OK);
+	    
+		return new ResponseEntity<>(datoReclamanteDTO, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Operación de servicio que consulta los comentarios por reclamante", notes = "La operación retorna el listado de comentarios por reclamante registrados en la base de datos")
@@ -192,11 +190,11 @@ public class DatoReclamanteController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/comentarios")
-	public ResponseEntity<Void> registrarComentarios(@Valid @RequestBody List<SnrComentarioReclamante> dto)
+	public ResponseEntity<Void> registrarComentarios(@Valid @RequestBody List<SnrComentarioReclamanteDTO> dto)
 			throws SiprenException {
 
-		for (SnrComentarioReclamante x : dto) {
-			comentariosService.registrar(x);
+		for (SnrComentarioReclamanteDTO comentarioDTO : dto) {
+			comentariosService.guardarComentarios(comentarioDTO);
 		}
 
 		return new ResponseEntity<>(HttpStatus.CREATED);

@@ -1,16 +1,17 @@
 package co.com.segurosalfa.siniestros.dto;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import co.com.sipren.common.util.DateUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,6 @@ import lombok.NoArgsConstructor;
 public class ProcesarPendientesDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 	private Long id;
 	private Integer idTipoDocumento;
@@ -29,10 +29,12 @@ public class ProcesarPendientesDTO implements Serializable {
 	private Long identificacionAfiliado;
 	private String tipoSolicitudAfp;
 	private Integer idSolicitudAfp;
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private LocalDate fechaSolicitud;
 	private Long identificacionReclamante;
 	private Long idSiniestro;
 	private Long idTramite;
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private LocalDate fechaRadicacionAlfa;
 	private String tipoRolPersona;
 	private Long numPersona;
@@ -134,14 +136,14 @@ public class ProcesarPendientesDTO implements Serializable {
 	 * @param idTramite
 	 * @param fechaRadicacionAlfa
 	 */
-	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, Long identificacionAfiliado,
+	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, Long identificacionReclamante,
 			Long idSiniestro, Long idTramite, LocalDate fechaRadicacionAlfa,
 			String primerNombre, String segundoNombre, String primerApellido, String segundoApellido,
 			Integer solicitudAfp, Long numPersona, Integer estadoReclamante) {
 		super();
 		this.id = id;
 		this.idTipoDocumento = idTipoDocumento;
-		this.identificacionAfiliado = identificacionAfiliado;
+		this.identificacionReclamante = identificacionReclamante;
 		this.idSiniestro = idSiniestro;
 		this.idTramite = idTramite;
 		if (Objects.nonNull(fechaRadicacionAlfa))
@@ -248,7 +250,7 @@ public class ProcesarPendientesDTO implements Serializable {
 		this.ocupacion = ocupacion;
 		this.ocupacionDesc = ocupacionDesc != null ? ocupacionDesc : "";
 		if (Objects.nonNull(fechaMuerte))
-			this.fecMuerte = sdf.format(fechaMuerte);
+			this.fecMuerte = DateUtil.convertDateToString(fechaMuerte);
 		this.idTipoDocumento = idTipoDocumento;
 	}
 

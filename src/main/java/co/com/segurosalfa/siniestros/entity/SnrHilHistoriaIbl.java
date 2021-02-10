@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "SNR_HIL_HISTORIA_IBL")
 public class SnrHilHistoriaIbl implements Serializable {
@@ -29,10 +32,10 @@ public class SnrHilHistoriaIbl implements Serializable {
 	private Long persona;
 
 	@Column(name = "FEC_INICIAL")
-	private LocalDateTime fecInicialCot;
+	private LocalDate fecInicialCot;
 
 	@Column(name = "FEC_FINAL")
-	private LocalDateTime fecFinalCot;
+	private LocalDate fecFinalCot;
 
 	@Column(name = "VLR_SALARIO")
 	private Long vlrSalario;

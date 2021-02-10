@@ -1,5 +1,6 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,21 +18,27 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.FiltroSiniestrosDTO;
+import co.com.segurosalfa.siniestros.dto.GnrPersonaClienteDTO;
+import co.com.segurosalfa.siniestros.dto.GnrTipoDocumentoDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
+import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoPrevisionalDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrOrigen;
+import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.GenericSprecification;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrDatoBasicoPrevisionalRepo;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
+import co.com.segurosalfa.siniestros.util.ObjectsUtil;
 import co.com.segurosalfa.siniestros.util.PageableUtil;
 import co.com.sipren.common.util.DateUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
+import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.SearchCriteria;
 import co.com.sipren.common.util.SearchOperation;
 import co.com.sipren.common.util.ServiceException;
@@ -187,6 +194,15 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 		datoBasico.setClienteUnico(dto);		
 	}
 	
+	private void getInfoPersona(SnrDatoBasicoDTO datoBasico)
+			throws SiprenException, ServiceException, JsonProcessingException {
+
+		ClienteUnicoDTO dto = clienteUnicoService.consumirRestClienteUnico(
+				String.valueOf(datoBasico.getPersona().getNumPersona()));
+		
+		datoBasico.setClienteUnico(dto);		
+	}
+	
 	@Override
 	public void actualizaEstadoSiniestro(Long numSiniestro, Integer codEstado) throws SiprenException {
 		repo.actualizaEstadoSiniestro(numSiniestro, codEstado);		
@@ -206,5 +222,43 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	public ResponsePageableDTO listarPaginado(Pageable page) throws SiprenException {
 		Page<SnrDatoBasicoPrevisional> listPaginado = repo.findAll(page);		
 		return PageableUtil.responsePageable(listPaginado.getContent(), listPaginado);
+	}
+
+	@Override
+	public List<SnrDatoBasicoDTO> listarSiniestros() throws SiprenException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		List<SnrDatoBasicoDTO> listaDatosBasicos = new ArrayList<>();
+		List<SnrDatoBasicoPrevisional> lista = this.listar();
+		for (SnrDatoBasicoPrevisional snrDatoBasicoPrevisional : lista) {
+			SnrDatoBasicoDTO siniestroPrevisionalDTO = modelMapper.map(snrDatoBasicoPrevisional,
+					SnrDatoBasicoDTO.class);			
+			SnrDatoBasicoDTO siniestroBasicoDTO = modelMapper.map(snrDatoBasicoPrevisional.getSiniestro(), SnrDatoBasicoDTO.class);
+			GnrPersonaClienteDTO personaClienteDTO = new GnrPersonaClienteDTO();
+			personaClienteDTO.setNumPersona(snrDatoBasicoPrevisional.getSiniestro().getPersona());
+			siniestroBasicoDTO.setPersona(personaClienteDTO);
+			listaDatosBasicos.add(ObjectsUtil.mergeObjects(siniestroPrevisionalDTO, siniestroBasicoDTO));
+		}
+		return listaDatosBasicos;
+	}
+
+	@Override
+	public SnrDatoBasicoDTO listarPorSiniestro(Long numSiniestro) throws JsonProcessingException, SiprenException, ServiceException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		SnrDatoBasicoPrevisional siniestroPrevisional = repo.listarPorSiniestro(numSiniestro);
+		if(Objects.isNull(siniestroPrevisional)) {
+			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
+		}		
+		SnrDatoBasicoDTO siniestroPrevisionalDTO = modelMapper.map(siniestroPrevisional,
+				SnrDatoBasicoDTO.class);
+		SnrDatoBasicoDTO siniestroBasicoDTO = modelMapper.map(siniestroPrevisional.getSiniestro(), 
+				SnrDatoBasicoDTO.class);
+		GnrPersonaClienteDTO personaClienteDTO = new GnrPersonaClienteDTO();
+		personaClienteDTO.setNumPersona(siniestroPrevisional.getSiniestro().getPersona());
+		siniestroBasicoDTO.setPersona(personaClienteDTO);
+		getInfoPersona(siniestroBasicoDTO);
+		siniestroBasicoDTO.getPersona().setNumIdentificacion(Integer.parseInt(siniestroBasicoDTO.getClienteUnico().getCedula()));
+		GnrTipoDocumentoDTO tipoDocumentoDTO = new GnrTipoDocumentoDTO();
+		tipoDocumentoDTO.setId(Integer.parseInt(siniestroBasicoDTO.getClienteUnico().getTipoDoc()));
+		tipoDocumentoDTO.setNombre(siniestroBasicoDTO.getClienteUnico().getTipoDocumento());
+		siniestroBasicoDTO.getPersona().setTipoDocumento(tipoDocumentoDTO);
+		return ObjectsUtil.mergeObjects(siniestroBasicoDTO, siniestroPrevisionalDTO);
 	}
 }

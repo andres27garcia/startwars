@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +14,8 @@ public class SnrHilHistoriaIblDTO implements Serializable {
 
 	private Long idHistoriaHil;
 	private Long persona;
-	private LocalDateTime fecInicialCot;
-	private LocalDateTime fecFinalCot;
+	private LocalDate fecInicialCot;
+	private LocalDate fecFinalCot;
 	private Long vlrSalario;
 	private Integer numDiasTrabajados;
 	private Integer numSemanas;

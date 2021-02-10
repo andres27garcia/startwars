@@ -29,7 +29,7 @@ public class SnrDatoBasico implements Serializable  {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqdatoBasico")
 	@SequenceGenerator(name = "idSeqdatoBasico", sequenceName = "SEQ_SNR_DATOS_BASICOS", schema = "SINIESTROS", allocationSize = 1)
 	@Column(name = "ID_SINIESTRO")
-	private Integer idSiniestro;
+	private Long idSiniestro;
 
 	@Column(name = "NUM_PERSONA")
 	private Long persona;

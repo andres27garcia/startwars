@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SnrOrigenesDTO {
+public class SnrOrigenDTO {
 
 	private Integer id;
 	private String nombre;

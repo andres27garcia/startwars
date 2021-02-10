@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class SnrComentarioReclamante implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqComentariosReclamantes")
-	@SequenceGenerator(name = "idSeqComentariosReclamantes", sequenceName = "SQ_SNR_COMENTARIOS_RECLAMANTES", schema = "NUEVO_SIPREN")
+	@SequenceGenerator(name = "idSeqComentariosReclamantes", sequenceName = "SQ_SNR_COMENTARIOS_RECLAMANTES", schema = "SINIESTROS")
 	@Column(name = "ID_COMENTARIO_RECLAMANTE")
 	private Long idComentario;
 
@@ -36,7 +36,7 @@ public class SnrComentarioReclamante implements Serializable {
 	private SnrDatoReclamante reclamante;
 
 	@Column(name = "FECHA_COMENTARIO")
-	private LocalDateTime fecComentario;
+	private LocalDate fecComentario;
 
 	@Size(max = 20, message = "El campo USUARIO_COMENTARIO no soporta mas de 20 caracteres")
 	@Column(name = "USUARIO_COMENTARIO")

@@ -39,4 +39,7 @@ public interface ISnrDatoBasicoPrevisionalRepo extends IGenericRepo<SnrDatoBasic
 	@Procedure(procedureName = "SINIESTROS.PKG_EQUIVALENCIAS.fPolizaAfp")
 	String consultaNumPoliza(@Param("pfecpoliza") Date fecSiniestro) throws SiprenException;
 	
+	@Query("FROM SnrDatoBasicoPrevisional sdp WHERE sdp.siniestro.idSiniestro = :numSiniestro")
+	SnrDatoBasicoPrevisional listarPorSiniestro(@Param("numSiniestro") Long numSiniestro);
+	
 }

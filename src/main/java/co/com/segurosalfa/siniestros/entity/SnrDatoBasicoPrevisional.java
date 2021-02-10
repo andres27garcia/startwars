@@ -14,6 +14,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "SNR_DATO_BASICO_PREVISIONAL")
 public class SnrDatoBasicoPrevisional implements Serializable {

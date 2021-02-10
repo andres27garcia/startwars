@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.segurosalfa.siniestros.dto.SnrOrigenesDTO;
+import co.com.segurosalfa.siniestros.dto.SnrOrigenDTO;
 import co.com.segurosalfa.siniestros.entity.SnrOrigen;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
@@ -41,8 +41,8 @@ public class OrigenesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrOrigenesDTO>> listar() throws SiprenException {
-		List<SnrOrigenesDTO> lista = service.listar().stream().map(n -> this.modelMapper.map(n, SnrOrigenesDTO.class))
+	public ResponseEntity<List<SnrOrigenDTO>> listar() throws SiprenException {
+		List<SnrOrigenDTO> lista = service.listar().stream().map(n -> this.modelMapper.map(n, SnrOrigenDTO.class))
 				.collect(Collectors.toList());
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
@@ -55,8 +55,8 @@ public class OrigenesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/{id}")
-	public ResponseEntity<SnrOrigenesDTO> listarPorId(@PathVariable("id") Integer id) throws SiprenException {
-		SnrOrigenesDTO obj = this.modelMapper.map(service.listarPorId(id), SnrOrigenesDTO.class);
+	public ResponseEntity<SnrOrigenDTO> listarPorId(@PathVariable("id") Integer id) throws SiprenException {
+		SnrOrigenDTO obj = this.modelMapper.map(service.listarPorId(id), SnrOrigenDTO.class);
 		if (obj == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
@@ -67,9 +67,9 @@ public class OrigenesController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping
-	public ResponseEntity<SnrOrigenesDTO> registrar(@Valid @RequestBody SnrOrigenesDTO dto) throws SiprenException {
+	public ResponseEntity<SnrOrigenDTO> registrar(@Valid @RequestBody SnrOrigenDTO dto) throws SiprenException {
 		SnrOrigen objSave = service.registrar(this.modelMapper.map(dto, SnrOrigen.class));
-		SnrOrigenesDTO obj = this.modelMapper.map(objSave, SnrOrigenesDTO.class);
+		SnrOrigenDTO obj = this.modelMapper.map(objSave, SnrOrigenDTO.class);
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
@@ -77,9 +77,9 @@ public class OrigenesController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PutMapping
-	public ResponseEntity<SnrOrigenesDTO> modificar(@Valid @RequestBody SnrOrigenesDTO dto) throws SiprenException {
+	public ResponseEntity<SnrOrigenDTO> modificar(@Valid @RequestBody SnrOrigenDTO dto) throws SiprenException {
 		SnrOrigen objSave = service.modificar(this.modelMapper.map(dto, SnrOrigen.class));
-		SnrOrigenesDTO obj = this.modelMapper.map(objSave, SnrOrigenesDTO.class);
+		SnrOrigenDTO obj = this.modelMapper.map(objSave, SnrOrigenDTO.class);
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 }

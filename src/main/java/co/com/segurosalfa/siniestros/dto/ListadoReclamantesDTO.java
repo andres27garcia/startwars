@@ -10,7 +10,7 @@ public class ListadoReclamantesDTO implements Serializable {
 	private static final long serialVersionUID = 1760141477151804824L;
 	private Long idReclamnte;
 	private Long idtramite;
-	private Long numPersona;
+	private GnrPersonaClienteDTO persona;
 	private String nombres;
 	private String estadoReclamante;
 	private Integer codEstadoReclamante;

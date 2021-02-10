@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class SnrHilDatoInicial implements Serializable {
 	@Column(name = "ID_DETALLE_HIL")
 	private Integer idDetalleHil;
 
-	@JoinColumn(name = "NUM_PERSONA", insertable = false, updatable = false)
+	@Column(name = "NUM_PERSONA")
 	private Long persona;
 
 	@NotNull(message = "El campo PERIODO_COTIZACION no puede ser nulo o vacio")
@@ -36,11 +36,11 @@ public class SnrHilDatoInicial implements Serializable {
 
 	@NotNull(message = "El campo FECHA_INICIAL_COT no puede ser nulo o vacio")
 	@Column(name = "FECHA_INICIAL_COT")
-	private LocalDateTime fecInicialCot;
+	private LocalDate fecInicialCot;
 
 	@NotNull(message = "El campo FECHA_FINAL_COT no puede ser nulo o vacio")
 	@Column(name = "FECHA_FINAL_COT")
-	private LocalDateTime fecFinalCot;
+	private LocalDate fecFinalCot;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_APORTANTE", insertable = false, updatable = false)

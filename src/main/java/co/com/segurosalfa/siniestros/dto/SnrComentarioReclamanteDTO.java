@@ -1,9 +1,11 @@
 package co.com.segurosalfa.siniestros.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-import javax.validation.constraints.Size;
+import javax.validation.Valid;
+
+import com.sun.istack.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +17,11 @@ public class SnrComentarioReclamanteDTO implements Serializable {
 	private static final long serialVersionUID = 6035131253468059707L;
 
 	private Long idComentario;
+	@Valid
+	@NotNull
 	private SnrDatoReclamanteDTO reclamante;
-	private LocalDateTime fecComentario;
-	@Size(max = 20, message = "El campo USUARIO_COMENTARIO no soporta mas de 20 caracteres")
+	private LocalDate fecComentario;
 	private String usuarioComentario;
-	@Size(max = 1000, message = "El campo DESCRIPCION_COMENTARIO no soporta mas de 1000 caracteres")
 	private String descripcionComentario;
 
 }

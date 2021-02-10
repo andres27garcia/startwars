@@ -1,5 +1,7 @@
 package co.com.segurosalfa.siniestros.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,9 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SnrDatoReclamanteDTO{
 
-	private Long id;
+	@NotNull(message = "El campo id reclamante es obligatorio")
+	private Long idReclamante;
 	private SnrDatoTramiteDTO tramite;
-	private Long persona;
+	private GnrPersonaClienteDTO persona;
 	private SnrEstadoDTO estadoReclamante;
 
 }

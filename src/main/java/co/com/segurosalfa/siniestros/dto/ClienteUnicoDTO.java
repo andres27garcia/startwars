@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.Data;
+
+@Data
 public class ClienteUnicoDTO {
 
 	private String nroCuentaInd;
@@ -30,6 +33,7 @@ public class ClienteUnicoDTO {
 	private BigDecimal sldoTtalPesos;
 	private String nroPinPoint;
 	private String eps;
+	private String epsDescripcion;
 	private String codEstadoCivil;
 	private String nacionalidad;
 	private String condicionInvalidez;
@@ -67,7 +71,7 @@ public class ClienteUnicoDTO {
 		if (Objects.nonNull(eps) && "-1".equals(eps))
 			this.eps = "";
 		else
-		    this.eps = eps;
+			this.eps = eps;
 	}
 
 	public String getCodEstadoCivil() {
@@ -188,7 +192,7 @@ public class ClienteUnicoDTO {
 		if (Objects.nonNull(primerApell) && "NA".equals(primerApell))
 			primerApell = "";
 		else
-		    this.primerApell = primerApell;
+			this.primerApell = primerApell;
 	}
 
 	public String getSegundoApell() {
@@ -202,7 +206,7 @@ public class ClienteUnicoDTO {
 		if (Objects.nonNull(segundoApell) && "NA".equals(segundoApell))
 			segundoApell = "";
 		else
-		    this.segundoApell = segundoApell;
+			this.segundoApell = segundoApell;
 	}
 
 	public String getPrimerNombre() {
@@ -215,7 +219,7 @@ public class ClienteUnicoDTO {
 		if (Objects.nonNull(primerNombre) && "NA".equals(primerNombre))
 			primerNombre = "";
 		else
-		    this.primerNombre = primerNombre;
+			this.primerNombre = primerNombre;
 	}
 
 	public String getSegundoNombre() {
@@ -229,7 +233,7 @@ public class ClienteUnicoDTO {
 		if (Objects.nonNull(segundoNombre) && "NA".equals(segundoNombre))
 			segundoNombre = "";
 		else
-		   this.segundoNombre = segundoNombre;
+			this.segundoNombre = segundoNombre;
 	}
 
 	public String getFecNacimiento() {
@@ -482,6 +486,14 @@ public class ClienteUnicoDTO {
 
 	public void setNumPersona(Long numPersona) {
 		this.numPersona = numPersona;
+	}
+
+	public String getEpsDescripcion() {
+		return epsDescripcion;
+	}
+
+	public void setEpsDescripcion(String epsDescripcion) {
+		this.epsDescripcion = epsDescripcion;
 	}
 
 	@Override

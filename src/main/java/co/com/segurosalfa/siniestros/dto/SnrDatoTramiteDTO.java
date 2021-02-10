@@ -11,7 +11,6 @@ public class SnrDatoTramiteDTO {
 
 	private Long idTramite;
 	private SnrDatoBasicoDTO siniestro;
-	private Integer numPoliza;
 	private SnrTipoDTO tipoTramite;
 	private SnrEstadoDTO estadoTramite;
 	private SnrTipoDTO clasificacionJur;
