@@ -87,10 +87,11 @@ public class DatoBasicoPrevisionalController {
 		if (datoBasicoPrevisional == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
-		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(datoBasicoPrevisional, SnrDatoBasicoPrevisionalDTO.class);
+		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(datoBasicoPrevisional,
+				SnrDatoBasicoPrevisionalDTO.class);
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros paginados por parametros de size y page", notes = "La operación retorna todos los siniestros registradas en la base de datos que cumplan con las condiciones de paginado")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -107,7 +108,7 @@ public class DatoBasicoPrevisionalController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -147,7 +148,7 @@ public class DatoBasicoPrevisionalController {
 		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(objSave, SnrDatoBasicoPrevisionalDTO.class);
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que simula cargue de Siniestro", notes = "La operación registra un siniestro pendiente por restricción de datos del Afiliado")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -169,7 +170,7 @@ public class DatoBasicoPrevisionalController {
 			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TEMPLATE).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TEMPLATE).getValor());
 
 			Context context1 = new Context();
 			context1.putVar("reporte", lista);
@@ -178,15 +179,15 @@ public class DatoBasicoPrevisionalController {
 			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
 
 			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
+			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
+			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
 					.split(","));
 			mail.setSubject(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
+			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
 			mail.setFile(attachment);
 			mail.setFileName(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
 
 			emailU.enviarMailAdjunto(mail);
 
@@ -196,7 +197,7 @@ public class DatoBasicoPrevisionalController {
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que actualiza el estado de un siniestro", notes = "La operación actualiza el estado de un siniestro en base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -206,5 +207,5 @@ public class DatoBasicoPrevisionalController {
 		service.actualizaEstadoSiniestro(dto.getId(), dto.getCodEstado());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }

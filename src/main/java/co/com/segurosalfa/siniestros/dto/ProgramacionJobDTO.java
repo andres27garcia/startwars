@@ -11,14 +11,14 @@ public class ProgramacionJobDTO implements Serializable {
 
 	private static final long serialVersionUID = -304171957528481128L;
 
-	private Integer codJob;
+	private String codJob;
 	private String fechaEjecucion;
 	private String usuario;
 	private String email;
 	private Integer codPeriodicidad;
 	private Integer codFecCorte;
 
-	public ProgramacionJobDTO(Integer codJob, String fechaEjecucion, String usuario, String email,
+	public ProgramacionJobDTO(String codJob, String fechaEjecucion, String usuario, String email,
 			Integer codPeriodicidad, Integer codFecCorte) {
 		this.codJob = codJob;
 		this.fechaEjecucion = fechaEjecucion;

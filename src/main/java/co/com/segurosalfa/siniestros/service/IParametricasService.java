@@ -17,8 +17,8 @@ public interface IParametricasService extends ICRUD<SnrParametrica, Integer> {
 
 	public List<ProcesosDTO> listarProcesos() throws SiprenException;
 
-	public List<ProcesosDTO> detalleProceso(Integer idProceso) throws SiprenException;
+	public List<ProcesosDTO> detalleProceso(String idProceso) throws SiprenException;
 
-	public List<ProcesosDTO> historicoProceso(Integer idProceso) throws SiprenException;
+	public List<ProcesosDTO> historicoProceso(String idProceso) throws SiprenException;
 
 }

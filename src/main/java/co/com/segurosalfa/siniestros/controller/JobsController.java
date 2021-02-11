@@ -60,7 +60,7 @@ public class JobsController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping(value = "/{idProceso}")
-	public ResponseEntity<List<ProcesosDTO>> detalleProceso(@PathVariable("idProceso") Integer idProceso)
+	public ResponseEntity<List<ProcesosDTO>> detalleProceso(@PathVariable("idProceso") String idProceso)
 			throws SiprenException {
 		List<ProcesosDTO> lista = service.detalleProceso(idProceso);
 
@@ -75,7 +75,7 @@ public class JobsController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping(value = "/historico/{idProceso}")
-	public ResponseEntity<List<ProcesosDTO>> historicoProceso(@PathVariable("idProceso") Integer idProceso)
+	public ResponseEntity<List<ProcesosDTO>> historicoProceso(@PathVariable("idProceso") String idProceso)
 			throws SiprenException {
 		List<ProcesosDTO> lista = service.historicoProceso(idProceso);
 

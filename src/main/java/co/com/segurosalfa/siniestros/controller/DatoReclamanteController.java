@@ -72,8 +72,6 @@ public class DatoReclamanteController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
-	
 
 	@ApiOperation(value = "Operación de servicio que consulta un datos de reclamantes por numero de siniestro y numero de tramite", notes = "La operación retorna un datos de reclamantes por numero de siniestro y numero de tramite registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -118,11 +116,11 @@ public class DatoReclamanteController {
 		if (obj != null && !obj.isEmpty()) {
 
 			try {
-				
+
 				ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 				InputStream isConv = EnvioCorreoController.class.getResourceAsStream(paramService
-						.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TEMPLATE).getValor());
+						.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TEMPLATE).getValor());
 
 				Context context1 = new Context();
 
@@ -133,15 +131,15 @@ public class DatoReclamanteController {
 
 				Mail mail = new Mail();
 				mail.setFrom(
-						paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FROM).getValor());
-				mail.setTo(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TO).getValor()
+						paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FROM).getValor());
+				mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TO).getValor()
 						.split(","));
-				mail.setSubject(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_SUBJECT)
+				mail.setSubject(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_SUBJECT)
 						.getValor());
 				mail.setText(
-						paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_BODY).getValor());
+						paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_BODY).getValor());
 				mail.setFile(attachment);
-				mail.setFileName(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FILENAME)
+				mail.setFileName(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FILENAME)
 						.getValor());
 
 				emailU.enviarMailAdjunto(mail);
@@ -160,12 +158,12 @@ public class DatoReclamanteController {
 	@PutMapping
 	public ResponseEntity<SnrDatoReclamanteDTO> modificar(@Valid @RequestBody SnrDatoReclamanteDTO dto)
 			throws SiprenException {
-		
+
 		SnrDatoReclamante datoReclamante = modelMapper.map(dto, SnrDatoReclamante.class);
 		datoReclamante.setNumPersona(dto.getPersona().getNumPersona());
 		SnrDatoReclamanteDTO datoReclamanteDTO = modelMapper.map(service.modificar(datoReclamante),
 				SnrDatoReclamanteDTO.class);
-	    
+
 		return new ResponseEntity<>(datoReclamanteDTO, HttpStatus.OK);
 	}
 

@@ -1,6 +1,5 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 	}
 
 	@Override
-	public List<ProcesosDTO> detalleProceso(Integer idProceso) throws SiprenException {
+	public List<ProcesosDTO> detalleProceso(String idProceso) throws SiprenException {
 
 		List<Object[]> detProceso = new ArrayList<>();
 		List<ProcesosDTO> resultDetProceso = new ArrayList<>();
@@ -86,7 +85,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 	}
 
 	@Override
-	public List<ProcesosDTO> historicoProceso(Integer idProceso) throws SiprenException {
+	public List<ProcesosDTO> historicoProceso(String idProceso) throws SiprenException {
 
 		List<Object[]> histProceso = new ArrayList<>();
 		List<ProcesosDTO> resultHistProceso = new ArrayList<>();
@@ -101,16 +100,13 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 		return resultHistProceso;
 	}
 
-	public String consultarAvanceProc(Integer idProceso) {
+	public String consultarAvanceProc(String idProceso) {
 		StringBuilder result = new StringBuilder();
 
 		try {
-			if (idProceso == 1) {
-				result.append(avance.count()).append("/").append(avance.registProcesar())
-						.append(" Registros a procesar.");
-			} else {
-				result.append("No se registra avance.");
-			}
+
+			result.append(avance.count()).append("/").append(avance.registProcesar()).append(" Registros a procesar.");
+
 		} catch (Exception e) {
 			log.error("Error al consultar el avance del proceso: ", e);
 		}
@@ -126,7 +122,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 				dto.stream().forEach(i -> {
 					ProcesosDTO tempDTO = new ProcesosDTO();
 
-					tempDTO.setIdProceso(new BigDecimal(i[0].toString()).intValue());
+					tempDTO.setIdProceso(i[0].toString());
 					tempDTO.setNombreProceso(i[1].toString());
 					tempDTO.setPeriodicidad(i[2].toString());
 					tempDTO.setFecFinEjecucion(i[3].toString());
@@ -145,7 +141,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 				dto.stream().forEach(i -> {
 					ProcesosDTO tempDTO = new ProcesosDTO();
 
-					tempDTO.setIdProceso(new BigDecimal(i[0].toString()).intValue());
+					tempDTO.setIdProceso(i[0].toString());
 					tempDTO.setNombreProceso(i[1].toString());
 					tempDTO.setPeriodicidad(i[2].toString());
 					tempDTO.setFecInicioProceso(i[3].toString());

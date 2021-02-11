@@ -11,7 +11,7 @@ public class ProcesosDTO implements Serializable {
 
 	private static final long serialVersionUID = -6926381718601587232L;
 
-	private Integer idProceso;
+	private String idProceso;
 	private String nombreProceso;
 	private String periodicidad;
 	private String fecFinEjecucion;
