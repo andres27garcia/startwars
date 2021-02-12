@@ -90,9 +90,7 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	@Override
 	public void consultaPorvenirPorAfiliado(String usuario, String proceso, Long documento, String tipoDoc,
 			Integer tipoSolicitud, Date fechaProceso) throws SiprenException, ParseException {
-		//Implementar la conversion desde el SP
-		//GnrEquivalenciaTipos gnrEquivalencias = repoEquivalencias.obtenerEquivalenciaAfp(tipoDoc);
-//		tipoDoc = gnrEquivalencias != null ? gnrEquivalencias.getAbreviaturaTipoIdAfp() : "";
+
 		repo.consultaPorvenirPorAfiliado(usuario, proceso, documento, tipoDoc, tipoSolicitud, fechaProceso);
 
 	}

@@ -72,12 +72,13 @@ public class ProcesarPendientesDTO implements Serializable {
 	 */
 	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento,  Long identificacionAfiliado,
 			String tipoSolicitudAfp, Integer idSolicitudAfp, LocalDate fechaSolicitud, String primerNombre,
-			String segundoNombre, String primerApellido, String segundoApellido, Integer codTipoSolicitudAfp) {
+			String segundoNombre, String primerApellido, String segundoApellido, Integer codTipoSolicitudAfp,
+			String tipoDocAfp, String tipoDocumento) {
 		super();
 		this.id = id;
 		this.idTipoDocumento = idTipoDocumento;
 		//salia del campo nombre de GnrTiposDocumentos
-//		this.tipoDocumento = tipoDocumento;
+		this.tipoDocumento = tipoDocumento;
 		this.identificacionAfiliado = identificacionAfiliado;
 		if (Objects.nonNull(tipoSolicitudAfp))
 			this.tipoSolicitudAfp = tipoSolicitudAfp;
@@ -107,7 +108,8 @@ public class ProcesarPendientesDTO implements Serializable {
 	 * @param fechaSolicitud
 	 */
 	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, Long identificacionAfiliado,
-			String tipoSolicitudAfp, Integer idSolicitudAfp, LocalDate fechaSolicitud, Integer codTipoSolicitudAfp) {
+			String tipoSolicitudAfp, Integer idSolicitudAfp, LocalDate fechaSolicitud, Integer codTipoSolicitudAfp,
+			String tipoDocAfp, String tipoDocumento) {
 		super();
 		this.id = id;
 		this.idTipoDocumento = idTipoDocumento;
@@ -139,7 +141,7 @@ public class ProcesarPendientesDTO implements Serializable {
 	public ProcesarPendientesDTO(Long id, Integer idTipoDocumento, Long identificacionReclamante,
 			Long idSiniestro, Long idTramite, LocalDate fechaRadicacionAlfa,
 			String primerNombre, String segundoNombre, String primerApellido, String segundoApellido,
-			Integer solicitudAfp, Long numPersona, Integer estadoReclamante) {
+			Integer solicitudAfp, Long numPersona, Integer estadoReclamante, String tipoDocumento) {
 		super();
 		this.id = id;
 		this.idTipoDocumento = idTipoDocumento;

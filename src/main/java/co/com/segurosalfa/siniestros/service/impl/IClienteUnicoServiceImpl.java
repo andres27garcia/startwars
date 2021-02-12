@@ -35,7 +35,7 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
 				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_PERSONA).getValor()
 						.replace("{numPersona}", numPersona),
-				5000);
+				10000);
 		String json = mapper.writeValueAsString(response);
 		return mapper.readValue(json, ClienteUnicoDTO.class);
 	}
@@ -48,7 +48,7 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
 				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_AFIL).getValor()
 						.replace("{tipoDoc}", tipoDocumento).replace("{doc}", numeroDocumento),
-				5000);
+				10000);
 		String json = mapper.writeValueAsString(response);
 		return mapper.readValue(json, ClienteUnicoDTO.class);
 	}

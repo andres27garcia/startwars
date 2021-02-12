@@ -79,7 +79,7 @@ public class SnrResulPrcCreacionSiniestro implements Serializable {
 	@Column(name = "FEC_ACT_SOLICITUD_AFP")
 	private LocalDate fecActSolicAfp;
 
-	@Column(name = "RESULTADO_SOLICITUD_AF")
+	@Column(name = "RESULTADO_SOLICITUD_AFP")
 	private String resultadoSolicAfp;
 
 	@Column(name = "FLG_PROCESO")
