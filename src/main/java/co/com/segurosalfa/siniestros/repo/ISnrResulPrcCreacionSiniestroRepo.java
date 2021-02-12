@@ -12,6 +12,9 @@ import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
 public interface ISnrResulPrcCreacionSiniestroRepo extends IGenericRepo<SnrResulPrcCreacionSiniestro, Integer> {
 
 	@Query("FROM SnrResulPrcCreacionSiniestro gr WHERE gr.flgProceso = :proceso")
-	public List<SnrResulPrcCreacionSiniestro> consultarPorProceso(@Param("proceso") String proceso);
+	List<SnrResulPrcCreacionSiniestro> consultarPorProceso(@Param("proceso") String proceso);
+
+	@Query(value = "SELECT COUNT(1) TOTAL_REGISTROS_PROCESAR FROM TMP_SOLICITUDES_AFP WHERE FLG_PROCESO = 'A'", nativeQuery = true)
+	Integer registProcesar();
 
 }

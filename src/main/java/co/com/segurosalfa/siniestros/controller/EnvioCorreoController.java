@@ -64,7 +64,7 @@ public class EnvioCorreoController {
 			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TEMPLATE).getValor());
+					service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TEMPLATE).getValor());
 
 			Context context1 = new Context();
 			context1.putVar("reporte", lista);
@@ -73,12 +73,12 @@ public class EnvioCorreoController {
 			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
 
 			Mail mail = new Mail();
-			mail.setFrom(service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FROM).getValor());
-			mail.setTo(service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TO).getValor().split(","));
-			mail.setSubject(service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_SUBJECT).getValor());
-			mail.setText(service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY).getValor());
+			mail.setFrom(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FROM).getValor());
+			mail.setTo(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TO).getValor().split(","));
+			mail.setSubject(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_SUBJECT).getValor());
+			mail.setText(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY).getValor());
 			mail.setFile(attachment);
-			mail.setFileName(service.parametroXNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor());
+			mail.setFileName(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor());
 
 			emailU.enviarMailAdjunto(mail);
 

@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,8 +34,6 @@ import co.com.segurosalfa.siniestros.dto.FiltroSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
-import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoPrevisionalDTO;
-import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
@@ -58,9 +54,7 @@ import io.swagger.annotations.ApiResponses;
 public class DatosBasicosController {
 
 	@Autowired
-	private ISnrDatoBasicoPrevisionalService service;
-	@Autowired
-	private ModelMapper modelMapper;
+	private ISnrDatoBasicoPrevisionalService service;	
 	@Autowired
 	EmailUtil emailU;
 	@Autowired
@@ -73,7 +67,9 @@ public class DatosBasicosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrDatoBasicoDTO>> listar() throws SiprenException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public ResponseEntity<List<SnrDatoBasicoDTO>> listar()
+			throws SiprenException, IllegalAccessException, InstantiationException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException {
 		List<SnrDatoBasicoDTO> lista = service.listarSiniestros();
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
@@ -81,20 +77,9 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Operación de servicio que consulta un siniestros por ID", notes = "La operación retorna un siniestro por ID registrado en la base de datos")
-	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
-			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
-			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/{id}")
-	public ResponseEntity<SnrDatoBasicoDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException {
-		SnrDatoBasicoDTO siniestro = service.listarPorSiniestro(id);
-		if (siniestro == null) {
-			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-		}		
-		return new ResponseEntity<>(siniestro, HttpStatus.OK);
-	}
-		
 	
+
+
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -132,7 +117,7 @@ public class DatosBasicosController {
 		SnrDatoBasicoDTO objSave = service.actualizarSiniestro(dto);
 		return new ResponseEntity<>(objSave, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que simula cargue de Siniestro", notes = "La operación registra un siniestro pendiente por restricción de datos del Afiliado")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -154,7 +139,7 @@ public class DatosBasicosController {
 			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TEMPLATE).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TEMPLATE).getValor());
 
 			Context context1 = new Context();
 			context1.putVar("reporte", lista);
@@ -163,15 +148,15 @@ public class DatosBasicosController {
 			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
 
 			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
+			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
+			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
 					.split(","));
 			mail.setSubject(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
+			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
 			mail.setFile(attachment);
 			mail.setFileName(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
 
 			emailU.enviarMailAdjunto(mail);
 
@@ -181,7 +166,7 @@ public class DatosBasicosController {
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
-	
+
 	@ApiOperation(value = "Operación de servicio que actualiza el estado de un siniestro", notes = "La operación actualiza el estado de un siniestro en base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -191,5 +176,5 @@ public class DatosBasicosController {
 		service.actualizaEstadoSiniestro(dto.getId(), dto.getCodEstado());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }

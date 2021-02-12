@@ -53,7 +53,6 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/v1/carguesSiniestros")
 public class CargueSiniestrosController {
 
-
 	@Autowired
 	private IParametricasService paramService;
 
@@ -93,10 +92,10 @@ public class CargueSiniestrosController {
 		try {
 
 			Object object = service.uploadFile(multipartToFile(file),
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CARGUE).getValor()
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CARGUE).getValor()
 							.replace(":v1",
-									paramService.parametroXNombre(ParametroGeneralUtil.CONS_PRC_CARGUE_SINIESTROS)
+									paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PRC_CARGUE_SINIESTROS)
 											.getValor())
 							.replace(":v2", ParametroGeneralUtil.CONS_SINIESTROS).replace(":v3", usuario),
 					5000);
@@ -116,8 +115,8 @@ public class CargueSiniestrosController {
 
 			Thread.sleep(2000);
 			Object objectDetail = service.executeApi(null, HttpMethod.GET,
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CONSULTA).getValor()
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CONSULTA).getValor()
 							.replace(":v1", archivo.getIdArchivoCargue().toString()),
 					5000);
 			if (objectDetail == null) {
@@ -194,7 +193,7 @@ public class CargueSiniestrosController {
 			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
 
 			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TEMPLATE).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TEMPLATE).getValor());
 
 			Context context1 = new Context();
 
@@ -205,26 +204,25 @@ public class CargueSiniestrosController {
 			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
 
 			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor()
+			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FROM).getValor());
+			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor()
 					.split(","));
 			mail.setSubject(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_SUBJECT).getValor());
+			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY).getValor());
 			mail.setFile(attachment);
 			mail.setFileName(
-					paramService.parametroXNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor());
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor());
 
 			emailU.enviarMailAdjunto(mail);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
 		} finally {
-			/*try {
-				logServiceUtil.sendLog("", logService);
-			} catch (LogServiceHandler e) {
-				log.error("Sucedio un error al registrar el evento de log", e);
-			}*/
+			/*
+			 * try { logServiceUtil.sendLog("", logService); } catch (LogServiceHandler e) {
+			 * log.error("Sucedio un error al registrar el evento de log", e); }
+			 */
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);

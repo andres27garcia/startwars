@@ -2,13 +2,10 @@ package co.com.segurosalfa.siniestros.service.impl;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.segurosalfa.siniestros.dto.SnrComentarioReclamanteDTO;
-import co.com.segurosalfa.siniestros.dto.SnrDatoReclamanteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrComentarioReclamante;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
