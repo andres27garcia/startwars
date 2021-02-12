@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 
-public interface ISnrDatosBasicosRepo extends IGenericRepo<SnrDatoBasico, Integer> {
+public interface ISnrDatosBasicosRepo extends IGenericRepo<SnrDatoBasico, Long> {
 
 	@Procedure(procedureName = "NUEVO_SIPREN.PKG_CREACION_SINIESTRO.PRC_CREAR_SINIESTRO_CARGUE")
 	void crearSiniestroCargue(@Param("usuario") String usuario, @Param("proceso") String proceso);

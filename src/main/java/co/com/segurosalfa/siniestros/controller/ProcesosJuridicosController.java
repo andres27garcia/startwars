@@ -75,7 +75,7 @@ public class ProcesosJuridicosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/abogados/{id}")
-	public ResponseEntity<SnrAbogadoDTO> listarAbogadosPorId(@PathVariable("id") Long id) throws SiprenException {
+	public ResponseEntity<SnrAbogadoDTO> listarAbogadosPorId(@PathVariable("id") Integer id) throws SiprenException {
 		SnrAbogadoDTO obj = this.modelMapper.map(serviceAbogados.listarPorId(id), SnrAbogadoDTO.class);
 		if (obj == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
@@ -172,10 +172,12 @@ public class ProcesosJuridicosController {
 	@GetMapping("/{id}")
 	public ResponseEntity<SnrProcesoJuridicoDTO> listarProcesosJuridicosPorId(@PathVariable("id") Integer id)
 			throws SiprenException {
-		SnrProcesoJuridicoDTO obj = this.modelMapper.map(serviceProceso.listarPorId(id), SnrProcesoJuridicoDTO.class);
-		if (obj == null) {
+		SnrProcesoJuridico procesoJuridico = serviceProceso.listarPorId(id);
+		if (procesoJuridico == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
+		SnrProcesoJuridicoDTO obj = this.modelMapper.map(procesoJuridico, SnrProcesoJuridicoDTO.class);
+		
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 

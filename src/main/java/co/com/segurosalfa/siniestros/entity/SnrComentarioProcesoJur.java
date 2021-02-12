@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,12 +27,13 @@ public class SnrComentarioProcesoJur implements Serializable {
 	private static final long serialVersionUID = 6513116650649018289L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqComentariosProcJur")
+	@SequenceGenerator(name = "idSeqComentariosProcJur", sequenceName = "SQ_SNR_PROCESOS_JURIDICOS", schema = "SINIESTROS", allocationSize = 1)
 	@Column(name = "ID_COMENTARIO_PROCESO_JUR")
 	private Long idComentarioJur;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_PROCESO_JURIDICO", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_PROCESO_JURIDICO")
 	private SnrProcesoJuridico procesoJuridico;
 
 	@NotNull(message = "El campo FECHA_COMENTARIO no puede ser nulo o vacio")

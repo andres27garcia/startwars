@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import co.com.segurosalfa.siniestros.dto.ActualizaEstadoSiniestroDTO;
 import co.com.segurosalfa.siniestros.dto.FiltroSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
@@ -44,6 +46,7 @@ import co.com.sipren.common.bus.dto.Mail;
 import co.com.sipren.common.util.EmailUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
+import co.com.sipren.common.util.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -91,22 +94,7 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 	
-	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros paginados por parametros de size y page", notes = "La operación retorna todos los siniestros registradas en la base de datos que cumplan con las condiciones de paginado")
-	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
-			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
-			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/paginados")
-	public ResponseEntity<ResponsePageableDTO> listarPaginado(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) throws SiprenException {
-
-		Pageable paging = PageRequest.of(page, size);
-		ResponsePageableDTO lista = service.listarPaginado(paging);
-
-		if (Objects.isNull(lista))
-			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-	}
+	
 	
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -115,7 +103,7 @@ public class DatoBasicoPrevisionalController {
 	@PostMapping("/paginadosPorFiltro")
 	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@Valid @RequestBody FiltroSiniestrosDTO dto,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
-			throws SiprenException {
+			throws SiprenException, JsonProcessingException, ServiceException {
 
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);

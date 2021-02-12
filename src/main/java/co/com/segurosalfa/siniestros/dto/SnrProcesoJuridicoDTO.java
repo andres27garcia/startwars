@@ -19,7 +19,7 @@ public class SnrProcesoJuridicoDTO {
 	private SnrTipoDTO clasificacionClase;
 	private SnrEstadoDTO estadoJuridico;
 	private SnrAbogadoDTO idAbogado;
-	private String blnConflictoBeneficiarios;
+	private String blnConflicBeneficiarios;
 	private String blnFidelidad;
 	private SnrTipoDTO juzgado;
 

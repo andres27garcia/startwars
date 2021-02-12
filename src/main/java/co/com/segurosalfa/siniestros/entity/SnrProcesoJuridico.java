@@ -1,7 +1,7 @@
 package co.com.segurosalfa.siniestros.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,44 +27,45 @@ public class SnrProcesoJuridico implements Serializable {
 	private static final long serialVersionUID = 6172614970633251423L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	@Column(name = "ID_PROCESO_JURIDICO")
 	private Integer idProcesoJuridico;
 
 	@ManyToOne
-	@JoinColumn(name = "COD_TIPO_PROCESO_JUR", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_PROCESO_JUR")
 	private SnrTipo tipoProcesoJuridico;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TRAMITE", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TRAMITE")
 	private SnrDatoTramite tramite;
 
 	@NotNull(message = "El campo FECHA_PROCESO_JURIDICO no puede ser nulo o vacio")
 	@Column(name = "FECHA_PROCESO_JURIDICO")
-	private LocalDateTime fecProcesoJuridico;
+	private LocalDate fecProcesoJuridico;
 
 	@NotNull(message = "El campo NOMBRE_ACTOR no puede ser nulo o vacio")
 	@Column(name = "NOMBRE_ACTOR")
 	private String nombreActor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_PRETENSION", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_PRETENSION")
 	private SnrTipo pretencion;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_CONTINGENCIA", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_CONTINGENCIA")
 	private SnrTipo contingencia;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_CALIFICACION_CLASE", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_CALIFICACION_CLASE")
 	private SnrTipo clasificacionClase;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ESTADO_PROCESO_JUR", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_ESTADO_PROCESO_JUR")
 	private SnrEstado estadoJuridico;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ABOGADO", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_ABOGADO")
 	private SnrAbogado idAbogado;
 	
 	@Column(name = "BLN_CONFLICTO_BENEFICIARIOS")
@@ -72,7 +75,7 @@ public class SnrProcesoJuridico implements Serializable {
 	private String blnFidelidad;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_JUZGADO", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_JUZGADO")
 	private SnrTipo juzgado;
 
 }

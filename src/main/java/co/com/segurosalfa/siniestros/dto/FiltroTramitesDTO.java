@@ -1,5 +1,7 @@
 package co.com.segurosalfa.siniestros.dto;
 
+import java.time.LocalDate;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,8 +16,8 @@ public class FiltroTramitesDTO {
 	private Integer tipoTramite;
 	private Integer subtipoTramite;
 	private Integer estadoTramite;
-	private String fecRadicacionAlfaIni;
-	private String fecRadicacionAlfaFin;
+	private LocalDate fecRadicacionAlfaIni;
+	private LocalDate fecRadicacionAlfaFin;
 	private Integer idSolicitudAfp;
 	private Integer clasificacionJur;
 

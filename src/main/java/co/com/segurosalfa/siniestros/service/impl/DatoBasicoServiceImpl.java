@@ -16,7 +16,7 @@ import co.com.segurosalfa.siniestros.service.ISnrDatosBasicosService;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 
 @Service
-public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> implements ISnrDatosBasicosService {
+public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Long> implements ISnrDatosBasicosService {
 
 	private final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -25,7 +25,7 @@ public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Integer> impl
 	
 
 	@Override
-	protected IGenericRepo<SnrDatoBasico, Integer> getRepo() {
+	protected IGenericRepo<SnrDatoBasico, Long> getRepo() {
 		return repo;
 	}
 

@@ -60,29 +60,40 @@ public class GenericSprecification<T> implements Specification<T> {
 			}
 		}
 		
+		// Si la consulta realiza JOIN con otras tablas
 		for (SearchCriteria<?> criteria : listJoins) {
-			if(criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {				
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.greaterThan(entity.get(criteria.getKey()), criteria.getValue().toString()));
-			} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.LESS_THAN)) {																
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.lessThan(entity.get(criteria.getKey()), criteria.getValue().toString()));
-			} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {								
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.greaterThanOrEqualTo(entity.get(criteria.getKey()), criteria.getValue().toString()));
-			} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.lessThanOrEqualTo(entity.get(criteria.getKey()), criteria.getValue().toString()));								
-			} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {				
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.notEqual(entity.get(criteria.getKey()), criteria.getValue()));
-			} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.EQUAL)) {
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.equal(entity.get(criteria.getKey()), criteria.getValue()));
-			} else if(criteria.getOperation().equals(SearchOperation.BETWEEN)) {
-				Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
-				predicates.add(builder.between(entity.get(criteria.getKey()), criteria.getValueDateI(), criteria.getValueDateF()));
-			}
+			/* Si se encesita filtrar dentro de una entidad que a su vez tiene JoinColumn hacia 
+			   otra entidad*/
+			if(criteria.getManageSubJoin()) {
+				predicates.add(builder.equal(root
+						.get(criteria.getEntityJoin())
+						.get(criteria.getFieldJoin())
+						.get(criteria.getKey()), criteria.getValue()));
+			}else {
+				//En caso de que no, realiza el filtro con un JOIN normal hacia las dos tablas que lleguen como parametro
+				if(criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {				
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.greaterThan(entity.get(criteria.getKey()), criteria.getValue().toString()));
+				} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.LESS_THAN)) {																
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.lessThan(entity.get(criteria.getKey()), criteria.getValue().toString()));
+				} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.GREATER_THAN_EQUAL)) {								
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.greaterThanOrEqualTo(entity.get(criteria.getKey()), criteria.getValue().toString()));
+				} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.LESS_THAN_EQUAL)) {
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.lessThanOrEqualTo(entity.get(criteria.getKey()), criteria.getValue().toString()));								
+				} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.NOT_EQUAL)) {				
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.notEqual(entity.get(criteria.getKey()), criteria.getValue()));
+				} else if (criteria.isManageJoin() && criteria.getOperation().equals(SearchOperation.EQUAL)) {
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.equal(entity.get(criteria.getKey()), criteria.getValue()));
+				} else if(criteria.getOperation().equals(SearchOperation.BETWEEN)) {
+					Join<T, ?> entity = root.join(criteria.getFieldJoin(), JoinType.LEFT);		
+					predicates.add(builder.between(entity.get(criteria.getKey()), criteria.getValueDateI(), criteria.getValueDateF()));
+				}
+			}			
 		}	
 		
 		

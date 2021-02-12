@@ -30,7 +30,7 @@ public class SnrDatoBasicoPrevisional implements Serializable {
 	private Long id;
 	
 	@OneToOne
-	@JoinColumn(name = "ID_SINIESTRO", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_SINIESTRO")
 	private SnrDatoBasico siniestro;
 	
 	@Column(name = "NUM_CALIF_VINC")

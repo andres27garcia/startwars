@@ -7,7 +7,7 @@ import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 
-public interface ISnrDatosBasicosService extends ICRUD<SnrDatoBasico, Integer> {
+public interface ISnrDatosBasicosService extends ICRUD<SnrDatoBasico, Long> {
 
 	void crearSiniestroCargue(String usuario, String proceso) throws SiprenException;
 

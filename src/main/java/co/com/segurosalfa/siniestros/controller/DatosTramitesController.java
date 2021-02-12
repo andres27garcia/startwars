@@ -2,6 +2,7 @@ package co.com.segurosalfa.siniestros.controller;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import co.com.segurosalfa.siniestros.dto.ActualizaEstadoSiniestroDTO;
 import co.com.segurosalfa.siniestros.dto.FiltroTramitesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
@@ -32,6 +35,7 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IComentarioTramiteService;
 import co.com.segurosalfa.siniestros.service.IDatoTramiteService;
 import co.com.sipren.common.util.ParametrosMensajes;
+import co.com.sipren.common.util.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -54,30 +58,14 @@ public class DatosTramitesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrDatoTramite>> listar() throws SiprenException {
-		List<SnrDatoTramite> lista = service.listar();
+	public ResponseEntity<List<SnrDatoTramiteDTO>> listar() throws SiprenException {
+		List<SnrDatoTramiteDTO> lista = service.listar().stream().map(tr -> 
+		modelMapper.map(tr, SnrDatoTramiteDTO.class)).collect(Collectors.toList());
 
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los datos de tramites paginados por parametros de size y page", notes = "La operación retorna todos los tramites registrados en la base de datos que cumplan con las condiciones de paginado")
-	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
-			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
-			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/paginados")
-	public ResponseEntity<ResponsePageableDTO> listarPaginado(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) throws SiprenException {
-
-		Pageable paging = PageRequest.of(page, size);
-		ResponsePageableDTO response = service.listarPaginado(paging);
-
-		if (Objects.isNull(response))
-			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 
@@ -100,7 +88,7 @@ public class DatosTramitesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/paginadosPorFiltro")
 	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@Valid @RequestBody FiltroTramitesDTO dto,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) throws JsonProcessingException, ServiceException, SiprenException {
 		
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);
@@ -119,7 +107,7 @@ public class DatosTramitesController {
 	public ResponseEntity<List<SnrDatoTramiteDTO>> listarPorSiniestro(@PathVariable("id") Long numSiniestro)
 			throws SiprenException {
 		List<SnrDatoTramiteDTO> obj = service.listarDatosXSiniestro(numSiniestro);
-		if (obj == null) {
+		if (obj == null || obj.isEmpty()) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
 		return new ResponseEntity<>(obj, HttpStatus.OK);

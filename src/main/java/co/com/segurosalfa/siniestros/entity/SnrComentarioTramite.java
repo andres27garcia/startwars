@@ -41,7 +41,7 @@ public class SnrComentarioTramite implements Serializable {
 	private String usuarioComentario;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TRAMITE", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_TRAMITE")
 	private SnrDatoTramite tramite;
 
 	@Size(max = 4000, message = "El campo DESCRIPCION_COMENTARIO no soporta mas de 4000 caracteres")

@@ -9,13 +9,13 @@ import co.com.segurosalfa.siniestros.repo.ISnrAbogadoRepo;
 import co.com.segurosalfa.siniestros.service.IAbogadoService;
 
 @Service
-public class AbogadoServiceImpl extends CRUDImpl<SnrAbogado, Long> implements IAbogadoService {
+public class AbogadoServiceImpl extends CRUDImpl<SnrAbogado, Integer> implements IAbogadoService {
 
 	@Autowired
 	private ISnrAbogadoRepo repo;
 
 	@Override
-	protected IGenericRepo<SnrAbogado, Long> getRepo() {
+	protected IGenericRepo<SnrAbogado, Integer> getRepo() {
 		return repo;
 	}
 

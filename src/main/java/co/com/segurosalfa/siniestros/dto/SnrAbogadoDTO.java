@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class SnrAbogadoDTO {
 
 	private Integer idAbogado;
-	private Integer tipoDocumento;
+	private Integer codTipoDocumento;
 	private Integer numIdAbogado;
 	private String nombreAbogado;
 

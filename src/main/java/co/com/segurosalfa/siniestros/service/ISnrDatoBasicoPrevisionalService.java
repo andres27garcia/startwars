@@ -21,17 +21,31 @@ import co.com.sipren.common.util.ServiceException;
 public interface ISnrDatoBasicoPrevisionalService extends ICRUD<SnrDatoBasicoPrevisional, Long>{
 	
 	List<SnrDatoBasicoDTO> listarSiniestros() throws SiprenException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException ;
-	SnrDatoBasicoDTO listarPorSiniestro(Long numSiniestro) throws JsonProcessingException, SiprenException, ServiceException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException ;
+	
+	SnrDatoBasicoDTO listarPorSiniestro(Long numSiniestro) throws SiprenException;
+	
 	void crearSiniestroCargue(String usuario, String proceso) throws SiprenException;
+	
 	void limpiarTemporalesCargue(String usuario, String proceso) throws SiprenException;
+	
 	void procesarCargue(CargueSiniestrosDTO siniestro) throws SiprenException, NumberFormatException, ParseException;
+	
 	void consultaPorvenirPorAfiliado(String usuario, String proceso, Long documento, String tipoDoc,
 			Integer tipoSolicitud, Date fechaProceso) throws SiprenException, ParseException;
-	ResponsePageableDTO listarPorFiltro(FiltroSiniestrosDTO dto, Pageable page) throws SiprenException;
+	
+	ResponsePageableDTO listarPorFiltro(FiltroSiniestrosDTO dto, Pageable page) throws JsonProcessingException, ServiceException, SiprenException;
+	
 	void crearSiniestroPendiente(ProcesarPendientesDTO procesarPendiente) throws SiprenException, ParseException;
+	
 	void actualizaEstadoSiniestro(Long numSiniestro, Integer codEstado) throws SiprenException;
+	
 	public String consultaNumPoliza(Date fecSiniestro) throws SiprenException;
+	
 	public Long consultaUltSiniestroPorAfiliado(Long numPersona) throws SiprenException;
-	public ResponsePageableDTO listarPaginado(Pageable page) throws SiprenException;
+	
+	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException;
+	
+	public SnrDatoBasicoDTO actualizarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException;
+	
 	
 }

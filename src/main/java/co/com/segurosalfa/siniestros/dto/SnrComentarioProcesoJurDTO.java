@@ -1,6 +1,6 @@
 package co.com.segurosalfa.siniestros.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SnrComentarioProcesoJurDTO {
 
-	private Integer idComentarioJur;
+	private Long idComentarioJur;
 	private SnrProcesoJuridicoDTO procesoJuridico;
-	private LocalDateTime fecComentario;
+	private LocalDate fecComentario;
 	private String usuarioComentario;
 	private String descripcionComentario;
 

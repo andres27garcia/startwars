@@ -33,19 +33,19 @@ public class SnrDatoTramite implements Serializable  {
 	private Long idTramite;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_SINIESTRO", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_SINIESTRO")
 	private SnrDatoBasico siniestro;	
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_TRAMITE", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_TRAMITE")
 	private SnrTipo tipoTramite;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ESTADO_TRAMITE", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_ESTADO_TRAMITE")
 	private SnrEstado estadoTramite;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TIPO_CLASIF_JUR", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "ID_TIPO_CLASIF_JUR")
 	private SnrTipo clasificacionJur;
 
 	@NotNull(message = "El campo ID_SOLICITUD_AFP no puede ser nulo o vacio")

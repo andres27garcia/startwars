@@ -86,31 +86,14 @@ public class DatosBasicosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/{id}")
-	public ResponseEntity<SnrDatoBasicoDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException, JsonProcessingException, IllegalAccessException, InstantiationException, 
-		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ServiceException {
+	public ResponseEntity<SnrDatoBasicoDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException {
 		SnrDatoBasicoDTO siniestro = service.listarPorSiniestro(id);
 		if (siniestro == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}		
 		return new ResponseEntity<>(siniestro, HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros paginados por parametros de size y page", notes = "La operación retorna todos los siniestros registradas en la base de datos que cumplan con las condiciones de paginado")
-	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
-			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
-			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/paginados")
-	public ResponseEntity<ResponsePageableDTO> listarPaginado(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) throws SiprenException {
-
-		Pageable paging = PageRequest.of(page, size);
-		ResponsePageableDTO lista = service.listarPaginado(paging);
-
-		if (Objects.isNull(lista))
-			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-	}
+		
 	
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -119,7 +102,7 @@ public class DatosBasicosController {
 	@PostMapping("/paginadosPorFiltro")
 	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@Valid @RequestBody FiltroSiniestrosDTO dto,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
-			throws SiprenException {
+			throws SiprenException, JsonProcessingException, ServiceException {
 
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);
@@ -134,22 +117,20 @@ public class DatosBasicosController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping
-	public ResponseEntity<SnrDatoBasicoPrevisionalDTO> registrar(@Valid @RequestBody SnrDatoBasicoPrevisionalDTO dto)
+	public ResponseEntity<SnrDatoBasicoDTO> registrar(@Valid @RequestBody SnrDatoBasicoDTO dto)
 			throws SiprenException {
-		SnrDatoBasicoPrevisional objSave = service.registrar(this.modelMapper.map(dto, SnrDatoBasicoPrevisional.class));
-		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(objSave, SnrDatoBasicoPrevisionalDTO.class);
-		return new ResponseEntity<>(obj, HttpStatus.CREATED);
+		SnrDatoBasicoDTO objSave = service.guardarSiniestro(dto);
+		return new ResponseEntity<>(objSave, HttpStatus.CREATED);
 	}
 
 	@ApiOperation(value = "Operación de servicio que actualiza un siniestro", notes = "La operación actualiza el siniestro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PutMapping
-	public ResponseEntity<SnrDatoBasicoPrevisionalDTO> modificar(@Valid @RequestBody SnrDatoBasicoPrevisionalDTO dto)
+	public ResponseEntity<SnrDatoBasicoDTO> modificar(@Valid @RequestBody SnrDatoBasicoDTO dto)
 			throws SiprenException {
-		SnrDatoBasicoPrevisional objSave = service.modificar(this.modelMapper.map(dto, SnrDatoBasicoPrevisional.class));
-		SnrDatoBasicoPrevisionalDTO obj = this.modelMapper.map(objSave, SnrDatoBasicoPrevisionalDTO.class);
-		return new ResponseEntity<>(obj, HttpStatus.OK);
+		SnrDatoBasicoDTO objSave = service.actualizarSiniestro(dto);
+		return new ResponseEntity<>(objSave, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Operación de servicio que simula cargue de Siniestro", notes = "La operación registra un siniestro pendiente por restricción de datos del Afiliado")

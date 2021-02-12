@@ -3,7 +3,6 @@ package co.com.segurosalfa.siniestros.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +14,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.FiltroTramitesDTO;
+import co.com.segurosalfa.siniestros.dto.GnrPersonaClienteDTO;
+import co.com.segurosalfa.siniestros.dto.GnrTipoDocumentoDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoTramiteDTO;
+import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.entity.SnrDatoTramite;
 import co.com.segurosalfa.siniestros.entity.SnrEstado;
 import co.com.segurosalfa.siniestros.entity.SnrTipo;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
+import co.com.segurosalfa.siniestros.repo.GenericSprecification;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrDatoTramiteRepo;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IDatoTramiteService;
 import co.com.segurosalfa.siniestros.util.PageableUtil;
-import co.com.segurosalfa.siniestros.util.SnrDatoTramiteRepoFilter;
-import co.com.sipren.common.util.DateUtil;
+import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.SearchCriteria;
 import co.com.sipren.common.util.SearchOperation;
 import co.com.sipren.common.util.ServiceException;
@@ -56,16 +58,19 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	}
 
 	@Override
-	public ResponsePageableDTO listarPaginado(Pageable page) throws SiprenException {
-		Page<SnrDatoTramite> listPaginados = repo.findAll(page);				
-		return PageableUtil.responsePageable(listPaginados.getContent(), listPaginados);
-	}
-
-	@Override
-	public List<SnrDatoTramiteDTO> listarDatosXSiniestro(Long numSiniestro) throws SiprenException {
-		List<SnrDatoTramiteDTO> listTramites = repo.listarDatosXSiniestro(numSiniestro).stream()
-				.map(t -> modelMapper.map(t, SnrDatoTramiteDTO.class)).collect(Collectors.toList());
-		return listTramites;
+	public List<SnrDatoTramiteDTO> listarDatosXSiniestro(Long numSiniestro) throws SiprenException {	
+		List<SnrDatoTramite> listTramites = repo.listarDatosPorPersona(numSiniestro);
+		List<SnrDatoTramiteDTO> listTramitesDTO = new ArrayList<>();
+		listTramites.forEach(tr -> {
+			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
+			try {
+				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
+				listTramitesDTO.add(snrDatoTramiteDTO);
+			} catch (SiprenException e) {
+				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
+			}
+		});
+		return listTramitesDTO;
 	}
 
 	@Override
@@ -78,26 +83,24 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			throws SiprenException, ServiceException, JsonProcessingException {
 		
 		ClienteUnicoDTO dto = clienteUnicoService.consumirRestClienteUnico(
-				String.valueOf(datosBasicos.getPersona()));
+				String.valueOf(datosBasicos.getPersona().getNumPersona()));
 		
 		datosBasicos.setClienteUnico(dto);		
 	}
 
 	@Override
 	public SnrDatoTramiteDTO consultarPorId(Long id) throws SiprenException {
-		SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(repo.findById(id).orElse(null), SnrDatoTramiteDTO.class);
-		try {
-			if(Objects.nonNull(datosTramitesDTO.getSiniestro()))
-				getInfoPersona(datosTramitesDTO.getSiniestro());
-		} catch (JsonProcessingException | ServiceException e) {
-			log.error("Error consultando información relacionada con Persona para listado de tramites: {}", e);
-		}
+		SnrDatoTramite datoTramite = repo.findById(id).orElse(null);
+		if(Objects.isNull(datoTramite))
+			return null;
+		SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datoTramite, SnrDatoTramiteDTO.class);
+		mapInfoPersona(datosTramitesDTO, datoTramite.getSiniestro().getPersona());
 		return datosTramitesDTO;
 	}
-
+		
 	@Override
-	public ResponsePageableDTO listarPorFiltro(FiltroTramitesDTO dto, Pageable page) {
-		SnrDatoTramiteRepoFilter<SnrDatoTramite> genericSprecification = new SnrDatoTramiteRepoFilter<>();
+	public ResponsePageableDTO listarPorFiltro(FiltroTramitesDTO dto, Pageable page) throws JsonProcessingException, ServiceException, SiprenException {
+		GenericSprecification<SnrDatoTramite> genericSprecification = new GenericSprecification<>();
 		List<SnrDatoTramiteDTO> listDto = new ArrayList<>();
 		Page<SnrDatoTramite> pageSnrDatosTramites;			
 								
@@ -108,23 +111,22 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		}
 		
 		if(Objects.nonNull(dto.getNumIdentificacion())) {
-			genericSprecification.setIdentificacion(Boolean.TRUE);
-			genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("numIdentificacion", 
-					dto.getNumIdentificacion(), 
+			Long numPersona = getNumPersona(dto);
+			genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", 
+					numPersona, 
 					SearchOperation.EQUAL,
 					Boolean.TRUE,
-					"persona",
-					Boolean.TRUE));
+					"siniestro",
+					Boolean.FALSE));
 		}
 		
 		if(Objects.nonNull(dto.getNumPersona())) {
-			genericSprecification.setIdentificacion(Boolean.TRUE);
-			genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("numPersona", 
+			genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", 
 					dto.getNumPersona(), 
 					SearchOperation.EQUAL,
 					Boolean.TRUE,
-					"persona",
-					Boolean.TRUE));
+					"siniestro",
+					Boolean.FALSE));
 		}
 						
 		if(Objects.nonNull(dto.getTipoTramite())) {
@@ -154,14 +156,12 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 					Boolean.FALSE));
 		}		
 		
-		if((Objects.nonNull(dto.getFecRadicacionAlfaIni()) &&
-				!"".equals(dto.getFecRadicacionAlfaIni()))
-				&& (Objects.nonNull(dto.getFecRadicacionAlfaFin()) &&
-						!"".equals(dto.getFecRadicacionAlfaFin()))) {
+		if(Objects.nonNull(dto.getFecRadicacionAlfaIni()) 
+				&& Objects.nonNull(dto.getFecRadicacionAlfaFin())) {
 			
 			genericSprecification.add(new SearchCriteria<SnrDatoTramite>("fecRadicacionAlfa", 
-					DateUtil.convertDateFromDto(dto.getFecRadicacionAlfaIni()),
-					DateUtil.convertDateFromDto(dto.getFecRadicacionAlfaFin()),
+					dto.getFecRadicacionAlfaIni(),
+					dto.getFecRadicacionAlfaFin(),
 					SearchOperation.BETWEEN));
 		}
 		
@@ -176,8 +176,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datosTramites, SnrDatoTramiteDTO.class);
 			listDto.add(datosTramitesDTO);
 			try {
-				getInfoPersona(datosTramitesDTO.getSiniestro());				
-			} catch (JsonProcessingException | SiprenException | ServiceException e) {
+				mapInfoPersona(datosTramitesDTO, datosTramites.getSiniestro().getPersona());
+			} catch (SiprenException e) {
 				log.error("Error consultando información relacionada con Persona para listado de siniestros: {}", e);
 			}
 		}
@@ -188,9 +188,18 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	@Override
 	public List<SnrDatoTramiteDTO> listarDatosPorPersona(Long numPersona) throws SiprenException {
-		List<SnrDatoTramiteDTO> listTramites = repo.listarDatosPorPersona(numPersona).stream()
-				.map(t -> modelMapper.map(t, SnrDatoTramiteDTO.class)).collect(Collectors.toList());
-		return listTramites;
+		List<SnrDatoTramite> listTramites = repo.listarDatosPorPersona(numPersona);
+		List<SnrDatoTramiteDTO> listTramitesDTO = new ArrayList<>();
+		listTramites.forEach(tr -> {
+			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
+			try {
+				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
+				listTramitesDTO.add(snrDatoTramiteDTO);
+			} catch (SiprenException e) {
+				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
+			}
+		});
+		return listTramitesDTO;
 	}
 
 	@Override
@@ -198,5 +207,50 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		repo.actualizaEstadoTramite(numTramite, codEstado);		
 	}
 	
-
+	private void mapInfoPersona(SnrDatoTramiteDTO snrDatoTramiteDTO, Long numPersona) throws SiprenException {
+		try {
+			if(Objects.nonNull(snrDatoTramiteDTO.getSiniestro())) {
+				GnrPersonaClienteDTO personaDTO = new GnrPersonaClienteDTO();
+				personaDTO.setNumPersona(numPersona);
+				snrDatoTramiteDTO.getSiniestro().setPersona(personaDTO);
+				getInfoPersona(snrDatoTramiteDTO.getSiniestro());
+				if(Objects.nonNull(snrDatoTramiteDTO.getSiniestro().getClienteUnico())) {
+					ClienteUnicoDTO clienteUnico = snrDatoTramiteDTO.getSiniestro().getClienteUnico(); 
+					personaDTO.setNumIdentificacion(Integer.parseInt(clienteUnico.getCedula()));
+					GnrTipoDocumentoDTO tipoDocumento = new GnrTipoDocumentoDTO();
+					tipoDocumento.setId(Integer.parseInt(clienteUnico.getTipoDoc()));
+					tipoDocumento.setNombre(clienteUnico.getTipoDocumento());
+					personaDTO.setTipoDocumento(tipoDocumento);
+				}							
+			}				
+		} catch (JsonProcessingException | ServiceException e) {
+			log.error("Error consultando información relacionada con Persona para listado de tramites", e);
+		}
+	}
+	
+	private Long getNumPersona(FiltroTramitesDTO filtroDto) throws JsonProcessingException, ServiceException, SiprenException {
+		/*Si el filtro viene por numIdentificación pero a su vez envian numero de persona
+		 * se evalua para evitar consumo a microservicio de cliente unico
+		 */
+		if(Objects.nonNull(filtroDto.getNumPersona())) {
+			return filtroDto.getNumPersona();
+		}
+		
+		ClienteUnicoDTO dto = clienteUnicoService.consumirRestClienteUnico(
+				ParametroGeneralUtil.GRAL_TIPO_DOC_CC,
+				String.valueOf(filtroDto.getNumIdentificacion()));
+		
+		//Si el documento no retorno resultados con tipoDoc 2, se consulta tipoDoc 1
+		if(Objects.isNull(dto)) {
+			dto = clienteUnicoService.consumirRestClienteUnico(
+					ParametroGeneralUtil.GRAL_TIPO_DOC_TI,
+					String.valueOf(filtroDto.getNumIdentificacion()));
+		}
+		
+		if(Objects.nonNull(dto)) {
+			return dto.getNumPersona();
+		}
+		return null;
+	}
+	
 }
