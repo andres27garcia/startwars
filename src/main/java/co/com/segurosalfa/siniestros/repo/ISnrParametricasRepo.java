@@ -23,7 +23,8 @@ public interface ISnrParametricasRepo extends IGenericRepo<SnrParametrica, Integ
 
 	@Procedure(procedureName = "PKG_ADMINISTRACION_JOBS.PRC_CREAR_JOB")
 	public Void programarJob(@Param("idJob") String idJob, @Param("fecEjecucion") String fecEjecucion,
-			@Param("usuario") String usuario, @Param("email") String email, @Param("frecuencia") Integer frecuencia);
+			@Param("usuario") String usuario, @Param("email") String email, @Param("frecuencia") Integer frecuencia,
+			@Param("detalleFrec") String detalleFrec, @Param("accionJob") String accionJob);
 
 	@Procedure(procedureName = "PKG_ADMINISTRACION_JOBS.PRC_CANCELA_JOB")
 	public Integer cancelarJob(@Param("idJob") String idJob, @Param("usuario") String usuario);

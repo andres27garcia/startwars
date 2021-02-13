@@ -26,6 +26,7 @@
 		<org.jxls-reader.version>2.0.3</org.jxls-reader.version>
 		<org.apache.poi.version>3.17</org.apache.poi.version>
 		<org.modelmapper.version>2.3.8</org.modelmapper.version>
+		<aws.java.sdk.secretsmanager.version>1.11.355</aws.java.sdk.secretsmanager.version>
 	</properties>
 
 	<dependencies>
@@ -134,6 +135,11 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${org.modelmapper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-secretsmanager</artifactId>
+			<version>${aws.java.sdk.secretsmanager.version}</version>
 		</dependency>
 	</dependencies>
 

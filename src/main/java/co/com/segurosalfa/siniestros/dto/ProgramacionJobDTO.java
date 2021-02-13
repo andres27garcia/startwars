@@ -17,6 +17,8 @@ public class ProgramacionJobDTO implements Serializable {
 	private String email;
 	private Integer codPeriodicidad;
 	private Integer codFecCorte;
+	private String detalleFrecuencia;
+	private String acccionJob;
 
 	public ProgramacionJobDTO(String codJob, String fechaEjecucion, String usuario, String email,
 			Integer codPeriodicidad, Integer codFecCorte) {

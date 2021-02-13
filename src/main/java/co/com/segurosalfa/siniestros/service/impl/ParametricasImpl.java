@@ -44,7 +44,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 		repo.actualizarParamFecCorte(dto.getCodFecCorte());
 
 		return repo.programarJob(dto.getCodJob(), dto.getFechaEjecucion(), dto.getUsuario(), dto.getEmail(),
-				dto.getCodPeriodicidad());
+				dto.getCodPeriodicidad(), dto.getDetalleFrecuencia(), dto.getAcccionJob());
 
 	}
 
