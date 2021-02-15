@@ -181,7 +181,7 @@
 					<finalName>siniestros-aws</finalName>
 					<archive>
 						<manifest>
-							<mainClass>co.com.siniestros.SiprenAwsBackendApplication
+							<mainClass>co.com.segurosalfa.siniestros.SiniestrosApplication
 							</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>libs/</classpathPrefix>

@@ -17,7 +17,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +48,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
 
+
+
+/**
+ * ** CargueSiniestrosController clase controlador que administra las peticiones
+ * para la v1 CargueSiniestros
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ */
 @Log4j2
 @RestController
 @RequestMapping("/v1/carguesSiniestros")
@@ -75,91 +83,15 @@ public class CargueSiniestrosController {
 //	@Autowired
 //	private LogServiceUtil logServiceUtil;
 
-	@ApiOperation(value = "Operacion para el cargue de siniestros para su creacion automatica", notes = "La operación realiza el cague en el gestor de archivos y posteriormente realiza su sincronizacion con la BD")
-	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
-			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
-			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/pruebaQuemada")
-	public void pruebaQuemada() {
-
-		try {
-			List<CargueSiniestrosDTO> listado = new ArrayList<>();
-
-			
-			CargueSiniestrosDTO siniestro = new CargueSiniestrosDTO("PROCESADO",
-					"null", "1", "2", "23810325", "2", "13/04/2020");
-
-			listado.add(siniestro);
-
-			if (listado == null || listado.isEmpty())
-				throw new ModeloNotFoundException("No se registran siniestros procesados");
-
-			List<SnrResulPrcCreacionSiniestroDTO> listResults = new ArrayList<SnrResulPrcCreacionSiniestroDTO>();
-
-			serviceSiniestro.limpiarTemporalesCargue("DMARIN", ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-
-			for (CargueSiniestrosDTO cargueSiniestrosDTO : listado) {
-				if (cargueSiniestrosDTO.getEstadoRegistro().equals("PROCESADO")
-						&& (null == cargueSiniestrosDTO.getDetalleError()
-								|| "".equals(cargueSiniestrosDTO.getDetalleError()))) {
-
-					serviceSiniestro.procesarCargue(cargueSiniestrosDTO);
-				} else {
-					// Consolida en listado los registros con errores en el cargue
-					SnrResulPrcCreacionSiniestroDTO gnrResult = new SnrResulPrcCreacionSiniestroDTO();
-					gnrResult.setIdRegistro(cargueSiniestrosDTO.getNumeroRegistro() != null
-							? Integer.parseInt(cargueSiniestrosDTO.getNumeroRegistro())
-							: 0);
-					gnrResult.setTipoSolicitud(cargueSiniestrosDTO.getTipoSolicitud());
-					gnrResult.setTipoIdent(cargueSiniestrosDTO.getTipoDocumento());
-					gnrResult.setNroIdent(cargueSiniestrosDTO.getDocumento() != null
-							? Long.parseLong(cargueSiniestrosDTO.getDocumento())
-							: 0);
-					gnrResult.setEstadoRegistro(cargueSiniestrosDTO.getEstadoRegistro());
-					gnrResult.setDetalleError(cargueSiniestrosDTO.getDetalleError());
-					listResults.add(gnrResult);
-				}
-			}
-
-			serviceSiniestro.crearSiniestroCargue("DMARIN", ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-
-			// Consolida en listado los que se procesaron en BD para crear siniestro
-			List<SnrResulPrcCreacionSiniestro> lista = serviceSini
-					.consultarPorProceso(ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-			for (SnrResulPrcCreacionSiniestro gnrResulPrcCreacionSiniestro : lista) {
-				listResults.add(modelMapper.map(gnrResulPrcCreacionSiniestro, SnrResulPrcCreacionSiniestroDTO.class));
-			}
-
-			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
-
-			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TEMPLATE).getValor());
-
-			Context context1 = new Context();
-
-			// Envia a la plantilla listado con consolidados
-			context1.putVar("reporte", listResults);
-			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
-
-			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
-
-			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor()
-					.split(","));
-			mail.setSubject(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY).getValor());
-			mail.setFile(attachment);
-			mail.setFileName(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor());
-
-			emailU.enviarMailAdjunto(mail);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
+	
+	/**
+	 * cargar archivo xls para creación de siniestros por cargue.
+	 * 
+	 * @param file
+	 * @param usuario
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operacion para el cargue de siniestros para su creacion automatica", notes = "La operación realiza el cague en el gestor de archivos y posteriormente realiza su sincronizacion con la BD")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -314,6 +246,13 @@ public class CargueSiniestrosController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	/**
+	 * Dada una posición obtiene el valor de la lista de respuesta del archivo de cargue.
+	 * 
+	 * @param detalleRegistro
+	 * @param i
+	 * @return
+	 */
 	private String getValor(List<DetalleRegistroResponse> detalleRegistro, int i) {
 		try {
 			return detalleRegistro.get(i).getValor();
@@ -323,6 +262,14 @@ public class CargueSiniestrosController {
 		return null;
 	}
 
+	
+	/**
+	 * Guarda temporalmente el archivo que se esta cargando para poder ser procesado.
+	 * 
+	 * @param multipart
+	 * @return
+	 * @throws IOException
+	 */
 	public File multipartToFile(MultipartFile multipart) throws IOException {
 		File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + multipart.getOriginalFilename());
 		multipart.transferTo(convFile);

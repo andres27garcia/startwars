@@ -23,6 +23,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *** HistoriasIBLHIController clase controlador que administra las peticiones
+ * para la v1 de HistoriasIBL
+ *
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/historiasLaboralesIBL")
 public class HistoriasIBLHIController {
@@ -31,6 +39,13 @@ public class HistoriasIBLHIController {
 	private IHilHistoriaIblService service;
 	
 
+	/**
+	 * Lista la historia IBL asociada a una persona.
+	 * 
+	 * @param numPersona
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el detalle de una historia IBL por persona", notes = "La operación retorna una historia laboral IBL para una persona")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -45,6 +60,13 @@ public class HistoriasIBLHIController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 	
+	/**
+	 * Elimina los periodos anteriores a una fecha asociados a una persona.
+	 * 
+	 * @param hilHistoriaIblDTO
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que elimina los periodos inferiores a una fecha dada", notes = "La operación elimina registros de una historia laboral IBL para una persona")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),

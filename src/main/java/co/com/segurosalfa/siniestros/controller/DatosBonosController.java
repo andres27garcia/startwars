@@ -17,6 +17,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** DatosBonosController clase controlador que administra las peticiones
+ * para la v1 de bonos
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1//bonos")
 public class DatosBonosController {
@@ -27,6 +35,12 @@ public class DatosBonosController {
 	@Autowired
 	ModelMapper modelMapper;
 
+	/**
+	 * Obtiene Bono pensional para una persona
+	 * 
+	 * @param numPersona
+	 * @return
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el bono pensional para una persona", notes = "La operación retorna el bono pensional para una persona")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),

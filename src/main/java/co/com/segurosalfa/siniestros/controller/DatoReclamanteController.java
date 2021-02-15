@@ -48,6 +48,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** DatoReclamanteController clase controlador que administra las peticiones
+ * para la v1 de reclamantes
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/datosReclamantes")
 public class DatoReclamanteController {
@@ -73,6 +81,13 @@ public class DatoReclamanteController {
 	@Autowired
 	ModelMapper modelMapper;
 
+	/**
+	 * Lista los reclamantes asociados a un trámite
+	 * 
+	 * @param numTramite
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un datos de reclamantes por numero de siniestro y numero de tramite", notes = "La operación retorna un datos de reclamantes por numero de siniestro y numero de tramite registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -87,6 +102,13 @@ public class DatoReclamanteController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra un nuevo reclamante asociado a un trámite.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo reclamante", notes = "La operación registra el reclamante en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -98,6 +120,15 @@ public class DatoReclamanteController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	/**
+	 * Reporcesa reclamantes que estaban pendientes por información pendiente de actualizar.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que asocia reclamante al trámite", notes = "La operación asocia un reclamante a un trámite, comprobando que el reclamante pase la coincidencia de datos con Cliente Unico")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -152,6 +183,13 @@ public class DatoReclamanteController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modifica los datos de un reclamante
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza un reclamante", notes = "La operación actualiza el reclamante en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -167,6 +205,13 @@ public class DatoReclamanteController {
 		return new ResponseEntity<>(datoReclamanteDTO, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista los Comentarios asociados a un reclamante
+	 * 
+	 * @param idReclamante
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta los comentarios por reclamante", notes = "La operación retorna el listado de comentarios por reclamante registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -182,6 +227,13 @@ public class DatoReclamanteController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra comentarios asociados a un reclamante
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo comentario de reclamante", notes = "La operación registra el comentario en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

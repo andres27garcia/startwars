@@ -27,6 +27,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** DatosInicialesHlController clase controlador que administra las peticiones
+ * para la v1 de Datos Iniciales HL
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/historiasLaborales")
 public class DatosInicialesHlController {
@@ -36,6 +44,12 @@ public class DatosInicialesHlController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * listar todos los registros asociados 
+	 *
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos las historias laborales", notes = "La operación retorna todas las historias laborales registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -50,6 +64,13 @@ public class DatosInicialesHlController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el detalle de una historia laboral por su ID", notes = "La operación retorna una historia laboral por su ID registrada en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -63,6 +84,13 @@ public class DatosInicialesHlController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Registrar un periodo de historia laboral asociado a una persona
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra una nueva historia laboral", notes = "La operación registra la historia laboral en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -75,6 +103,13 @@ public class DatosInicialesHlController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar un periodo de historia laboral asociado a una persona
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza una nueva historia laboral", notes = "La operación actualiza una nueva historia laboral en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

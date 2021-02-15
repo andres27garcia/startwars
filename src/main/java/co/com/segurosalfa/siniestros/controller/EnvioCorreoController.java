@@ -30,6 +30,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *** EnvioCorreoController clase controlador que administra las peticiones
+ * para la v1 de EnvioCorreo 
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/enviosCorreos")
 public class EnvioCorreoController {
@@ -45,6 +53,12 @@ public class EnvioCorreoController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Envio de correo para proceso automático informando el resultado del proceso.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operacion para el envio automatico del correo con los resultados del proceso automatico de creacion de siniestros", notes = "La operación envia un correo electronico con adjunto, el servicio no retorna respuesta")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),

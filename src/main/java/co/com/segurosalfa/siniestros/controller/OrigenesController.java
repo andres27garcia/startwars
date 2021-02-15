@@ -27,6 +27,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * 
+ *** OrigenesController clase controlador que administra las peticiones
+ * para la v1 de Origenes
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G% 
+ *
+ */
 @RestController
 @RequestMapping("/v1/parametros/origenes")
 public class OrigenesController {
@@ -36,6 +45,12 @@ public class OrigenesController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Lista todos los registros asociados.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta el listado de los origenes", notes = "La operación retorna todas origenes registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -50,6 +65,13 @@ public class OrigenesController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta los origenes de siniestro por ID", notes = "La operación retorna un origen de siniestro por ID registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -63,6 +85,13 @@ public class OrigenesController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Registar un Origen
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que registra un origenes", notes = "La operación registra el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -73,6 +102,13 @@ public class OrigenesController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Actualizar un origen.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que actualiza un origenes", notes = "La operación actualiza el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

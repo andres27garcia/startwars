@@ -36,6 +36,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *** ProcesosJuridicosController clase controlador que administra las peticiones
+ * para la v1 de ProcesosJuridicos 
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/procesosJuridicos")
 public class ProcesosJuridicosController {
@@ -55,6 +63,12 @@ public class ProcesosJuridicosController {
 	@Autowired
 	ModelMapper modelMapper;
 
+	/**
+	 * Lista todos los registros asociados.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los abogados", notes = "La operación retorna todos los abogados registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -70,6 +84,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un abogado por ID", notes = "La operación retorna un abogado por ID registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -83,6 +104,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra un Abogado.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo abogado", notes = "La operación registra el abogado en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -95,6 +123,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Actualiza un abogado.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza un abogado", notes = "La operación actualiza el abogado en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -106,6 +141,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista los comentarios asociados a un proceso juridico.
+	 * 
+	 * @param idProcesoJur
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta los comentarios por proceso juridico", notes = "La operación retorna el listado de comentarios por proceso juridico registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -121,6 +163,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra un comentario para un proceso juridico.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo comentario de proceso juridico", notes = "La operación registra el comentario en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -134,6 +183,12 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Lista todos los registros asociados a un proceso juridico.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los procesos juridicos", notes = "La operación retorna todos los procesos juridicos registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -149,6 +204,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista todos los procesos juridicos asociados a una persona.
+	 * 
+	 * @param persona
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de procesos juridicos para un Afiliado", notes = "La operación retorna todos los procesos juridicos registradas en la base de datos para una persona")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -165,6 +227,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Busca un proceso Juridico por Id. 
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un proceso juridico por ID", notes = "La operación retorna un proceso juridico por ID registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -181,6 +250,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra un proceso juridico.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo proceos juridico", notes = "La operación registra el proceso juridico en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -193,6 +269,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Actualiza un proceso Juridico.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza un proceso juridico", notes = "La operación actualiza el proceso juridico en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -204,6 +287,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar Instancias Juridicas por proceso.
+	 * 
+	 * @param numProcesoJur
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de instancias juridicas por proceso juridico", notes = "La operación retorna un listado de instancias juridicas por proceso juridico registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -219,6 +309,14 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista Instancias Juridicas por numero de proceso y tipo de instancia.
+	 * 
+	 * @param numProcesoJur
+	 * @param idTipoInstancia
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de instancias juridicas por proceso juridic y tipo de instancia", notes = "La operación retorna un listado de instancias juridicas por proceso juridico y tipo de instancia registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -236,6 +334,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registra instancias juridicas.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra una nueva instancia juridica", notes = "La operación registra la instancia juridica en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -249,6 +354,13 @@ public class ProcesosJuridicosController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modifica Instancias Juridicas
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza una instancia juridica", notes = "La operación actualiza una instancia juridica en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

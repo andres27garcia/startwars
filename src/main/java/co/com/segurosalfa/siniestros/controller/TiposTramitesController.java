@@ -27,6 +27,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** TiposTramitesController clase controlador que administra las peticiones
+ * para la v1 de TiposTramites 
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/parametros/tiposTramite")
 public class TiposTramitesController {
@@ -37,6 +45,12 @@ public class TiposTramitesController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Listar todos los registros asociados.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta el listado de los tipos de tramites", notes = "La operación retorna todas los tipos de tramites registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -51,6 +65,14 @@ public class TiposTramitesController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	
+	/**
+	 * Listar por Id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta los tipos de tramite por ID", notes = "La operación retorna un tipo de tramite por ID registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -64,6 +86,13 @@ public class TiposTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Registrar un Tipo
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que registra un tipo de tramite", notes = "La operación registra el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -75,6 +104,13 @@ public class TiposTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar un tipo
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que actualiza un tipo de tramite", notes = "La operación actualiza el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

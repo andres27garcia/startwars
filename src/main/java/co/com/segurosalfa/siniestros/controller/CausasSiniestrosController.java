@@ -27,6 +27,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** CausasSiniestrosController clase controlador que administra las peticiones
+ * para la v1 CausasSiniestros
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/parametros/causasSiniestros")
 public class CausasSiniestrosController {
@@ -36,6 +44,13 @@ public class CausasSiniestrosController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	
+	/**
+	 * Listar todos los registros asociados
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta el listado de las causas de siniestros", notes = "La operación retorna todas las causas de siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -50,6 +65,13 @@ public class CausasSiniestrosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta las causas de siniestros por ID", notes = "La operación retorna una causa de siniestros por ID registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -63,6 +85,13 @@ public class CausasSiniestrosController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Registrar CausaSiniestro
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que registra una nueva causa de siniestro", notes = "La operación registra el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -74,6 +103,13 @@ public class CausasSiniestrosController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar CausaSiniestro
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que actualiza una causa de siniestro", notes = "La operación actualiza el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

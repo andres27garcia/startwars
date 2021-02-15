@@ -30,6 +30,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** ProcesarPendientesController clase controlador que administra las peticiones
+ * para la v1 de procesarPendientes
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ * 
+ *
+ */
 @RestController
 @RequestMapping("/v1/procesarPendientes")
 public class ProcesarPendientesController {
@@ -47,6 +56,13 @@ public class ProcesarPendientesController {
 
 	// servicios que retornan las listas de datos pendientes para afiliados y
 	// reclamantes
+	/**
+	 * Lista los registros asociados a los afiliados pendientes por ajustes en información personal
+	 * luego de compararlos entre AFP y Cliente Unico.
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de afiliados pendientes por procesar siniestro", notes = "La operación retorna todos los afiliados con diferencias en datos principales y que impiden la creación de siniestro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -61,6 +77,15 @@ public class ProcesarPendientesController {
 		return new ResponseEntity<>(listaAfiliadosPendientes, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista los registros asociados a los reclamantes pendientes por ajustes en información personal
+	 * luego de compararlos entre AFP y Cliente Unico.
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws SiprenException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de reclamantes pendientes por procesar siniestro", notes = "La operación retorna todos los reclamantes con diferencias en datos principales y que impiden la creación de siniestro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -75,6 +100,14 @@ public class ProcesarPendientesController {
 		return new ResponseEntity<>(listaReclamantespendientes, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista los afiliados y reclamantes pendientes de completar datos correspondientes a la información adicional.
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de reclamantes y afiliados pendientes por procesar", notes = "La operación retorna los reclamantes y afiliados pendientes de actualizar datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -91,6 +124,16 @@ public class ProcesarPendientesController {
 
 	// Servicios que exponen las operaciones de comparación
 
+	/**
+	 * Compara la información entre cliente Unico y AFP para un afiliado
+	 * 
+	 * @param tipoDoc
+	 * @param documento
+	 * @return
+	 * @throws SiprenException
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que compara el afiliado", notes = "La operación retorna la comparación del Afiliado entre Cliente Unico y AFP")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -140,6 +183,16 @@ public class ProcesarPendientesController {
 		return new ResponseEntity<>(afiliado, HttpStatus.OK);
 	}
 
+	/**
+	 * Compara la información entre cliente Unico y AFP para un reclamante
+	 * 
+	 * @param tipoDoc
+	 * @param documento
+	 * @return
+	 * @throws SiprenException
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que compara el reclamante", notes = "La operación retorna la comparación del Reclamante entre Cliente Unico y AFP")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -188,6 +241,17 @@ public class ProcesarPendientesController {
 		return new ResponseEntity<>(afiliado, HttpStatus.OK);
 	}
 
+	/**
+	 * Compara la información entre cliente Unico y AFP para  los datos adicionales pendientes de afiliados
+	 * y reclamantes
+	 * 
+	 * @param tipoDoc
+	 * @param documento
+	 * @return
+	 * @throws SiprenException
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que compara Datos Adicionales", notes = "La operación retorna la comparación de Información Adicional del Afiliado o el reclamante entre Cliente Unico y AFP")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),

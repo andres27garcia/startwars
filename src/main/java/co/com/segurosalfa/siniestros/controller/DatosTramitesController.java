@@ -40,6 +40,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *** DatosTramitesController clase controlador que administra las peticiones
+ * para la v1 de DatosTramites 
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/datosTramites")
 public class DatosTramitesController {
@@ -53,6 +61,12 @@ public class DatosTramitesController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Listar todos los registros asociados
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los datos de tramites registrados", notes = "La operación retorna todos los datos de tramites registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -69,6 +83,13 @@ public class DatosTramitesController {
 	}
 	
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un datos de tramite por ID", notes = "La operación retorna un datos de tramite por ID registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -82,6 +103,18 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista páginada de registros filtrados por numPersona, numIdentificacion, idTramite, tipoTramite, subtipoTramite, estadoTramite,
+	 * fecRadicacionAlfaIni, fecRadicacionAlfaFin, idSolicitudAfp y clasificacionJur 
+	 * 
+	 * @param dto
+	 * @param page
+	 * @param size
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un datos de tramite por filtros", notes = "La operación retorna los tramites dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -99,6 +132,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	/**
+	 * Lista los siniestros asociados a un trámite
+	 * 
+	 * @param numSiniestro
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un datos de tramite por numero de siniestro", notes = "La operación retorna un datos de tramite por numero de siniestro registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -113,6 +153,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Listado de trámites asociados a una persona
+	 * 
+	 * @param numPersona
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un datos de tramite por numero de persona", notes = "La operación retorna un datos de tramite por numero de persona registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -127,6 +174,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registrar un nuevo trámite
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo tramite", notes = "La operación registra el tramite en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -142,6 +196,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar un trámite
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza un tramite", notes = "La operación actualiza el tramite en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -153,6 +214,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar comentarios asociados a un trámite.
+	 * 
+	 * @param numTramite
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta los comentarios por tramite", notes = "La operación retorna el listado de comentarios por tramite registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -167,6 +235,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Registrar un comentario asociado a un trámite.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo comentario de tramite", notes = "La operación registra el comentario en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -181,6 +256,13 @@ public class DatosTramitesController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	/**
+	 * Actualiza el estado de un trámite
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza el estado de un tramite", notes = "La operación actualiza el estado de un tramite en base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

@@ -27,6 +27,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *** EstadoTramiteController clase controlador que administra las peticiones
+ * para la v1 de EstadoTramites
+ *  
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ *
+ */
 @RestController
 @RequestMapping("/v1/parametros/estadosTramites")
 public class EstadoTramiteController {
@@ -37,6 +45,11 @@ public class EstadoTramiteController {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Lista todos los registros asociados
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta el listado de los estados de los tramites", notes = "La operación retorna todas los estados de los tramites registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -51,6 +64,13 @@ public class EstadoTramiteController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que consulta los estados de tramite por ID", notes = "La operación retorna un estado de tramite por ID registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -64,6 +84,13 @@ public class EstadoTramiteController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Registrar un Estado
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que registra un nuevo estado de los tramites", notes = "La operación registra el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -74,6 +101,13 @@ public class EstadoTramiteController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar un Estado.
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "operación de servicio que actualiza un estado de tramites", notes = "La operación actualiza el parametro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })

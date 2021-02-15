@@ -51,6 +51,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * ** DatoBasicoPrevisionalController clase controlador que administra las peticiones
+ * para la v1 de siniestros
+ * 
+ * @author diego.marin@segurosalfa.com.co
+ * @version %I%, %G%
+ * 
+ * @author Diego
+ *
+ */
 @RestController
 @RequestMapping("/v1/siniestros/previsional")
 public class DatoBasicoPrevisionalController {
@@ -66,6 +76,12 @@ public class DatoBasicoPrevisionalController {
 	@Autowired
 	IResulPrcCreacionSiniestroService serviceSini;
 
+	/**
+	 * Listar todos los registros asociados
+	 * 
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros", notes = "La operación retorna todos los siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -80,6 +96,13 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta un siniestros por ID", notes = "La operación retorna un siniestro por ID registrado en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -95,6 +118,18 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * Listar registros por idSiniestro, numPersona, numPoliza, numIdentificacion, origen, estado
+	 * fecSiniestroInicial, fecSiniestroFinal
+	 * 
+	 * @param dto
+	 * @param page
+	 * @param size
+	 * @return
+	 * @throws SiprenException
+	 * @throws JsonProcessingException
+	 * @throws ServiceException
+	 */
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -113,6 +148,13 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	/**}
+	 * Registrar Siniestro 
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que registra un nuevo siniestro", notes = "La operación registra el siniestro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -124,6 +166,13 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Modificar Siniestro
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza un siniestro", notes = "La operación actualiza el siniestro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -135,6 +184,15 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
+	/**
+	 * Reprocesa la creación de un trámite que no ha podido ser creado por diferencias en los datos del
+	 * afiliado entre Cliente-Unico y AFP. 
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 * @throws ParseException
+	 */
 	@ApiOperation(value = "Operación de servicio que simula cargue de Siniestro", notes = "La operación registra un siniestro pendiente por restricción de datos del Afiliado")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -184,6 +242,13 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	/**
+	 * Actualiza el estado de un siniestro
+	 * 
+	 * @param dto
+	 * @return
+	 * @throws SiprenException
+	 */
 	@ApiOperation(value = "Operación de servicio que actualiza el estado de un siniestro", notes = "La operación actualiza el estado de un siniestro en base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
