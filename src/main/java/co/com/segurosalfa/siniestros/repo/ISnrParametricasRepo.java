@@ -18,7 +18,7 @@ public interface ISnrParametricasRepo extends IGenericRepo<SnrParametrica, Integ
 	SnrParametrica parametroPorNombre(@Param("nombre") String nombre) throws SiprenException;
 
 	@Modifying
-	@Query(value = "UPDATE GNR_PARAMETRICAS SET VALOR = :codFecCorte WHERE NOMBRE = 'CONS_PRC_AUT_TRAM_FEC_CORTE'", nativeQuery = true)
+	@Query(value = "UPDATE SNR_PARAMETRICA SET VALOR = :codFecCorte WHERE NOMBRE = 'CONS_PRC_AUT_TRAM_FEC_CORTE'", nativeQuery = true)
 	public Integer actualizarParamFecCorte(@Param("codFecCorte") Integer fecCorte);
 
 	@Procedure(procedureName = "PKG_ADMINISTRACION_JOBS.PRC_CREAR_JOB")
