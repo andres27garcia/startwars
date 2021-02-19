@@ -76,7 +76,7 @@ public class DatosInicialesHlController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/{id}")
-	public ResponseEntity<SnrHilDatoInicialDTO> listarPorId(@PathVariable("id") Integer id) throws SiprenException {
+	public ResponseEntity<SnrHilDatoInicialDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException {
 		SnrHilDatoInicialDTO obj = this.modelMapper.map(service.listarPorId(id), SnrHilDatoInicialDTO.class);
 		if (obj == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);

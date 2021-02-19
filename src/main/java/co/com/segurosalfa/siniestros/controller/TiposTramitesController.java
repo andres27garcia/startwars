@@ -83,7 +83,7 @@ public class TiposTramitesController {
 		if (obj == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
-		return new ResponseEntity<>(obj, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
 	/**

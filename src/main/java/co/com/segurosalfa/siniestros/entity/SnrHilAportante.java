@@ -21,13 +21,13 @@ public class SnrHilAportante implements Serializable {
 
 	@Id
 	@Column(name = "ID_APORTANTE")
-	private Integer idAportante;
+	private Long idAportante;
 
 	@Column(name = "COD_TIPO_IDENTIFICACION")
 	private Long tipoIdentificacion;
 
 	@Column(name = "NID_NUMERO_IDENTIFICACION")
-	private Integer nidNumeroDocumento;
+	private Long nidNumeroDocumento;
 
 	@Size(max = 200, message = "El campo NOMBRE_APORTANTE no soporta mas de 200 caracteres")
 	@Column(name = "NOMBRE_APORTANTE")

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 
-public interface IHilDatoInicialService extends ICRUD<SnrHilDatoInicial, Integer>{
+public interface IHilDatoInicialService extends ICRUD<SnrHilDatoInicial, Long>{
 	
 	void actualizarRegistroInvalido(String blnRegInv, Long numPersona, LocalDate fecha);
 

@@ -10,13 +10,13 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 
 public interface ISnrDatosBasicosRepo extends IGenericRepo<SnrDatoBasico, Long> {
 
-	@Procedure(procedureName = "NUEVO_SIPREN.PKG_CREACION_SINIESTRO.PRC_CREAR_SINIESTRO_CARGUE")
+	@Procedure(procedureName = "SINIESTROS.PKG_CREACION_SINIESTRO.PRC_CREAR_SINIESTRO_CARGUE")
 	void crearSiniestroCargue(@Param("usuario") String usuario, @Param("proceso") String proceso);
 
-	@Procedure(procedureName = "NUEVO_SIPREN.PKG_CREACION_SINIESTRO.PRC_ELIMINAR_INFO_PORVENIR_CARGUE")
+	@Procedure(procedureName = "SINIESTROS.PKG_CREACION_SINIESTRO.PRC_ELIMINAR_INFO_PORVENIR_CARGUE")
 	void limpiarTemporalesCargue(@Param("usuario") String usuario, @Param("proceso") String proceso);
 
-	@Procedure(procedureName = "NUEVO_SIPREN.PKG_CREACION_SINIESTRO.PRC_CONSULTA_INFO_PORVENIR_CARGUE")
+	@Procedure(procedureName = "SINIESTROS.PKG_CREACION_SINIESTRO.PRC_CONSULTA_INFO_PORVENIR_CARGUE")
 	void consultaPorvenirPorAfiliado(@Param("usuario") String usuario, @Param("proceso") String proceso,
 			@Param("documento") Long documento, @Param("tipoDoc") String tipoDoc,
 			@Param("tipoSolicitud") Integer tipoSolicitud, @Param("fechaproceso") Date fechaProceso)

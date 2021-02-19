@@ -24,7 +24,7 @@ public class SnrHilHistoriaIbl implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqHilHistoriasibl")
-	@SequenceGenerator(name = "idSeqHilHistoriasibl", sequenceName = "SQ_SNR_HIL_HISTORIAS_IBL", schema = "NUEVO_SIPREN")
+	@SequenceGenerator(name = "idSeqHilHistoriasibl", sequenceName = "SQ_SNR_HIL_HISTORIAS_IBL", schema = "SINIESTROS")
 	@Column(name = "ID_HISTORIA_IBL")
 	private Long idHistoriaHil;
 

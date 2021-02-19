@@ -11,13 +11,13 @@ import co.com.segurosalfa.siniestros.repo.ISnrHilDatoInicialRepo;
 import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
 
 @Service
-public class HilDatosInicialesServiceImpl extends CRUDImpl<SnrHilDatoInicial, Integer> implements IHilDatoInicialService{
+public class HilDatosInicialesServiceImpl extends CRUDImpl<SnrHilDatoInicial, Long> implements IHilDatoInicialService{
 
 	@Autowired
 	private ISnrHilDatoInicialRepo repo;
 	
 	@Override
-	protected IGenericRepo<SnrHilDatoInicial, Integer> getRepo(){
+	protected IGenericRepo<SnrHilDatoInicial, Long> getRepo(){
 		return repo;
 	}
 

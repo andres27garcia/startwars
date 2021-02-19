@@ -24,7 +24,7 @@ public class SnrResulPrcCreacionSiniestro implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqPrcAutoCreacSini")
-	@SequenceGenerator(name = "idSeqPrcAutoCreacSini", sequenceName = "SEQ_GNR_RESULT_PRC_CREACION_SINIESTRO", schema = "NUEVO_SIPREN", allocationSize = 1)
+	@SequenceGenerator(name = "idSeqPrcAutoCreacSini", sequenceName = "SEQ_SNR_RESULT_PRC_CREACION_SINIESTRO", schema = "SINIESTROS", allocationSize = 1)
 	@Column(name = "ID_REGISTRO")
 	private Integer idRegistro;
 

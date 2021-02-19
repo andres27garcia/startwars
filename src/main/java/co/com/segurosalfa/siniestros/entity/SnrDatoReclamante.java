@@ -30,14 +30,14 @@ public class SnrDatoReclamante implements Serializable {
 	private Long idReclamante;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_TRAMITE", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_TRAMITE")
 	private SnrDatoTramite tramite;
 
 	@Column(name = "num_persona")
 	private Long numPersona;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ESTADO_RECLAMANTE", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_ESTADO_RECLAMANTE")
 //	@JoinColumnsOrFormulas({
 //		@JoinColumnOrFormula(formula=@JoinFormula(value = "RECLAMANTE", referencedColumnName = "tipo")),
 //		@JoinColumnOrFormula(column = @JoinColumn(name = "ID_ESTADO_RECLAMANTE", referencedColumnName = "codigo"))

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 
 @Repository
-public interface ISnrHilDatoInicialRepo extends IGenericRepo<SnrHilDatoInicial, Integer>{
+public interface ISnrHilDatoInicialRepo extends IGenericRepo<SnrHilDatoInicial, Long>{
 
 	@Transactional
 	@Modifying

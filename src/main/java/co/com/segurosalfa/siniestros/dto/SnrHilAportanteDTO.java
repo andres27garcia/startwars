@@ -11,9 +11,9 @@ public class SnrHilAportanteDTO implements Serializable {
 
 	private static final long serialVersionUID = -6095779731639659803L;
 
-	private Integer idAportante;
+	private Long idAportante;
 	private Long tipoIdentificacion;
-	private Integer nidNumeroDocumento;
+	private Long nidNumeroDocumento;
 	private String nombreAportante;
 
 }

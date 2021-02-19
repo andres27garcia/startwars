@@ -28,7 +28,7 @@ public interface ISnrDatoReclamanteRepo extends IGenericRepo<SnrDatoReclamante, 
 	void insertarReclamante(@Param("numTramite") Long numTramite, @Param("numPersona") Long numPersona,
 			@Param("codEstado") Integer codEstado) throws SiprenException;
 
-	@Procedure(procedureName = "NUEVO_SIPREN.PKG_PROCESO_RECLAMANTES.PRC_CREA_DATOS_RECLAMANTES")
+	@Procedure(procedureName = "SINIESTROS.PKG_PROCESO_RECLAMANTES.PRC_CREA_DATOS_RECLAMANTES")
 	void crearDatosReclamante(@Param("siniestro") Long siniestro, @Param("tramite") Long tramite,
 			@Param("solicitudAfp") Integer solicitudAfp, @Param("usuario") String usuario,
 			@Param("origen") String origen);

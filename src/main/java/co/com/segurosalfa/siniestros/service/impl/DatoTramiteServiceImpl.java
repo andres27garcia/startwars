@@ -59,7 +59,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	@Override
 	public List<SnrDatoTramiteDTO> listarDatosXSiniestro(Long numSiniestro) throws SiprenException {	
-		List<SnrDatoTramite> listTramites = repo.listarDatosPorPersona(numSiniestro);
+		List<SnrDatoTramite> listTramites = repo.listarDatosXSiniestro(numSiniestro);
 		List<SnrDatoTramiteDTO> listTramitesDTO = new ArrayList<>();
 		listTramites.forEach(tr -> {
 			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
