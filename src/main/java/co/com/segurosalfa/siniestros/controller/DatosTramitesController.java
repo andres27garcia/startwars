@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RestController
-@RequestMapping("/datosTramites")
+@RequestMapping("/v1/datosTramites")
 public class DatosTramitesController {
 
 	@Autowired

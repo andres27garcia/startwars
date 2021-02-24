@@ -62,7 +62,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RestController
-@RequestMapping("/v1/siniestros/previsional")
+//@RequestMapping("/v1/siniestros/previsional")
 public class DatoBasicoPrevisionalController {
 
 	@Autowired

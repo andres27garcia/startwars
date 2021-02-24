@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RestController
-@RequestMapping("/historiasLaboralesIBL")
+@RequestMapping("/v1/historiasLaboralesIBL")
 public class HistoriasIBLHIController {
 	
 	@Autowired
