@@ -61,7 +61,7 @@ import io.swagger.annotations.ApiResponses;
  * @author Diego
  *
  */
-@RestController
+//@RestController
 //@RequestMapping("/v1/siniestros/previsional")
 public class DatoBasicoPrevisionalController {
 

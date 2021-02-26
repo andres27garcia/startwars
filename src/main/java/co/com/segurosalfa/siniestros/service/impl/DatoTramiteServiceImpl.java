@@ -20,6 +20,7 @@ import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoTramiteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
+import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrDatoTramite;
 import co.com.segurosalfa.siniestros.entity.SnrEstado;
 import co.com.segurosalfa.siniestros.entity.SnrTipo;
@@ -29,6 +30,7 @@ import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrDatoTramiteRepo;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IDatoTramiteService;
+import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
 import co.com.segurosalfa.siniestros.util.PageableUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.SearchCriteria;
@@ -49,6 +51,9 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private ISnrDatoBasicoPrevisionalService siniestroPrevisionalService;
 		
 	
 
@@ -65,6 +70,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
 			try {
 				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
+				mapInfoPrevisional(snrDatoTramiteDTO);
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
 				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
@@ -95,6 +101,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			return null;
 		SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datoTramite, SnrDatoTramiteDTO.class);
 		mapInfoPersona(datosTramitesDTO, datoTramite.getSiniestro().getPersona());
+		mapInfoPrevisional(datosTramitesDTO);
 		return datosTramitesDTO;
 	}
 		
@@ -177,6 +184,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			listDto.add(datosTramitesDTO);
 			try {
 				mapInfoPersona(datosTramitesDTO, datosTramites.getSiniestro().getPersona());
+				mapInfoPrevisional(datosTramitesDTO);
 			} catch (SiprenException e) {
 				log.error("Error consultando información relacionada con Persona para listado de siniestros: {}", e);
 			}
@@ -194,6 +202,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
 			try {
 				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
+				mapInfoPrevisional(snrDatoTramiteDTO);
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
 				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
@@ -226,6 +235,10 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		} catch (JsonProcessingException | ServiceException e) {
 			log.error("Error consultando información relacionada con Persona para listado de tramites", e);
 		}
+	}
+	
+	private void mapInfoPrevisional(SnrDatoTramiteDTO snrDatoTramiteDTO) throws SiprenException{
+		snrDatoTramiteDTO.setSiniestro(siniestroPrevisionalService.listarPorSiniestro(snrDatoTramiteDTO.getSiniestro().getIdSiniestro()));		
 	}
 	
 	private Long getNumPersona(FiltroTramitesDTO filtroDto) throws JsonProcessingException, ServiceException, SiprenException {
