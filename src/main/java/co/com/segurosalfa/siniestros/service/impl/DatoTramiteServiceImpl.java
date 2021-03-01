@@ -20,7 +20,6 @@ import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoTramiteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
-import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrDatoTramite;
 import co.com.segurosalfa.siniestros.entity.SnrEstado;
 import co.com.segurosalfa.siniestros.entity.SnrTipo;
