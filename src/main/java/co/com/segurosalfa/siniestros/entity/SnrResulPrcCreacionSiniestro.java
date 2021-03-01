@@ -84,5 +84,11 @@ public class SnrResulPrcCreacionSiniestro implements Serializable {
 
 	@Column(name = "FLG_PROCESO")
 	private String flgProceso;
+	
+	@Column(name = "NRO_CALCULO")
+    private Long nroCalculo;
+
+    @Column(name = "NROS_MOV_RESERVA")
+    private String nroMovReserva;
 
 }

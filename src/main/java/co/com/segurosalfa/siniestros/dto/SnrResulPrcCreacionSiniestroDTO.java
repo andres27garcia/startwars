@@ -25,6 +25,8 @@ public class SnrResulPrcCreacionSiniestroDTO {
 	private Long nroTramiteSiniestro;
 	private String estadoRegistro;
 	private String detalleError;
+	private Long nroCalculo;
+    private String nroMovReserva;
 
 	public SnrResulPrcCreacionSiniestroDTO(String tipoIdent, Long nroIdent, String primerApell, String segundoApell,
 			String primerNombre, String segundoNombre, Integer nroSolicitud, String fecRadicAFP, String tipoSolicitud,
