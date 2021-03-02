@@ -4,7 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.jxls.common.Context;
@@ -21,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -47,8 +51,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
-
-
 
 /**
  * ** CargueSiniestrosController clase controlador que administra las peticiones
@@ -83,7 +85,6 @@ public class CargueSiniestrosController {
 //	@Autowired
 //	private LogServiceUtil logServiceUtil;
 
-	
 	/**
 	 * cargar archivo xls para creación de siniestros por cargue.
 	 * 
@@ -97,15 +98,8 @@ public class CargueSiniestrosController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping(value = "/enviarArchivo", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<Void> guardarArchivo(@RequestParam("adjunto") MultipartFile file,
+	public ResponseEntity<Void> guardarArchivo(@RequestParam("adjunto") String file,
 			@RequestParam(name = "usuario") String usuario) throws SiprenException {
-
-//		LogService logService = new LogService();
-//		logService.setService(Constants.SINIESTROS_BUSINESS_UNIT, Constants.SINIESTORS_MICROSERVICES);
-//		logService.setServiceName("/carguesSiniestros/enviarArchivo");
-//		logService.setIp("192.168.0.1");
-//		logService.setAction(LogServiceEnum.GET);
-//		logService.setUser("TEST");
 
 		try {
 
@@ -247,7 +241,8 @@ public class CargueSiniestrosController {
 	}
 
 	/**
-	 * Dada una posición obtiene el valor de la lista de respuesta del archivo de cargue.
+	 * Dada una posición obtiene el valor de la lista de respuesta del archivo de
+	 * cargue.
 	 * 
 	 * @param detalleRegistro
 	 * @param i
@@ -262,17 +257,26 @@ public class CargueSiniestrosController {
 		return null;
 	}
 
-	
 	/**
-	 * Guarda temporalmente el archivo que se esta cargando para poder ser procesado.
+	 * Guarda temporalmente el archivo que se esta cargando para poder ser
+	 * procesado.
 	 * 
 	 * @param multipart
 	 * @return
 	 * @throws IOException
 	 */
-	public File multipartToFile(MultipartFile multipart) throws IOException {
-		File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + multipart.getOriginalFilename());
-		multipart.transferTo(convFile);
+	public File multipartToFile(String base64) throws IOException {
+		String ruta = System.getProperty("java.io.tmpdir").concat(String.valueOf(System.currentTimeMillis()))
+				.concat(".xlsx");
+		
+		System.out.println(ruta);
+
+		byte[] data = Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8));
+
+		Path destinationFile = Paths.get(ruta);
+		Files.write(destinationFile, data);
+
+		File convFile = new File(ruta);
 		return convFile;
 	}
 
