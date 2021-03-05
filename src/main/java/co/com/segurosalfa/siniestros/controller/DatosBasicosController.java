@@ -5,7 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -13,12 +15,11 @@ import javax.validation.Valid;
 import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -40,8 +42,8 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
-import co.com.sipren.common.bus.dto.Mail;
-import co.com.sipren.common.util.EmailUtil;
+import co.com.sipren.common.notifications.EmailService;
+import co.com.sipren.common.notifications.EmailServiceUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.ServiceException;
@@ -54,13 +56,13 @@ import io.swagger.annotations.ApiResponses;
 public class DatosBasicosController {
 
 	@Autowired
-	private ISnrDatoBasicoPrevisionalService service;	
-	@Autowired
-	EmailUtil emailU;
+	ISnrDatoBasicoPrevisionalService service;
 	@Autowired
 	IParametricasService paramService;
 	@Autowired
 	IResulPrcCreacionSiniestroService serviceSini;
+	@Autowired
+	private EmailServiceUtil emailUtil;
 
 	@ApiOperation(value = "OperaciÃ³n de servicio que consulta el listado de todos los siniestros", notes = "La operaciÃ³n retorna todos los siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -76,9 +78,6 @@ public class DatosBasicosController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-
-	
-
 
 	@ApiOperation(value = "OperaciÃ³n de servicio que consulta datos de siniestros por filtros", notes = "La operaciÃ³n retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -102,8 +101,7 @@ public class DatosBasicosController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping
-	public ResponseEntity<SnrDatoBasicoDTO> registrar(@Valid @RequestBody SnrDatoBasicoDTO dto)
-			throws SiprenException {
+	public ResponseEntity<SnrDatoBasicoDTO> registrar(@Valid @RequestBody SnrDatoBasicoDTO dto) throws SiprenException {
 		SnrDatoBasicoDTO objSave = service.guardarSiniestro(dto);
 		return new ResponseEntity<>(objSave, HttpStatus.CREATED);
 	}
@@ -112,8 +110,7 @@ public class DatosBasicosController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PutMapping
-	public ResponseEntity<SnrDatoBasicoDTO> modificar(@Valid @RequestBody SnrDatoBasicoDTO dto)
-			throws SiprenException {
+	public ResponseEntity<SnrDatoBasicoDTO> modificar(@Valid @RequestBody SnrDatoBasicoDTO dto) throws SiprenException {
 		SnrDatoBasicoDTO objSave = service.actualizarSiniestro(dto);
 		return new ResponseEntity<>(objSave, HttpStatus.OK);
 	}
@@ -145,20 +142,23 @@ public class DatosBasicosController {
 			context1.putVar("reporte", lista);
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
-			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
+			MultipartFile[] multipartFiles = new MultipartFile[1];
+			multipartFiles[0] = new MockMultipartFile(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor(),
+					outConv.toByteArray());
 
-			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
-					.split(","));
-			mail.setSubject(
+			EmailService email = new EmailService();
+			Map<String, Object> params = new HashMap<>();
+
+			email.setFrom(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
+			email.setSubject(
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
-			mail.setFile(attachment);
-			mail.setFileName(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
-
-			emailU.enviarMailAdjunto(mail);
+			email.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor());
+			email.setTemplate(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY);
+			params.put("user", dto.getUsuario());
+			email.setParams(params);
+			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());

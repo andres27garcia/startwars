@@ -29,4 +29,6 @@ public interface IProcesarPendientesService {
 	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento) throws JsonProcessingException, ServiceException, SiprenException ;
 
 	public void eliminarPendientePorCedula(Integer tipoDoc, Long documento);
+	
+	public void eliminarPendientePorCedulaAdicional(Integer tipoDoc, Long documento);
 }

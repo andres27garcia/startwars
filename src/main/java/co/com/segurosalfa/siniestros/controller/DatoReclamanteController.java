@@ -2,7 +2,9 @@ package co.com.segurosalfa.siniestros.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -11,10 +13,9 @@ import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -39,8 +41,8 @@ import co.com.segurosalfa.siniestros.service.IComentarioReclamanteService;
 import co.com.segurosalfa.siniestros.service.IDatoReclamanteService;
 import co.com.segurosalfa.siniestros.service.IDatoTramiteService;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
-import co.com.sipren.common.bus.dto.Mail;
-import co.com.sipren.common.util.EmailUtil;
+import co.com.sipren.common.notifications.EmailService;
+import co.com.sipren.common.notifications.EmailServiceUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.ServiceException;
@@ -73,7 +75,7 @@ public class DatoReclamanteController {
 	IComentarioReclamanteService comentariosService;
 
 	@Autowired
-	EmailUtil emailU;
+	private EmailServiceUtil emailUtil;
 
 	@Autowired
 	IParametricasService paramService;
@@ -121,7 +123,8 @@ public class DatoReclamanteController {
 	}
 
 	/**
-	 * Reporcesa reclamantes que estaban pendientes por información pendiente de actualizar.
+	 * Reporcesa reclamantes que estaban pendientes por información pendiente de
+	 * actualizar.
 	 * 
 	 * @param dto
 	 * @return
@@ -158,22 +161,24 @@ public class DatoReclamanteController {
 				context1.putVar("reporte", obj);
 				JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
-				InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
+				MultipartFile[] multipartFiles = new MultipartFile[1];
+				multipartFiles[0] = new MockMultipartFile(paramService
+						.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FILENAME).getValor(),
+						outConv.toByteArray());
 
-				Mail mail = new Mail();
-				mail.setFrom(
+				EmailService email = new EmailService();
+				Map<String, Object> params = new HashMap<>();
+
+				email.setFrom(
 						paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FROM).getValor());
-				mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TO).getValor()
-						.split(","));
-				mail.setSubject(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_SUBJECT)
+				email.setSubject(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_SUBJECT)
 						.getValor());
-				mail.setText(
-						paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_BODY).getValor());
-				mail.setFile(attachment);
-				mail.setFileName(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_FILENAME)
-						.getValor());
-
-				emailU.enviarMailAdjunto(mail);
+				email.setTo(
+						paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_TO).getValor());
+				email.setTemplate(ParametroGeneralUtil.CONS_PROC_RECL_SIN_EMAIL_BODY);
+				params.put("user", dto.getUsuario());
+				email.setParams(params);
+				emailUtil.notification(email, multipartFiles);
 
 			} catch (Exception e) {
 				throw new SiprenException(e.getMessage());
