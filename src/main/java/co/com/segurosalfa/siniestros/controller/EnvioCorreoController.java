@@ -95,9 +95,10 @@ public class EnvioCorreoController {
 			email.setFrom(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FROM).getValor());
 			email.setSubject(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_SUBJECT).getValor());
 			email.setTo(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TO).getValor());
-			email.setTemplate(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY);
+			email.setTemplate(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY).getValor());
 			params.put("user", "Automatico");
 			email.setParams(params);
+			
 			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
