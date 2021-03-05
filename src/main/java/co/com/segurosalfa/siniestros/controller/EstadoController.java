@@ -36,8 +36,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RestController
-@RequestMapping("/v1/parametros/estadosTramites")
-public class EstadoTramiteController {
+@RequestMapping("/v1/parametros/estados")
+public class EstadoController {
 
 	@Autowired
 	private ISnrEstadoService service;
@@ -63,26 +63,21 @@ public class EstadoTramiteController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-
-	/**
-	 * Listar por id.
-	 * 
-	 * @param id
-	 * @return
-	 * @throws SiprenException
-	 */
-	@ApiOperation(value = "operación de servicio que consulta los estados de tramite por ID", notes = "La operación retorna un estado de tramite por ID registradas en la base de datos")
+	
+	@ApiOperation(value = "operación de servicio que consulta el listado de los estados de los tramites", notes = "La operación retorna todas los estados de los tramites registrados en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/{id}")
-	public ResponseEntity<SnrEstadoDTO> listarPorId(@PathVariable("id") Integer id) throws SiprenException {
-		SnrEstadoDTO obj = this.modelMapper.map(service.listarPorId(id), SnrEstadoDTO.class);
-		if (obj == null) {
+	@GetMapping("/{tipo}")
+	public ResponseEntity<List<SnrEstadoDTO>> listarPorTipo(@PathVariable("tipo") String tipo) throws SiprenException {
+		List<SnrEstadoDTO> lista = service.listarPorTipo(tipo).stream().map(n -> this.modelMapper.map(n, SnrEstadoDTO.class))
+				.collect(Collectors.toList());
+		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
-		}
-		return new ResponseEntity<>(obj, HttpStatus.OK);
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
+
 
 	/**
 	 * Registrar un Estado

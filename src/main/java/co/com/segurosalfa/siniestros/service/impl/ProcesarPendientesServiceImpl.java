@@ -100,12 +100,15 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	@Override
 	public List<ProcesarPendientesDTO> listarPendientesInfoAdicional() throws JsonProcessingException, ServiceException, SiprenException {
 		List<ProcesarPendientesDTO> listPendientes = repoInfoAdicional.listarPendientesInfoAdicional();
-		for (ProcesarPendientesDTO procesarPendientesDTO : listPendientes) {
-			ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(procesarPendientesDTO.getNumPersona()));
-			procesarPendientesDTO.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));
-			procesarPendientesDTO.setTipoDocumento(afiliado.getTipoDocumento());
-	
-		}
+		listPendientes.parallelStream().peek(ia -> {
+			try {
+				ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(ia.getNumPersona()));
+				ia.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));
+				ia.setTipoDocumento(afiliado.getTipoDocumento());
+			} catch (Exception e) {
+				log.error("error consultando afiliado en cliente unico en listar pendientes info adicional");
+			}
+		});
 		return listPendientes;
 	}
 

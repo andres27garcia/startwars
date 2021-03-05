@@ -36,23 +36,18 @@ public class SnrDatoBasicoPrevisional implements Serializable {
 	@Column(name = "NUM_CALIF_VINC")
 	private BigDecimal numCalifVinc;
 	
-	@NotNull(message = "El campo NUM_PROC_JUR_VINC no puede ser nulo o vacio")
 	@Column(name = "NUM_PROC_JUR_VINC")
 	private Long numProcJurVinc;
 	
-	@NotNull(message = "El campo VLR_BONO_PENSIONAL no puede ser nulo o vacio")
 	@Column(name = "VLR_BONO_PENSIONAL")
 	private BigDecimal vlrBonoPensional;
 	
-	@NotNull(message = "El campo VLR_CTA_INDIVIDUAL no puede ser nulo o vacio")
 	@Column(name = "VLR_CTA_INDIVIDUAL")
 	private Integer vlrCitaIndividual;
 
-	@NotNull(message = "El campo VLR_BONO_PEN_CTA_IND no puede ser nulo o vacio")
 	@Column(name = "VLR_BONO_PEN_CTA_IND")
 	private Integer vlrBonoPenCtaInd;
 	
-	@NotNull(message = "El campo VLR_ULT_ING_BASE_COT no puede ser nulo o vacio")
 	@Column(name = "VLR_ULT_ING_BASE_COT")
 	private Integer vlrUltIngBaseCot;
 	

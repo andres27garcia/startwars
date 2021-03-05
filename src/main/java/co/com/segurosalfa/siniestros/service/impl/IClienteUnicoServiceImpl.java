@@ -14,8 +14,10 @@ import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.sipren.common.util.ClienteRestGenerico;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 
 	@Autowired
@@ -31,26 +33,38 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 	public ClienteUnicoDTO consumirRestClienteUnico(String numPersona)
 			throws ServiceException, SiprenException, JsonProcessingException {
 		Object response;
-		response = service.executeApi(null, HttpMethod.GET,
-				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
-				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_PERSONA).getValor()
-						.replace("{numPersona}", numPersona),
-				500);
-		String json = mapper.writeValueAsString(response);
-		return mapper.readValue(json, ClienteUnicoDTO.class);
+		try {
+			response = service.executeApi(null, HttpMethod.GET,
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_PERSONA).getValor()
+							.replace("{numPersona}", numPersona),
+					5000);
+			String json = mapper.writeValueAsString(response);
+			return mapper.readValue(json, ClienteUnicoDTO.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error consumiendo servicio de cliente unico por número de persona", e);
+			return null;
+		}	
 	}
 
 	@Override
 	public ClienteUnicoDTO consumirRestClienteUnico(String tipoDocumento, String numeroDocumento)
 			throws ServiceException, SiprenException, JsonProcessingException {
 		Object response;
-		response = service.executeApi(null, HttpMethod.GET,
-				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
-				paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_AFIL).getValor()
-						.replace("{tipoDoc}", tipoDocumento).replace("{doc}", numeroDocumento),
-				500);
-		String json = mapper.writeValueAsString(response);
-		return mapper.readValue(json, ClienteUnicoDTO.class);
+		try {
+			response = service.executeApi(null, HttpMethod.GET,
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_AFIL).getValor()
+							.replace("{tipoDoc}", tipoDocumento).replace("{doc}", numeroDocumento),
+					5000);
+			String json = mapper.writeValueAsString(response);
+			return mapper.readValue(json, ClienteUnicoDTO.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error consumiendo servicio de cliente unico por tipo y número de documento", e);
+			return null;
+		}
 	}
 
 }
