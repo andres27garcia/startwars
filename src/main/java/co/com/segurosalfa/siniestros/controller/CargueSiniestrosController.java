@@ -10,22 +10,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -38,12 +40,12 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
-import co.com.sipren.common.bus.dto.Mail;
+import co.com.sipren.common.notifications.EmailService;
+import co.com.sipren.common.notifications.EmailServiceUtil;
 import co.com.sipren.common.util.ClienteRestGenerico;
 import co.com.sipren.common.util.DetalleArchivoResponse;
 import co.com.sipren.common.util.DetalleCargueArchivoResponse;
 import co.com.sipren.common.util.DetalleRegistroResponse;
-import co.com.sipren.common.util.EmailUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.RegistroResponse;
@@ -65,22 +67,22 @@ import lombok.extern.log4j.Log4j2;
 public class CargueSiniestrosController {
 
 	@Autowired
-	private IParametricasService paramService;
+	IParametricasService paramService;
 
 	@Autowired
-	private ClienteRestGenerico service;
+	ClienteRestGenerico service;
 
 	@Autowired
-	private ISnrDatoBasicoPrevisionalService serviceSiniestro;
+	ISnrDatoBasicoPrevisionalService serviceSiniestro;
 
 	@Autowired
-	private IResulPrcCreacionSiniestroService serviceSini;
+	IResulPrcCreacionSiniestroService serviceSini;
 
 	@Autowired
-	private EmailUtil emailU;
+	private EmailServiceUtil emailUtil;
 
 	@Autowired
-	private ModelMapper modelMapper;
+	ModelMapper modelMapper;
 
 //	@Autowired
 //	private LogServiceUtil logServiceUtil;
@@ -208,25 +210,26 @@ public class CargueSiniestrosController {
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TEMPLATE).getValor());
 
 			Context context1 = new Context();
-
-			// Envia a la plantilla listado con consolidados
 			context1.putVar("reporte", listResults);
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
-			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
+			MultipartFile[] multipartFiles = new MultipartFile[1];
+			multipartFiles[0] = new MockMultipartFile(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor(),
+					outConv.toByteArray());
 
-			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor()
-					.split(","));
-			mail.setSubject(
+			EmailService email = new EmailService();
+			Map<String, Object> params = new HashMap<>();
+
+			email.setFrom(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FROM).getValor());
+			email.setSubject(
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY).getValor());
-			mail.setFile(attachment);
-			mail.setFileName(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor());
-
-			emailU.enviarMailAdjunto(mail);
+			email.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor());
+			email.setTemplate(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY);
+			params.put("user", usuario);
+			email.setParams(params);
+			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
@@ -268,7 +271,7 @@ public class CargueSiniestrosController {
 	public File multipartToFile(String base64) throws IOException {
 		String ruta = System.getProperty("java.io.tmpdir").concat(String.valueOf(System.currentTimeMillis()))
 				.concat(".xlsx");
-		
+
 		System.out.println(ruta);
 
 		byte[] data = Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8));

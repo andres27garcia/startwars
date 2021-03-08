@@ -30,6 +30,7 @@ public class DatabasePropertiesListener implements ApplicationListener<Applicati
 
 	private final static String DATASOURCE_USERNAME = "spring.datasource.username";
 	private final static String DATASOURCE_PASSWORD = "spring.datasource.password";
+	private final static String DATASOURCE_URL = "spring.datasource.url";
 	private ObjectMapper mapper = new ObjectMapper();
 
 	@Override
@@ -40,9 +41,14 @@ public class DatabasePropertiesListener implements ApplicationListener<Applicati
 		String secretJson = getSecret(secretName, region);
 		String dbUser = getString(secretJson, "username");
 		String dbPassword = getString(secretJson, "password");
+		String dbHost = getString(secretJson, "host");
+		String dbPort = getString(secretJson, "port");
+		String dbDBName = getString(secretJson, "dbname");
+		String dbUrl = "jdbc:oracle:thin:@"+dbHost+":"+dbPort+"/"+dbDBName;
 		Properties dbProperties = new Properties();
 		dbProperties.put(DATASOURCE_USERNAME, dbUser);
 		dbProperties.put(DATASOURCE_PASSWORD, dbPassword);
+		dbProperties.put(DATASOURCE_URL, dbUrl);
 		env.getPropertySources().addFirst(new PropertiesPropertySource("aws.secret.manager", dbProperties));
 	}
 

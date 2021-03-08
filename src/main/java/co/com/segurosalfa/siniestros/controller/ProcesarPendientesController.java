@@ -31,8 +31,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- * ** ProcesarPendientesController clase controlador que administra las peticiones
- * para la v1 de procesarPendientes
+ * ** ProcesarPendientesController clase controlador que administra las
+ * peticiones para la v1 de procesarPendientes
  * 
  * @author diego.marin@segurosalfa.com.co
  * @version %I%, %G%
@@ -51,14 +51,14 @@ public class ProcesarPendientesController {
 
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ParametroGeneralUtil.GRAL_FORMAT_YYYYMMDD);
 
 	// servicios que retornan las listas de datos pendientes para afiliados y
 	// reclamantes
 	/**
-	 * Lista los registros asociados a los afiliados pendientes por ajustes en información personal
-	 * luego de compararlos entre AFP y Cliente Unico.
+	 * Lista los registros asociados a los afiliados pendientes por ajustes en
+	 * información personal luego de compararlos entre AFP y Cliente Unico.
 	 * 
 	 * @return
 	 * @throws SiprenException
@@ -78,8 +78,8 @@ public class ProcesarPendientesController {
 	}
 
 	/**
-	 * Lista los registros asociados a los reclamantes pendientes por ajustes en información personal
-	 * luego de compararlos entre AFP y Cliente Unico.
+	 * Lista los registros asociados a los reclamantes pendientes por ajustes en
+	 * información personal luego de compararlos entre AFP y Cliente Unico.
 	 * 
 	 * @return
 	 * @throws JsonProcessingException
@@ -91,7 +91,8 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/reclamantes")
-	public ResponseEntity<List<ProcesarPendientesDTO>> listarReclamantesPendientes() throws JsonProcessingException, SiprenException, ServiceException {
+	public ResponseEntity<List<ProcesarPendientesDTO>> listarReclamantesPendientes()
+			throws JsonProcessingException, SiprenException, ServiceException {
 		List<ProcesarPendientesDTO> listaReclamantespendientes = pendientesService.listarPendientesreclamante();
 
 		if (listaReclamantespendientes != null && listaReclamantespendientes.isEmpty())
@@ -101,7 +102,8 @@ public class ProcesarPendientesController {
 	}
 
 	/**
-	 * Lista los afiliados y reclamantes pendientes de completar datos correspondientes a la información adicional.
+	 * Lista los afiliados y reclamantes pendientes de completar datos
+	 * correspondientes a la información adicional.
 	 * 
 	 * @return
 	 * @throws JsonProcessingException
@@ -113,7 +115,8 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/infoAdicional")
-	public ResponseEntity<List<ProcesarPendientesDTO>> listarInfoAdicional() throws JsonProcessingException, ServiceException, SiprenException {
+	public ResponseEntity<List<ProcesarPendientesDTO>> listarInfoAdicional()
+			throws JsonProcessingException, ServiceException, SiprenException {
 		List<ProcesarPendientesDTO> listaInfoAdicional = pendientesService.listarPendientesInfoAdicional();
 
 		if (listaInfoAdicional != null && listaInfoAdicional.isEmpty())
@@ -140,7 +143,8 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/compararAfiliado/{tipoDoc}/{documento}")
 	public ResponseEntity<ProcesarPendientesDTO> compararAfiliadoPendiente(@PathVariable("tipoDoc") Integer tipoDoc,
-			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException, ServiceException {
+			@PathVariable("documento") Long documento)
+			throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> afiliados = pendientesService.consultarPendientePorCedula(tipoDoc, documento);
 		ProcesarPendientesDTO afiliado = new ProcesarPendientesDTO();
 		if (Objects.nonNull(afiliados) && !afiliados.isEmpty()) {
@@ -199,7 +203,8 @@ public class ProcesarPendientesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/compararReclamante/{tipoDoc}/{documento}")
 	public ResponseEntity<ProcesarPendientesDTO> compararReclamantePendiente(@PathVariable("tipoDoc") Integer tipoDoc,
-			@PathVariable("documento") Long documento) throws SiprenException, JsonProcessingException, ServiceException {
+			@PathVariable("documento") Long documento)
+			throws SiprenException, JsonProcessingException, ServiceException {
 		List<ProcesarPendientesDTO> afiliados = pendientesService.consultarReclamantePorCedula(tipoDoc, documento);
 		ProcesarPendientesDTO afiliado = new ProcesarPendientesDTO();
 		if (Objects.nonNull(afiliados) && !afiliados.isEmpty()) {
@@ -242,8 +247,8 @@ public class ProcesarPendientesController {
 	}
 
 	/**
-	 * Compara la información entre cliente Unico y AFP para  los datos adicionales pendientes de afiliados
-	 * y reclamantes
+	 * Compara la información entre cliente Unico y AFP para los datos adicionales
+	 * pendientes de afiliados y reclamantes
 	 * 
 	 * @param tipoDoc
 	 * @param documento
@@ -299,6 +304,48 @@ public class ProcesarPendientesController {
 		}
 
 		return new ResponseEntity<>(afiliado, HttpStatus.OK);
+	}
+
+	/**
+	 * Elimina bandeja nombres.
+	 *
+	 * @param tipoDoc   the tipo doc
+	 * @param documento the documento
+	 * @return the response entity
+	 * @throws SiprenException the sipren exception
+	 */
+	@ApiOperation(value = "Operación de servicio que elimina registros de la temporales restrictivas de nombres para afiliado y reclamantes", notes = "La operación elimina registro procesados de las bandejas restrictivas de afiliados y reclamantes")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping("/eliminaBandejasNombres/{tipoDoc}/{documento}")
+	public ResponseEntity<Void> eliminaBandejaNombres(@PathVariable("tipoDoc") Integer tipoDoc,
+			@PathVariable("documento") Long documento) throws SiprenException {
+
+		pendientesService.eliminarPendientePorCedula(tipoDoc, documento);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	/**
+	 * Elimina bandeja datos adicionales.
+	 *
+	 * @param tipoDoc the tipo doc
+	 * @param documento the documento
+	 * @return the response entity
+	 * @throws SiprenException the sipren exception
+	 */
+	@ApiOperation(value = "Operación de servicio que elimina registros de la temporales de datos adicionales para afiliado y reclamantes", notes = "La operación elimina registro procesados de las bandejas de datos adicionales de afiliados y reclamantes")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping("/eliminaBandejasAdicionales/{tipoDoc}/{documento}")
+	public ResponseEntity<Void> eliminaBandejaDatosAdicionales(@PathVariable("tipoDoc") Integer tipoDoc,
+			@PathVariable("documento") Long documento) throws SiprenException {
+
+		pendientesService.eliminarPendientePorCedulaAdicional(tipoDoc, documento);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

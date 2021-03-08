@@ -2,8 +2,10 @@ package co.com.segurosalfa.siniestros.repo;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.entity.SnrTmpPendInfoAdicional;
@@ -24,4 +26,9 @@ public interface ISnrTmpPendienteInfoAdicionalRepo extends IGenericRepo<SnrTmpPe
 			+ "WHERE pa.codTipoIdentificacion = :tipoDoc and pa.nidNumeroIdentificacion = :documento")
 	List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(@Param("tipoDoc") Integer tipoDoc, @Param("documento") Long documento);
 
+	@Transactional
+	@Modifying
+	@Query("delete from SnrTmpPendInfoAdicional pa where pa.codTipoIdentificacion = :tipoDoc and pa.nidNumeroIdentificacion = :documento")
+	void eliminarPendientePorCedula(@Param("tipoDoc") Integer tipoDoc, @Param("documento") Long documento);
+	
 }

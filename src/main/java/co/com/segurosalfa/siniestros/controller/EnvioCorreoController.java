@@ -2,28 +2,30 @@ package co.com.segurosalfa.siniestros.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.com.segurosalfa.siniestros.dto.SnrResulPrcCreacionSiniestroDTO;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
-import co.com.sipren.common.bus.dto.Mail;
-import co.com.sipren.common.util.EmailUtil;
+import co.com.sipren.common.notifications.EmailService;
+import co.com.sipren.common.notifications.EmailServiceUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import io.swagger.annotations.ApiOperation;
@@ -31,8 +33,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- *** EnvioCorreoController clase controlador que administra las peticiones
- * para la v1 de EnvioCorreo 
+ *** EnvioCorreoController clase controlador que administra las peticiones para la
+ * v1 de EnvioCorreo
  * 
  * @author diego.marin@segurosalfa.com.co
  * @version %I%, %G%
@@ -43,15 +45,13 @@ import io.swagger.annotations.ApiResponses;
 public class EnvioCorreoController {
 
 	@Autowired
-	private EmailUtil emailU;
-
+	EmailServiceUtil emailUtil;
 	@Autowired
-	private IParametricasService service;
-
+	IParametricasService service;
 	@Autowired
-	private IResulPrcCreacionSiniestroService serviceSini;
+	IResulPrcCreacionSiniestroService serviceSini;
 	@Autowired
-	private ModelMapper modelMapper;
+	ModelMapper modelMapper;
 
 	/**
 	 * Envio de correo para proceso automático informando el resultado del proceso.
@@ -84,17 +84,21 @@ public class EnvioCorreoController {
 			context1.putVar("reporte", lista);
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
-			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
+			MultipartFile[] multipartFiles = new MultipartFile[1];
+			multipartFiles[0] = new MockMultipartFile(
+					service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor(),
+					outConv.toByteArray());
 
-			Mail mail = new Mail();
-			mail.setFrom(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FROM).getValor());
-			mail.setTo(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TO).getValor().split(","));
-			mail.setSubject(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_SUBJECT).getValor());
-			mail.setText(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY).getValor());
-			mail.setFile(attachment);
-			mail.setFileName(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor());
+			EmailService email = new EmailService();
+			Map<String, Object> params = new HashMap<>();
 
-			emailU.enviarMailAdjunto(mail);
+			email.setFrom(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FROM).getValor());
+			email.setSubject(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_SUBJECT).getValor());
+			email.setTo(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_TO).getValor());
+			email.setTemplate(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY);
+			params.put("user", "Automatico");
+			email.setParams(params);
+			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
