@@ -43,18 +43,15 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	@Autowired
 	private ISnrDatoTramiteRepo repo;
-	
-	
+
 	@Autowired
 	private IClienteUnicoService clienteUnicoService;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ISnrDatoBasicoPrevisionalService siniestroPrevisionalService;
-		
-	
 
 	@Override
 	protected IGenericRepo<SnrDatoTramite, Long> getRepo() {
@@ -62,7 +59,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	}
 
 	@Override
-	public List<SnrDatoTramiteDTO> listarDatosXSiniestro(Long numSiniestro) throws SiprenException {	
+	public List<SnrDatoTramiteDTO> listarDatosXSiniestro(Long numSiniestro) throws SiprenException {
 		List<SnrDatoTramite> listTramites = repo.listarDatosXSiniestro(numSiniestro);
 		List<SnrDatoTramiteDTO> listTramitesDTO = new ArrayList<>();
 		listTramites.forEach(tr -> {
@@ -72,7 +69,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 				mapInfoPrevisional(snrDatoTramiteDTO);
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
-				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
+				log.error("Error obteniendo tramite: {} ", tr.getIdTramite(), e);
 			}
 		});
 		return listTramitesDTO;
@@ -82,103 +79,133 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	public Long ultimoTramiteXSiniestro(Long numSiniestro) throws SiprenException {
 		return repo.ultimoTramiteXSiniestro(numSiniestro);
 	}
-	
 
 	public void getInfoPersona(SnrDatoBasicoDTO datosBasicos)
 			throws SiprenException, ServiceException, JsonProcessingException {
-		
-		ClienteUnicoDTO dto = clienteUnicoService.consumirRestClienteUnico(
-				String.valueOf(datosBasicos.getPersona().getNumPersona()));
-		
-		datosBasicos.setClienteUnico(dto);		
+
+		ClienteUnicoDTO dto = clienteUnicoService
+				.consumirRestClienteUnico(String.valueOf(datosBasicos.getPersona().getNumPersona()));
+
+		datosBasicos.setClienteUnico(dto);
 	}
 
 	@Override
 	public SnrDatoTramiteDTO consultarPorId(Long id) throws SiprenException {
 		SnrDatoTramite datoTramite = repo.findById(id).orElse(null);
-		if(Objects.isNull(datoTramite))
+		if (Objects.isNull(datoTramite))
 			return null;
 		SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datoTramite, SnrDatoTramiteDTO.class);
 		mapInfoPersona(datosTramitesDTO, datoTramite.getSiniestro().getPersona());
 		mapInfoPrevisional(datosTramitesDTO);
 		return datosTramitesDTO;
 	}
-		
+
 	@Override
-	public ResponsePageableDTO listarPorFiltro(FiltroTramitesDTO dto, Pageable page) throws JsonProcessingException, ServiceException, SiprenException {
+	public ResponsePageableDTO listarPorFiltro(FiltroTramitesDTO dto, Pageable page)
+			throws JsonProcessingException, ServiceException, SiprenException {
 		GenericSprecification<SnrDatoTramite> genericSprecification = new GenericSprecification<>();
 		List<SnrDatoTramiteDTO> listDto = new ArrayList<>();
-		Page<SnrDatoTramite> pageSnrDatosTramites;			
-								
-		if(Objects.nonNull(dto.getIdTramite())) {
-			genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idTramite", 
-					dto.getIdTramite(), 
-					SearchOperation.EQUAL));
+		Page<SnrDatoTramite> pageSnrDatosTramites;
+
+		if (Objects.nonNull(dto.getTramite())) {
+			if (Objects.nonNull(dto.getTramite().getRango()) && !dto.getTramite().getRango().isEmpty()) {
+				dto.getTramite().getRango().stream().forEach(n -> {
+					genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("idTramite", n.getDatoInicio(),
+							n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
+				});
+			}
+
+			if (Objects.nonNull(dto.getTramite().getIndividual()) && !dto.getTramite().getIndividual().isEmpty()) {
+				dto.getTramite().getIndividual().stream().forEach(n -> {
+					genericSprecification
+							.add(new SearchCriteria<SnrDatoTramite>("idTramite", n, SearchOperation.EQUAL));
+				});
+			}
 		}
-		
-		if(Objects.nonNull(dto.getNumIdentificacion())) {
-			Long numPersona = getNumPersona(dto);
-			genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", 
-					numPersona, 
-					SearchOperation.EQUAL,
-					Boolean.TRUE,
-					"siniestro",
-					Boolean.FALSE));
+
+		if (Objects.nonNull(dto.getIdentificacion())) {
+			if (Objects.nonNull(dto.getPersona().getRango()) && !dto.getPersona().getRango().isEmpty()) {
+				dto.getPersona().getRango().stream().forEach(n -> {
+					Long numPersonaI = getNumPersona(Long.valueOf(n.getDatoInicio()));
+					Long numPersonaF = getNumPersona(Long.valueOf(n.getDatoFinal()));
+					if (Objects.nonNull(numPersonaI) && Objects.nonNull(numPersonaF)) {
+						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", numPersonaI,
+								numPersonaF, SearchOperation.BETWEEN_LONG, Boolean.TRUE, "siniestro", Boolean.FALSE));
+					}
+				});
+			}
+
+			if (Objects.nonNull(dto.getPersona().getIndividual()) && !dto.getPersona().getIndividual().isEmpty()) {
+				dto.getPersona().getIndividual().stream().forEach(n -> {
+					Long numPersona = getNumPersona(Long.valueOf(n));
+					if (Objects.nonNull(numPersona)) {
+						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", n,
+								SearchOperation.EQUAL, Boolean.TRUE, "siniestro", Boolean.FALSE));
+					}
+				});
+			}
 		}
-		
-		if(Objects.nonNull(dto.getNumPersona())) {
-			genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", 
-					dto.getNumPersona(), 
-					SearchOperation.EQUAL,
-					Boolean.TRUE,
-					"siniestro",
-					Boolean.FALSE));
+
+		if (Objects.nonNull(dto.getPersona())) {
+
+			if (Objects.nonNull(dto.getPersona().getRango()) && !dto.getPersona().getRango().isEmpty()) {
+				dto.getPersona().getRango().stream().forEach(n -> {
+					genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", n.getDatoInicio(),
+							n.getDatoFinal(), SearchOperation.BETWEEN_LONG, Boolean.TRUE, "siniestro", Boolean.FALSE));
+				});
+			}
+
+			if (Objects.nonNull(dto.getPersona().getIndividual()) && !dto.getPersona().getIndividual().isEmpty()) {
+				dto.getPersona().getIndividual().stream().forEach(n -> {
+					genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", n,
+							SearchOperation.EQUAL, Boolean.TRUE, "siniestro", Boolean.FALSE));
+				});
+			}
+
 		}
-						
-		if(Objects.nonNull(dto.getTipoTramite())) {
-			genericSprecification.addJoins(new SearchCriteria<SnrTipo>("id", 
-					dto.getTipoTramite(), 
-					SearchOperation.EQUAL,
-					Boolean.TRUE,
-					"tipoTramite",
-					Boolean.FALSE));
+
+		if (Objects.nonNull(dto.getTipoTramite())) {
+			genericSprecification.addJoins(new SearchCriteria<SnrTipo>("id", dto.getTipoTramite(),
+					SearchOperation.EQUAL, Boolean.TRUE, "tipoTramite", Boolean.FALSE));
 		}
-		
-		if(Objects.nonNull(dto.getEstadoTramite())) {
-			genericSprecification.addJoins(new SearchCriteria<SnrEstado>("id", 
-					dto.getEstadoTramite(), 
-					SearchOperation.EQUAL,
-					Boolean.TRUE,
-					"estadoTramite",
-					Boolean.FALSE));
+
+		if (Objects.nonNull(dto.getEstadoTramite())) {
+			genericSprecification.addJoins(new SearchCriteria<SnrEstado>("id", dto.getEstadoTramite(),
+					SearchOperation.EQUAL, Boolean.TRUE, "estadoTramite", Boolean.FALSE));
 		}
-		
-		if(Objects.nonNull(dto.getClasificacionJur())) {
-			genericSprecification.addJoins(new SearchCriteria<SnrTipo>("id", 
-					dto.getClasificacionJur(), 
-					SearchOperation.EQUAL,
-					Boolean.TRUE,
-					"clasificacionJur",
-					Boolean.FALSE));
-		}		
-		
-		if(Objects.nonNull(dto.getFecRadicacionAlfaIni()) 
-				&& Objects.nonNull(dto.getFecRadicacionAlfaFin())) {
-			
-			genericSprecification.add(new SearchCriteria<SnrDatoTramite>("fecRadicacionAlfa", 
-					dto.getFecRadicacionAlfaIni(),
-					dto.getFecRadicacionAlfaFin(),
-					SearchOperation.BETWEEN));
+
+		if (Objects.nonNull(dto.getClasificacionJur())) {
+			genericSprecification.addJoins(new SearchCriteria<SnrTipo>("id", dto.getClasificacionJur(),
+					SearchOperation.EQUAL, Boolean.TRUE, "clasificacionJur", Boolean.FALSE));
 		}
-		
-		if(Objects.nonNull(dto.getIdSolicitudAfp())) {
-			genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp", 
-					dto.getIdSolicitudAfp(), 
-					SearchOperation.EQUAL));
-		}	
-		pageSnrDatosTramites = repo.findAll(genericSprecification, page);			
-		
-		for(SnrDatoTramite datosTramites : pageSnrDatosTramites) {
+
+		if (Objects.nonNull(dto.getFecRadicacionAlfaIni()) && Objects.nonNull(dto.getFecRadicacionAlfaFin())) {
+
+			genericSprecification.add(new SearchCriteria<SnrDatoTramite>("fecRadicacionAlfa",
+					dto.getFecRadicacionAlfaIni(), dto.getFecRadicacionAlfaFin(), SearchOperation.BETWEEN));
+		}
+
+		if (Objects.nonNull(dto.getSolicitudAfp())) {
+
+			if (Objects.nonNull(dto.getSolicitudAfp().getRango()) && !dto.getSolicitudAfp().getRango().isEmpty()) {
+				dto.getSolicitudAfp().getRango().stream().forEach(n -> {
+					genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
+							n.getDatoInicio(), n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
+				});
+			}
+
+			if (Objects.nonNull(dto.getSolicitudAfp().getIndividual())
+					&& !dto.getSolicitudAfp().getIndividual().isEmpty()) {
+				dto.getSolicitudAfp().getIndividual().stream().forEach(n -> {
+					genericSprecification
+							.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp", n, SearchOperation.EQUAL));
+				});
+			}
+
+		}
+		pageSnrDatosTramites = repo.findAll(genericSprecification, page);
+
+		for (SnrDatoTramite datosTramites : pageSnrDatosTramites) {
 			SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datosTramites, SnrDatoTramiteDTO.class);
 			listDto.add(datosTramitesDTO);
 			try {
@@ -188,9 +215,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 				log.error("Error consultando información relacionada con Persona para listado de siniestros: {}", e);
 			}
 		}
-			
-		
-		return PageableUtil.responsePageable(listDto, pageSnrDatosTramites);		
+
+		return PageableUtil.responsePageable(listDto, pageSnrDatosTramites);
 	}
 
 	@Override
@@ -204,7 +230,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 				mapInfoPrevisional(snrDatoTramiteDTO);
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
-				log.error("Error obteniendo tramite: {} ",tr.getIdTramite(), e);
+				log.error("Error obteniendo tramite: {} ", tr.getIdTramite(), e);
 			}
 		});
 		return listTramitesDTO;
@@ -212,57 +238,56 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	@Override
 	public void actualizaEstadoTramite(Long numTramite, Integer codEstado) throws SiprenException {
-		repo.actualizaEstadoTramite(numTramite, codEstado);		
+		repo.actualizaEstadoTramite(numTramite, codEstado);
 	}
-	
+
 	private void mapInfoPersona(SnrDatoTramiteDTO snrDatoTramiteDTO, Long numPersona) throws SiprenException {
 		try {
-			if(Objects.nonNull(snrDatoTramiteDTO.getSiniestro())) {
+			if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro())) {
 				GnrPersonaClienteDTO personaDTO = new GnrPersonaClienteDTO();
 				personaDTO.setNumPersona(numPersona);
 				snrDatoTramiteDTO.getSiniestro().setPersona(personaDTO);
 				getInfoPersona(snrDatoTramiteDTO.getSiniestro());
-				if(Objects.nonNull(snrDatoTramiteDTO.getSiniestro().getClienteUnico())) {
-					ClienteUnicoDTO clienteUnico = snrDatoTramiteDTO.getSiniestro().getClienteUnico(); 
+				if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro().getClienteUnico())) {
+					ClienteUnicoDTO clienteUnico = snrDatoTramiteDTO.getSiniestro().getClienteUnico();
 					personaDTO.setNumIdentificacion(Integer.parseInt(clienteUnico.getCedula()));
 					GnrTipoDocumentoDTO tipoDocumento = new GnrTipoDocumentoDTO();
 					tipoDocumento.setId(Integer.parseInt(clienteUnico.getTipoDoc()));
 					tipoDocumento.setNombre(clienteUnico.getTipoDocumento());
 					personaDTO.setTipoDocumento(tipoDocumento);
-				}							
-			}				
+				}
+			}
 		} catch (JsonProcessingException | ServiceException e) {
 			log.error("Error consultando información relacionada con Persona para listado de tramites", e);
 		}
 	}
-	
-	private void mapInfoPrevisional(SnrDatoTramiteDTO snrDatoTramiteDTO) throws SiprenException{
-		snrDatoTramiteDTO.setSiniestro(siniestroPrevisionalService.listarPorSiniestro(snrDatoTramiteDTO.getSiniestro().getIdSiniestro()));		
+
+	private void mapInfoPrevisional(SnrDatoTramiteDTO snrDatoTramiteDTO) throws SiprenException {
+		snrDatoTramiteDTO.setSiniestro(
+				siniestroPrevisionalService.listarPorSiniestro(snrDatoTramiteDTO.getSiniestro().getIdSiniestro()));
 	}
-	
-	private Long getNumPersona(FiltroTramitesDTO filtroDto) throws JsonProcessingException, ServiceException, SiprenException {
-		/*Si el filtro viene por numIdentificación pero a su vez envian numero de persona
-		 * se evalua para evitar consumo a microservicio de cliente unico
-		 */
-		if(Objects.nonNull(filtroDto.getNumPersona())) {
-			return filtroDto.getNumPersona();
-		}
-		
-		ClienteUnicoDTO dto = clienteUnicoService.consumirRestClienteUnico(
-				ParametroGeneralUtil.GRAL_TIPO_DOC_CC,
-				String.valueOf(filtroDto.getNumIdentificacion()));
-		
-		//Si el documento no retorno resultados con tipoDoc 2, se consulta tipoDoc 1
-		if(Objects.isNull(dto)) {
-			dto = clienteUnicoService.consumirRestClienteUnico(
-					ParametroGeneralUtil.GRAL_TIPO_DOC_TI,
-					String.valueOf(filtroDto.getNumIdentificacion()));
-		}
-		
-		if(Objects.nonNull(dto)) {
-			return dto.getNumPersona();
+
+	private Long getNumPersona(Long documento) {
+
+		ClienteUnicoDTO dto;
+		try {
+			dto = clienteUnicoService.consumirRestClienteUnico(ParametroGeneralUtil.GRAL_TIPO_DOC_CC,
+					String.valueOf(documento));
+
+			if (Objects.isNull(dto)) {
+				dto = clienteUnicoService.consumirRestClienteUnico(ParametroGeneralUtil.GRAL_TIPO_DOC_TI,
+						String.valueOf(documento));
+			}
+
+			if (Objects.nonNull(dto)) {
+				return dto.getNumPersona();
+			}
+
+		} catch (Exception e) {
+			return null;
 		}
 		return null;
+
 	}
-	
+
 }

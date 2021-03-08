@@ -44,7 +44,7 @@ public class DatabasePropertiesListener implements ApplicationListener<Applicati
 		String dbHost = getString(secretJson, "host");
 		String dbPort = getString(secretJson, "port");
 		String dbDBName = getString(secretJson, "dbname");
-		String dbUrl = "jdbc:oracle:thin:@"+dbHost+":"+dbPort+"/"+dbDBName;
+		String dbUrl = "jdbc:oracle:thin:@" + dbHost + ":" + dbPort + "/" + dbDBName;
 		Properties dbProperties = new Properties();
 		dbProperties.put(DATASOURCE_USERNAME, dbUser);
 		dbProperties.put(DATASOURCE_PASSWORD, dbPassword);
