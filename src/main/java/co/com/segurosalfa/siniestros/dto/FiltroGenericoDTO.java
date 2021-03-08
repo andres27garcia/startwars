@@ -12,4 +12,5 @@ public class FiltroGenericoDTO {
 	private List<FiltroRangoDTO> rango;
 	private List<String> individual;
 
+	
 }

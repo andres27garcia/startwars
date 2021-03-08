@@ -10,4 +10,5 @@ public class FiltroRangoDTO {
 	private Long datoInicio;
 	private Long datoFinal;
 
+	
 }
