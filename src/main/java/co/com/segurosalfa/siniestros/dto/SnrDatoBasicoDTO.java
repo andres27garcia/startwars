@@ -14,11 +14,12 @@ public class SnrDatoBasicoDTO  {
 
 	private Long idSiniestro;
 	private GnrPersonaClienteDTO persona;
-	@NotNull(message = "El campo numPoliza puede ser nulo o vacio")
+//	@NotNull(message = "El campo numPoliza puede ser nulo o vacio")
 	private Integer numPoliza;
 	private SnrOrigenDTO origen;
-	@NotNull(message = "El campo estado no puede ser nulo o vacio")
+//	@NotNull(message = "El campo estado no puede ser nulo o vacio")
 	private SnrEstadoDTO estado;
+	@NotNull(message = "El campo fecSiniestro no puede ser nulo o vacio")
 	private LocalDate fecSiniestro;
 	private SnrCausaSiniestroDTO causaSiniestro;
 	private Integer numCalifVinculacion;
