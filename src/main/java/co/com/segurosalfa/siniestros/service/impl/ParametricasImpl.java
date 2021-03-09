@@ -128,7 +128,7 @@ public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implemen
 					tempDTO.setFecFinEjecucion(i[3].toString());
 					tempDTO.setEstadoProceso(i[4].toString());
 
-					if (tempDTO.getEstadoProceso().equalsIgnoreCase("En Ejecuci\u00f3n")) {
+					if (tempDTO.getEstadoProceso().equalsIgnoreCase("En Ejecución")) {
 						tempDTO.setFecFinEjecucion("");
 						tempDTO.setAvance(consultarAvanceProc(tempDTO.getIdProceso()));
 					} else {

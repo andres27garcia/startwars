@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FiltroSiniestrosDTO {
 
-	private Long idSiniestro;
-	private Long numPersona;
-	private Integer numPoliza;
-	private Integer numIdentificacion;
+	private FiltroGenericoDTO siniestro;
+	private FiltroGenericoDTO persona;
+	private FiltroGenericoDTO poliza;
+	private FiltroGenericoDTO identificacion;
 	private Integer origen;
 	private Integer estado;
 	private LocalDate fecSiniestroInicial;

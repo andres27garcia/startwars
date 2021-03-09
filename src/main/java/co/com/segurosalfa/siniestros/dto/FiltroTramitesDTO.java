@@ -9,16 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FiltroTramitesDTO {
 
-
-	private Long numPersona;
-	private Integer numIdentificacion;
-	private Long idTramite;
+	private FiltroGenericoDTO persona;
+	private FiltroGenericoDTO identificacion;
+	private FiltroGenericoDTO tramite;
 	private Integer tipoTramite;
 	private Integer subtipoTramite;
 	private Integer estadoTramite;
 	private LocalDate fecRadicacionAlfaIni;
 	private LocalDate fecRadicacionAlfaFin;
-	private Integer idSolicitudAfp;
+	private FiltroGenericoDTO solicitudAfp;
 	private Integer clasificacionJur;
 
 }
