@@ -61,7 +61,6 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 
 	@Autowired
 	private ISnrDatoBasicoPrevisionalService serviceDatoBasicoPrevisional;
-	
 
 	@Override
 	protected IGenericRepo<SnrDatoBasicoPrevisional, Long> getRepo() {
@@ -225,7 +224,10 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 					"siniestro", Boolean.FALSE));
 		}
 
-		pageDatoBasicoPrevisional = repo.findAll(genericSprecification, page);
+		if (Boolean.TRUE.equals(genericSprecification.validContent()))
+			pageDatoBasicoPrevisional = repo.findAll(genericSprecification, page);
+		else
+			pageDatoBasicoPrevisional = repo.findAll(page);
 
 		for (SnrDatoBasicoPrevisional datoBasicoPrevisional : pageDatoBasicoPrevisional) {
 			SnrDatoBasicoDTO snrDatoBasicoDTO = construirSnrDatoBasico(datoBasicoPrevisional);
@@ -357,13 +359,14 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	}
 
 	@Override
-	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException{
+	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException {
 		snrDatoBasicoDTO.getEstado().setId(ParametroGeneralUtil.ESTADO_AVISADO);
 		snrDatoBasicoDTO.setNumPoliza(Integer.valueOf(serviceDatoBasicoPrevisional
 				.consultaNumPoliza(Timestamp.valueOf(snrDatoBasicoDTO.getFecSiniestro().atStartOfDay()))));
-		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasicoPrevisional.class);
-		SnrDatoBasico siniestroBasico =  modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
-		
+		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO,
+				SnrDatoBasicoPrevisional.class);
+		SnrDatoBasico siniestroBasico = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
+
 		siniestroBasico.setPersona(snrDatoBasicoDTO.getPersona().getNumPersona());
 		siniestroBasico = serviceDatoBasico.registrar(siniestroBasico);
 		siniestroPrevisional.setSiniestro(siniestroBasico);

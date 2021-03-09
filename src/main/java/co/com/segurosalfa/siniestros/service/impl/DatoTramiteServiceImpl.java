@@ -203,7 +203,11 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			}
 
 		}
-		pageSnrDatosTramites = repo.findAll(genericSprecification, page);
+
+		if (Boolean.TRUE.equals(genericSprecification.validContent()))
+			pageSnrDatosTramites = repo.findAll(genericSprecification, page);
+		else
+			pageSnrDatosTramites = repo.findAll(page);
 
 		for (SnrDatoTramite datosTramites : pageSnrDatosTramites) {
 			SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datosTramites, SnrDatoTramiteDTO.class);

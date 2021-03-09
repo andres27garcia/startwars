@@ -2,7 +2,6 @@ package co.com.segurosalfa.siniestros.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
