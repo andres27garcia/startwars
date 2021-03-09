@@ -25,6 +25,7 @@ public class Beans {
 		@Override
 		protected void configure() {
 			skip().setNumPersona(null);
+	
 		}
 	};
 
