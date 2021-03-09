@@ -1,6 +1,7 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +58,10 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	private IClienteUnicoService clienteUnicoService;
 	@Autowired
 	private ISnrDatosBasicosService serviceDatoBasico;
+
+	@Autowired
+	private ISnrDatoBasicoPrevisionalService serviceDatoBasicoPrevisional;
+	
 
 	@Override
 	protected IGenericRepo<SnrDatoBasicoPrevisional, Long> getRepo() {
@@ -352,10 +357,13 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	}
 
 	@Override
-	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException {
-		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO,
-				SnrDatoBasicoPrevisional.class);
-		SnrDatoBasico siniestroBasico = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
+	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException{
+		snrDatoBasicoDTO.getEstado().setId(ParametroGeneralUtil.ESTADO_AVISADO);
+		snrDatoBasicoDTO.setNumPoliza(Integer.valueOf(serviceDatoBasicoPrevisional
+				.consultaNumPoliza(Timestamp.valueOf(snrDatoBasicoDTO.getFecSiniestro().atStartOfDay()))));
+		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasicoPrevisional.class);
+		SnrDatoBasico siniestroBasico =  modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
+		
 		siniestroBasico.setPersona(snrDatoBasicoDTO.getPersona().getNumPersona());
 		siniestroBasico = serviceDatoBasico.registrar(siniestroBasico);
 		siniestroPrevisional.setSiniestro(siniestroBasico);
