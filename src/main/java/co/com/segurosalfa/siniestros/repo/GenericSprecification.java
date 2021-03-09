@@ -2,6 +2,7 @@ package co.com.segurosalfa.siniestros.repo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -112,6 +113,18 @@ public class GenericSprecification<T> implements Specification<T> {
 		}
 
 		return builder.or(predicates.toArray(new Predicate[0]));
+	}
+
+	public boolean validContent() {
+
+		if (Objects.nonNull(this.list) && !this.list.isEmpty())
+			return true;
+
+		if (Objects.nonNull(this.listJoins) && !this.listJoins.isEmpty())
+			return true;
+
+		return false;
+
 	}
 
 }
