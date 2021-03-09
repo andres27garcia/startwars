@@ -79,7 +79,7 @@ public class CargueSiniestrosController {
 	IResulPrcCreacionSiniestroService serviceSini;
 
 	@Autowired
-	private EmailServiceUtil emailUtil;
+	EmailServiceUtil emailUtil;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -214,8 +214,9 @@ public class CargueSiniestrosController {
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
 			MultipartFile[] multipartFiles = new MultipartFile[1];
-			multipartFiles[0] = new MockMultipartFile(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME).getValor(),
+			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_FILENAME)
+					.getValor();
+			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
 					outConv.toByteArray());
 
 			EmailService email = new EmailService();
