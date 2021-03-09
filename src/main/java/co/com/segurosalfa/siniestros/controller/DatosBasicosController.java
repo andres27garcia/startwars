@@ -62,7 +62,7 @@ public class DatosBasicosController {
 	@Autowired
 	IResulPrcCreacionSiniestroService serviceSini;
 	@Autowired
-	private EmailServiceUtil emailUtil;
+	EmailServiceUtil emailUtil;
 
 	@ApiOperation(value = "OperaciÃ³n de servicio que consulta el listado de todos los siniestros", notes = "La operaciÃ³n retorna todos los siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
@@ -143,8 +143,8 @@ public class DatosBasicosController {
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
 			MultipartFile[] multipartFiles = new MultipartFile[1];
-			multipartFiles[0] = new MockMultipartFile(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor(),
+			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor();
+			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
 					outConv.toByteArray());
 
 			EmailService email = new EmailService();

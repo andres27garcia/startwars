@@ -3,7 +3,9 @@ package co.com.segurosalfa.siniestros.controller;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -13,18 +15,18 @@ import org.jxls.common.Context;
 import org.jxls.util.JxlsHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -40,8 +42,8 @@ import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
-import co.com.sipren.common.bus.dto.Mail;
-import co.com.sipren.common.util.EmailUtil;
+import co.com.sipren.common.notifications.EmailService;
+import co.com.sipren.common.notifications.EmailServiceUtil;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.ServiceException;
@@ -50,8 +52,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- * ** DatoBasicoPrevisionalController clase controlador que administra las peticiones
- * para la v1 de siniestros
+ * ** DatoBasicoPrevisionalController clase controlador que administra las
+ * peticiones para la v1 de siniestros
  * 
  * @author diego.marin@segurosalfa.com.co
  * @version %I%, %G%
@@ -64,11 +66,11 @@ import io.swagger.annotations.ApiResponses;
 public class DatoBasicoPrevisionalController {
 
 	@Autowired
-	private ISnrDatoBasicoPrevisionalService service;
+	ISnrDatoBasicoPrevisionalService service;
 	@Autowired
-	private ModelMapper modelMapper;
+	ModelMapper modelMapper;
 	@Autowired
-	EmailUtil emailU;
+	EmailServiceUtil emailUtil;
 	@Autowired
 	IParametricasService paramService;
 	@Autowired
@@ -117,8 +119,8 @@ public class DatoBasicoPrevisionalController {
 	}
 
 	/**
-	 * Listar registros por idSiniestro, numPersona, numPoliza, numIdentificacion, origen, estado
-	 * fecSiniestroInicial, fecSiniestroFinal
+	 * Listar registros por idSiniestro, numPersona, numPoliza, numIdentificacion,
+	 * origen, estado fecSiniestroInicial, fecSiniestroFinal
 	 * 
 	 * @param dto
 	 * @param page
@@ -146,8 +148,8 @@ public class DatoBasicoPrevisionalController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	/**}
-	 * Registrar Siniestro 
+	/**
+	 * } Registrar Siniestro
 	 * 
 	 * @param dto
 	 * @return
@@ -183,8 +185,8 @@ public class DatoBasicoPrevisionalController {
 	}
 
 	/**
-	 * Reprocesa la creación de un trámite que no ha podido ser creado por diferencias en los datos del
-	 * afiliado entre Cliente-Unico y AFP. 
+	 * Reprocesa la creación de un trámite que no ha podido ser creado por
+	 * diferencias en los datos del afiliado entre Cliente-Unico y AFP.
 	 * 
 	 * @param dto
 	 * @return
@@ -218,20 +220,24 @@ public class DatoBasicoPrevisionalController {
 			context1.putVar("reporte", lista);
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
-			InputStreamSource attachment = new ByteArrayResource(outConv.toByteArray());
+			MultipartFile[] multipartFiles = new MultipartFile[1];
+			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME)
+					.getValor();
+			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
+					outConv.toByteArray());
 
-			Mail mail = new Mail();
-			mail.setFrom(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
-			mail.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor()
-					.split(","));
-			mail.setSubject(
+			EmailService email = new EmailService();
+			Map<String, Object> params = new HashMap<>();
+
+			email.setFrom(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
+			email.setSubject(
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
-			mail.setText(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY).getValor());
-			mail.setFile(attachment);
-			mail.setFileName(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor());
-
-			emailU.enviarMailAdjunto(mail);
+			email.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor());
+			email.setTemplate(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY);
+			params.put("user", dto.getUsuario());
+			email.setParams(params);
+			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());

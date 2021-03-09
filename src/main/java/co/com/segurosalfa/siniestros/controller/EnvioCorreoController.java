@@ -85,8 +85,8 @@ public class EnvioCorreoController {
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
 			MultipartFile[] multipartFiles = new MultipartFile[1];
-			multipartFiles[0] = new MockMultipartFile(
-					service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor(),
+			String fileName = service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_FILENAME).getValor();
+			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
 					outConv.toByteArray());
 
 			EmailService email = new EmailService();
@@ -98,7 +98,7 @@ public class EnvioCorreoController {
 			email.setTemplate(service.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_AUT_EMAIL_BODY).getValor());
 			params.put("user", "Automatico");
 			email.setParams(params);
-			
+
 			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
