@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,6 +78,26 @@ public class DatosBasicosController {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
+	/**
+	 * Listar por id.
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SiprenException
+	 */
+	@ApiOperation(value = "Operación de servicio que consulta un siniestros por ID", notes = "La operación retorna un siniestro por ID registrado en la base de datos")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping("/{id}")
+	public ResponseEntity<SnrDatoBasicoDTO> listarPorId(@PathVariable("id") Long id) throws SiprenException {
+		SnrDatoBasicoDTO datoBasico = service.listarPorSiniestro(id);
+		if (datoBasico == null) {
+			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
+		}
+		return new ResponseEntity<>(datoBasico, HttpStatus.NO_CONTENT);
 	}
 
 	@ApiOperation(value = "OperaciÃ³n de servicio que consulta datos de siniestros por filtros", notes = "La operaciÃ³n retorna los siniestros dependiendo de los campos seleccionados")
