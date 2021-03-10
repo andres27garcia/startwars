@@ -65,8 +65,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		listTramites.forEach(tr -> {
 			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
 			try {
-				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
 				mapInfoPrevisional(snrDatoTramiteDTO);
+				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
 				log.error("Error obteniendo tramite: {} ", tr.getIdTramite(), e);
@@ -82,7 +82,6 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	public void getInfoPersona(SnrDatoBasicoDTO datosBasicos)
 			throws SiprenException, ServiceException, JsonProcessingException {
-
 		ClienteUnicoDTO dto = clienteUnicoService
 				.consumirRestClienteUnico(String.valueOf(datosBasicos.getPersona().getNumPersona()));
 
@@ -95,8 +94,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		if (Objects.isNull(datoTramite))
 			return null;
 		SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datoTramite, SnrDatoTramiteDTO.class);
-		mapInfoPersona(datosTramitesDTO, datoTramite.getSiniestro().getPersona());
 		mapInfoPrevisional(datosTramitesDTO);
+		mapInfoPersona(datosTramitesDTO, datoTramite.getSiniestro().getPersona());
 		return datosTramitesDTO;
 	}
 
@@ -213,8 +212,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			SnrDatoTramiteDTO datosTramitesDTO = modelMapper.map(datosTramites, SnrDatoTramiteDTO.class);
 			listDto.add(datosTramitesDTO);
 			try {
-				mapInfoPersona(datosTramitesDTO, datosTramites.getSiniestro().getPersona());
 				mapInfoPrevisional(datosTramitesDTO);
+				mapInfoPersona(datosTramitesDTO, datosTramites.getSiniestro().getPersona());
 			} catch (SiprenException e) {
 				log.error("Error consultando información relacionada con Persona para listado de siniestros: {}", e);
 			}
@@ -230,8 +229,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		listTramites.forEach(tr -> {
 			SnrDatoTramiteDTO snrDatoTramiteDTO = modelMapper.map(tr, SnrDatoTramiteDTO.class);
 			try {
-				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
 				mapInfoPrevisional(snrDatoTramiteDTO);
+				mapInfoPersona(snrDatoTramiteDTO, tr.getSiniestro().getPersona());
 				listTramitesDTO.add(snrDatoTramiteDTO);
 			} catch (SiprenException e) {
 				log.error("Error obteniendo tramite: {} ", tr.getIdTramite(), e);
@@ -246,24 +245,22 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	}
 
 	private void mapInfoPersona(SnrDatoTramiteDTO snrDatoTramiteDTO, Long numPersona) throws SiprenException {
-		try {
-			if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro())) {
-				GnrPersonaClienteDTO personaDTO = new GnrPersonaClienteDTO();
-				personaDTO.setNumPersona(numPersona);
-				snrDatoTramiteDTO.getSiniestro().setPersona(personaDTO);
-				getInfoPersona(snrDatoTramiteDTO.getSiniestro());
-				if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro().getClienteUnico())) {
-					ClienteUnicoDTO clienteUnico = snrDatoTramiteDTO.getSiniestro().getClienteUnico();
-					personaDTO.setNumIdentificacion(Integer.parseInt(clienteUnico.getCedula()));
-					GnrTipoDocumentoDTO tipoDocumento = new GnrTipoDocumentoDTO();
-					tipoDocumento.setId(Integer.parseInt(clienteUnico.getTipoDoc()));
-					tipoDocumento.setNombre(clienteUnico.getTipoDocumento());
-					personaDTO.setTipoDocumento(tipoDocumento);
-				}
+
+		if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro())) {
+			GnrPersonaClienteDTO personaDTO = new GnrPersonaClienteDTO();
+			personaDTO.setNumPersona(numPersona);
+			snrDatoTramiteDTO.getSiniestro().setPersona(personaDTO);
+			// getInfoPersona(snrDatoTramiteDTO.getSiniestro());
+			if (Objects.nonNull(snrDatoTramiteDTO.getSiniestro().getClienteUnico())) {
+				ClienteUnicoDTO clienteUnico = snrDatoTramiteDTO.getSiniestro().getClienteUnico();
+				personaDTO.setNumIdentificacion(Integer.parseInt(clienteUnico.getCedula()));
+				GnrTipoDocumentoDTO tipoDocumento = new GnrTipoDocumentoDTO();
+				tipoDocumento.setId(Integer.parseInt(clienteUnico.getTipoDoc()));
+				tipoDocumento.setNombre(clienteUnico.getTipoDocumento());
+				personaDTO.setTipoDocumento(tipoDocumento);
 			}
-		} catch (JsonProcessingException | ServiceException e) {
-			log.error("Error consultando información relacionada con Persona para listado de tramites", e);
 		}
+
 	}
 
 	private void mapInfoPrevisional(SnrDatoTramiteDTO snrDatoTramiteDTO) throws SiprenException {

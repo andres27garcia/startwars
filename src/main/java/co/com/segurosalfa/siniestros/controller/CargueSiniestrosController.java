@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class CargueSiniestrosController {
 			@RequestParam(name = "usuario") String usuario) throws SiprenException {
 
 		try {
-
+			log.info("Cargue inicial: " + new Date());
 			Object object = service.uploadFile(multipartToFile(file),
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CARGUE).getValor()
@@ -116,7 +117,7 @@ public class CargueSiniestrosController {
 			if (object == null) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_CARGUE);
 			}
-
+			log.info(object.toString());
 			JsonObject jsonO = new Gson().fromJson(object.toString(), JsonObject.class);
 
 			DetalleCargueArchivoResponse archivo = new Gson().fromJson(jsonO.get("data").toString(),
@@ -126,7 +127,7 @@ public class CargueSiniestrosController {
 					|| "".equalsIgnoreCase(archivo.getIdArchivoCargue().toString())) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_RESPUESTA_CARGUE);
 			}
-
+			log.info("Consulta temporal: " + new Date());
 			Thread.sleep(2000);
 			Object objectDetail = service.executeApi(null, HttpMethod.GET,
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
@@ -136,7 +137,7 @@ public class CargueSiniestrosController {
 			if (objectDetail == null) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_CONSULTA_DETALLE);
 			}
-
+			log.info(objectDetail.toString());
 			String json = new Gson().toJson(objectDetail);
 
 			if (json == null || json.isEmpty()) {
@@ -169,15 +170,16 @@ public class CargueSiniestrosController {
 				throw new ModeloNotFoundException("No se registran siniestros procesados");
 
 			List<SnrResulPrcCreacionSiniestroDTO> listResults = new ArrayList<SnrResulPrcCreacionSiniestroDTO>();
-
+			log.info("Limpiar temporal: " + new Date());
 			serviceSiniestro.limpiarTemporalesCargue(usuario, ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-
+			log.info("fin limpiar temporal: " + new Date());
 			for (CargueSiniestrosDTO cargueSiniestrosDTO : listado) {
 				if (cargueSiniestrosDTO.getEstadoRegistro().equals("PROCESADO")
 						&& (null == cargueSiniestrosDTO.getDetalleError()
 								|| "".equals(cargueSiniestrosDTO.getDetalleError()))) {
-
+					log.info("Cargando lista: " + new Date());
 					serviceSiniestro.procesarCargue(cargueSiniestrosDTO);
+					log.info("Fin cargando lista: " + new Date());
 				} else {
 					// Consolida en listado los registros con errores en el cargue
 					SnrResulPrcCreacionSiniestroDTO gnrResult = new SnrResulPrcCreacionSiniestroDTO();
@@ -194,8 +196,9 @@ public class CargueSiniestrosController {
 					listResults.add(gnrResult);
 				}
 			}
-
+			log.info("Proceso cargue: " + new Date());
 			serviceSiniestro.crearSiniestroCargue(usuario, ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
+			log.info("Fin proceso cargue: " + new Date());
 
 			// Consolida en listado los que se procesaron en BD para crear siniestro
 			List<SnrResulPrcCreacionSiniestro> lista = serviceSini
@@ -227,18 +230,14 @@ public class CargueSiniestrosController {
 			email.setSubject(
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_SUBJECT).getValor());
 			email.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_TO).getValor());
-			email.setTemplate(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY);
+			email.setTemplate(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_CAR_SIN_EMAIL_BODY).getValor());
 			params.put("user", usuario);
 			email.setParams(params);
 			emailUtil.notification(email, multipartFiles);
 
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
-		} finally {
-			/*
-			 * try { logServiceUtil.sendLog("", logService); } catch (LogServiceHandler e) {
-			 * log.error("Sucedio un error al registrar el evento de log", e); }
-			 */
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
