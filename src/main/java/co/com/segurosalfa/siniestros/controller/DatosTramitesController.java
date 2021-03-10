@@ -124,6 +124,9 @@ public class DatosTramitesController {
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
 			throws JsonProcessingException, ServiceException, SiprenException {
 
+		if (Objects.isNull(dto))
+			dto = new FiltroTramitesDTO();
+
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);
 

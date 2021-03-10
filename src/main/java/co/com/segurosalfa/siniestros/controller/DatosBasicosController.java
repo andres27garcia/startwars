@@ -88,6 +88,9 @@ public class DatosBasicosController {
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
 			throws SiprenException, JsonProcessingException, ServiceException {
 
+		if (Objects.isNull(dto))
+			dto = new FiltroSiniestrosDTO();
+
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);
 
