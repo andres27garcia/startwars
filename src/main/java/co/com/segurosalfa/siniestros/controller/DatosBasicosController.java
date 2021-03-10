@@ -64,7 +64,7 @@ public class DatosBasicosController {
 	@Autowired
 	EmailServiceUtil emailUtil;
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que consulta el listado de todos los siniestros", notes = "La operaciÃ³n retorna todos los siniestros registradas en la base de datos")
+	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros", notes = "La operación retorna todos los siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
@@ -79,12 +79,12 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que consulta datos de siniestros por filtros", notes = "La operaciÃ³n retorna los siniestros dependiendo de los campos seleccionados")
+	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/paginadosPorFiltro")
-	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@Valid @RequestBody FiltroSiniestrosDTO dto,
+	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@RequestBody FiltroSiniestrosDTO dto,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
 			throws SiprenException, JsonProcessingException, ServiceException {
 
@@ -97,7 +97,7 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que registra un nuevo siniestro", notes = "La operaciÃ³n registra el siniestro en base de datos y retorna el registro")
+	@ApiOperation(value = "Operación de servicio que registra un nuevo siniestro", notes = "La operación registra el siniestro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 201, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping
@@ -106,7 +106,7 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(objSave, HttpStatus.CREATED);
 	}
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que actualiza un siniestro", notes = "La operaciÃ³n actualiza el siniestro en base de datos y retorna el registro")
+	@ApiOperation(value = "Operación de servicio que actualiza un siniestro", notes = "La operación actualiza el siniestro en base de datos y retorna el registro")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PutMapping
@@ -115,7 +115,7 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(objSave, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que simula cargue de Siniestro", notes = "La operaciÃ³n registra un siniestro pendiente por restricciÃ³n de datos del Afiliado")
+	@ApiOperation(value = "Operación de servicio que simula cargue de Siniestro", notes = "La operación registra un siniestro pendiente por restricción de datos del Afiliado")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/procesarPendiente")
@@ -143,7 +143,8 @@ public class DatosBasicosController {
 			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
 
 			MultipartFile[] multipartFiles = new MultipartFile[1];
-			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME).getValor();
+			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME)
+					.getValor();
 			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
 					outConv.toByteArray());
 
@@ -167,7 +168,7 @@ public class DatosBasicosController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@ApiOperation(value = "OperaciÃ³n de servicio que actualiza el estado de un siniestro", notes = "La operaciÃ³n actualiza el estado de un siniestro en base de datos")
+	@ApiOperation(value = "Operación de servicio que actualiza el estado de un siniestro", notes = "La operación actualiza el estado de un siniestro en base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/actualizarEstadoSiniestros")
