@@ -41,8 +41,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- *** DatosTramitesController clase controlador que administra las peticiones
- * para la v1 de DatosTramites 
+ *** DatosTramitesController clase controlador que administra las peticiones para
+ * la v1 de DatosTramites
  * 
  * @author diego.marin@segurosalfa.com.co
  * @version %I%, %G%
@@ -73,15 +73,14 @@ public class DatosTramitesController {
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
 	public ResponseEntity<List<SnrDatoTramiteDTO>> listar() throws SiprenException {
-		List<SnrDatoTramiteDTO> lista = service.listar().stream().map(tr -> 
-		modelMapper.map(tr, SnrDatoTramiteDTO.class)).collect(Collectors.toList());
+		List<SnrDatoTramiteDTO> lista = service.listar().stream()
+				.map(tr -> modelMapper.map(tr, SnrDatoTramiteDTO.class)).collect(Collectors.toList());
 
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
 
 	/**
 	 * Listar por id.
@@ -104,8 +103,9 @@ public class DatosTramitesController {
 	}
 
 	/**
-	 * Lista páginada de registros filtrados por numPersona, numIdentificacion, idTramite, tipoTramite, subtipoTramite, estadoTramite,
-	 * fecRadicacionAlfaIni, fecRadicacionAlfaFin, idSolicitudAfp y clasificacionJur 
+	 * Lista páginada de registros filtrados por numPersona, numIdentificacion,
+	 * idTramite, tipoTramite, subtipoTramite, estadoTramite, fecRadicacionAlfaIni,
+	 * fecRadicacionAlfaFin, idSolicitudAfp y clasificacionJur
 	 * 
 	 * @param dto
 	 * @param page
@@ -120,9 +120,13 @@ public class DatosTramitesController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@PostMapping("/paginadosPorFiltro")
-	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@Valid @RequestBody FiltroTramitesDTO dto,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) throws JsonProcessingException, ServiceException, SiprenException {
-		
+	public ResponseEntity<ResponsePageableDTO> listarPorFiltro(@RequestBody FiltroTramitesDTO dto,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
+			throws JsonProcessingException, ServiceException, SiprenException {
+
+		if (Objects.isNull(dto))
+			dto = new FiltroTramitesDTO();
+
 		Pageable paging = PageRequest.of(page, size);
 		ResponsePageableDTO response = service.listarPorFiltro(dto, paging);
 

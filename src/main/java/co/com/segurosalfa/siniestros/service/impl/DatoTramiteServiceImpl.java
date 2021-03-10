@@ -109,15 +109,15 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		if (Objects.nonNull(dto.getTramite())) {
 			if (Objects.nonNull(dto.getTramite().getRango()) && !dto.getTramite().getRango().isEmpty()) {
 				dto.getTramite().getRango().stream().forEach(n -> {
-					genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("idTramite", n.getDatoInicio(),
+					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idTramite", n.getDatoInicio(),
 							n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
 				});
 			}
 
 			if (Objects.nonNull(dto.getTramite().getIndividual()) && !dto.getTramite().getIndividual().isEmpty()) {
 				dto.getTramite().getIndividual().stream().forEach(n -> {
-					genericSprecification
-							.add(new SearchCriteria<SnrDatoTramite>("idTramite", n, SearchOperation.EQUAL));
+					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idTramite", n,
+							SearchOperation.EQUAL));
 				});
 			}
 		}
@@ -188,7 +188,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 			if (Objects.nonNull(dto.getSolicitudAfp().getRango()) && !dto.getSolicitudAfp().getRango().isEmpty()) {
 				dto.getSolicitudAfp().getRango().stream().forEach(n -> {
-					genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
+					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
 							n.getDatoInicio(), n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
 				});
 			}
