@@ -188,7 +188,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 			if (Objects.nonNull(dto.getSolicitudAfp().getRango()) && !dto.getSolicitudAfp().getRango().isEmpty()) {
 				dto.getSolicitudAfp().getRango().stream().forEach(n -> {
-					genericSprecification.addJoins(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
+					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
 							n.getDatoInicio(), n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
 				});
 			}
@@ -197,7 +197,7 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 					&& !dto.getSolicitudAfp().getIndividual().isEmpty()) {
 				dto.getSolicitudAfp().getIndividual().stream().forEach(n -> {
 					genericSprecification
-							.addJoins(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp", n, SearchOperation.EQUAL));
+							.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp", n, SearchOperation.EQUAL));
 				});
 			}
 
