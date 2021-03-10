@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,6 +105,53 @@ public class CargueSiniestrosController {
 	public ResponseEntity<Void> guardarArchivo(@RequestParam("adjunto") String file,
 			@RequestParam(name = "usuario") String usuario) throws SiprenException {
 
+		procesarSolicitud(file, usuario);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	/**
+	 * Dada una posición obtiene el valor de la lista de respuesta del archivo de
+	 * cargue.
+	 * 
+	 * @param detalleRegistro
+	 * @param i
+	 * @return
+	 */
+	private String getValor(List<DetalleRegistroResponse> detalleRegistro, int i) {
+		try {
+			return detalleRegistro.get(i).getValor();
+		} catch (Exception e) {
+			log.error("Error al obtener el valor " + i);
+		}
+		return null;
+	}
+
+	/**
+	 * Guarda temporalmente el archivo que se esta cargando para poder ser
+	 * procesado.
+	 * 
+	 * @param multipart
+	 * @return
+	 * @throws IOException
+	 */
+	public File multipartToFile(String base64) throws IOException {
+		String ruta = System.getProperty("java.io.tmpdir").concat(String.valueOf(System.currentTimeMillis()))
+				.concat(".xlsx");
+
+		System.out.println(ruta);
+
+		byte[] data = Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8));
+
+		Path destinationFile = Paths.get(ruta);
+		Files.write(destinationFile, data);
+
+		File convFile = new File(ruta);
+		return convFile;
+	}
+
+	@Async
+	private void procesarSolicitud(String file, String usuario) throws SiprenException {
 		try {
 			log.info("Cargue inicial: " + new Date());
 			Object object = service.uploadFile(multipartToFile(file),
@@ -239,48 +287,6 @@ public class CargueSiniestrosController {
 		} catch (Exception e) {
 			throw new SiprenException(e.getMessage());
 		}
-
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	/**
-	 * Dada una posición obtiene el valor de la lista de respuesta del archivo de
-	 * cargue.
-	 * 
-	 * @param detalleRegistro
-	 * @param i
-	 * @return
-	 */
-	private String getValor(List<DetalleRegistroResponse> detalleRegistro, int i) {
-		try {
-			return detalleRegistro.get(i).getValor();
-		} catch (Exception e) {
-			log.error("Error al obtener el valor " + i);
-		}
-		return null;
-	}
-
-	/**
-	 * Guarda temporalmente el archivo que se esta cargando para poder ser
-	 * procesado.
-	 * 
-	 * @param multipart
-	 * @return
-	 * @throws IOException
-	 */
-	public File multipartToFile(String base64) throws IOException {
-		String ruta = System.getProperty("java.io.tmpdir").concat(String.valueOf(System.currentTimeMillis()))
-				.concat(".xlsx");
-
-		System.out.println(ruta);
-
-		byte[] data = Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8));
-
-		Path destinationFile = Paths.get(ruta);
-		Files.write(destinationFile, data);
-
-		File convFile = new File(ruta);
-		return convFile;
 	}
 
 }
