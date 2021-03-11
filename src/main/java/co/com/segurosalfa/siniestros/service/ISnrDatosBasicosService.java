@@ -17,5 +17,7 @@ public interface ISnrDatosBasicosService extends ICRUD<SnrDatoBasico, Long> {
 
 	void consultaPorvenirPorAfiliado(String usuario, String proceso, Long documento, String tipoDoc,
 			Integer tipoSolicitud, Date fechaProceso) throws SiprenException, ParseException;
+	
+	Long consultaUltimoSiniestro(Long numPersona) throws SiprenException;
 
 }

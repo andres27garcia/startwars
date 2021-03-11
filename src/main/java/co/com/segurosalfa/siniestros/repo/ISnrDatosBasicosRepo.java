@@ -2,6 +2,7 @@ package co.com.segurosalfa.siniestros.repo;
 
 import java.util.Date;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
@@ -21,5 +22,8 @@ public interface ISnrDatosBasicosRepo extends IGenericRepo<SnrDatoBasico, Long> 
 			@Param("documento") Long documento, @Param("tipoDoc") String tipoDoc,
 			@Param("tipoSolicitud") Integer tipoSolicitud, @Param("fechaproceso") Date fechaProceso)
 			throws SiprenException;
+	
+	@Query("SELECT max(s.idSiniestro) FROM SnrDatoBasico s WHERE s.persona = :numPersona")
+	Long consultaUltimoSiniestro(@Param("numPersona") Long numPersona) throws SiprenException;
 
 }

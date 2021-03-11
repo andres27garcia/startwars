@@ -24,6 +24,7 @@ import co.com.segurosalfa.siniestros.dto.GnrTipoDocumentoDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
+import co.com.segurosalfa.siniestros.dto.SnrEstadoDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasicoPrevisional;
 import co.com.segurosalfa.siniestros.entity.SnrOrigen;
@@ -360,18 +361,21 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 
 	@Override
 	public SnrDatoBasicoDTO guardarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException {
-		snrDatoBasicoDTO.getEstado().setId(ParametroGeneralUtil.ESTADO_AVISADO);
+		SnrEstadoDTO estadoDTO = new SnrEstadoDTO(ParametroGeneralUtil.ESTADO_AVISADO, null);
+		snrDatoBasicoDTO.setEstado(estadoDTO);
 		snrDatoBasicoDTO.setNumPoliza(Integer.valueOf(serviceDatoBasicoPrevisional
 				.consultaNumPoliza(Timestamp.valueOf(snrDatoBasicoDTO.getFecSiniestro().atStartOfDay()))));
 		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO,
 				SnrDatoBasicoPrevisional.class);
 		SnrDatoBasico siniestroBasico = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
-
 		siniestroBasico.setPersona(snrDatoBasicoDTO.getPersona().getNumPersona());
 		siniestroBasico = serviceDatoBasico.registrar(siniestroBasico);
-		siniestroPrevisional.setSiniestro(siniestroBasico);
+	    Long idSiniestro = serviceDatoBasico.consultaUltimoSiniestro(siniestroBasico.getPersona());
+	    SnrDatoBasico siniestroAux = new SnrDatoBasico();
+	    siniestroAux.setIdSiniestro(idSiniestro);
+		siniestroPrevisional.setSiniestro(siniestroAux);
 		repo.save(siniestroPrevisional);
-		snrDatoBasicoDTO.setIdSiniestro(siniestroBasico.getIdSiniestro());
+		snrDatoBasicoDTO.setIdSiniestro(idSiniestro);
 		return snrDatoBasicoDTO;
 	}
 

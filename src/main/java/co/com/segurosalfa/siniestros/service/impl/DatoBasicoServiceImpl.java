@@ -61,4 +61,9 @@ public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Long> impleme
 		repo.consultaPorvenirPorAfiliado(usuario, proceso, documento, tipoDoc, tipoSolicitud, fechaProceso);
 
 	}
+
+	@Override
+	public Long consultaUltimoSiniestro(Long numPersona) throws SiprenException {
+		return repo.consultaUltimoSiniestro(numPersona);
+	}
 }
