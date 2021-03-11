@@ -26,8 +26,8 @@ public class SnrResulPrcCreacionSiniestroDTO {
     private Long nroSiniestro;
     private Long nroTramiteSiniestro;
     private String origenSiniestro;
-    private Date fecActuacSolicAFP;
-    private String resultSolicAFP;
+    private Date fecActSolicAfp;
+    private String resultadoSolicAfp;
     private String flgProceso;
     private String estadoRegistro;
     private String detalleError;
