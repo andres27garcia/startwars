@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SnrDatoBasicoPrevisionalDTO{
+public class SnrDatoBasicoPrevisionalDTO {
 
 	private Integer id;
 	private SnrDatoBasicoDTO siniestro;
 	private Integer numCalifVinc;
 	private Integer numProcJurVinc;
 	private Integer vlrBonoPensional;
-	private Integer vlrCitaIndividual;
+	private Long vlrCitaIndividual;
 	private Integer vlrBonoPenCtaInd;
 	private Integer vlrUltIngBaseCot;
 	private Integer ultPeriodoCot;

@@ -42,7 +42,7 @@ public class SnrDatoBasicoPrevisional implements Serializable {
 	private BigDecimal vlrBonoPensional;
 	
 	@Column(name = "VLR_CTA_INDIVIDUAL")
-	private Integer vlrCitaIndividual;
+	private Long vlrCitaIndividual;
 
 	@Column(name = "VLR_BONO_PEN_CTA_IND")
 	private Integer vlrBonoPenCtaInd;
