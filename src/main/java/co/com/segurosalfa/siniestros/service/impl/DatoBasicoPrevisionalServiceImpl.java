@@ -173,8 +173,8 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 		// numPersona
 		if (Objects.nonNull(dto.getIdentificacion())) {
 
-			if (Objects.nonNull(dto.getPersona().getRango()) && !dto.getPersona().getRango().isEmpty()) {
-				dto.getPersona().getRango().stream().forEach(n -> {
+			if (Objects.nonNull(dto.getIdentificacion().getRango()) && !dto.getIdentificacion().getRango().isEmpty()) {
+				dto.getIdentificacion().getRango().stream().forEach(n -> {
 					Long numPersonaI = getNumPersona(Long.valueOf(n.getDatoInicio()));
 					Long numPersonaF = getNumPersona(Long.valueOf(n.getDatoFinal()));
 					if (Objects.nonNull(numPersonaI) && Objects.nonNull(numPersonaF)) {
@@ -184,11 +184,11 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 				});
 			}
 
-			if (Objects.nonNull(dto.getPersona().getIndividual()) && !dto.getPersona().getIndividual().isEmpty()) {
-				dto.getPersona().getIndividual().stream().forEach(n -> {
+			if (Objects.nonNull(dto.getIdentificacion().getIndividual()) && !dto.getIdentificacion().getIndividual().isEmpty()) {
+				dto.getIdentificacion().getIndividual().stream().forEach(n -> {
 					Long numPersona = getNumPersona(Long.valueOf(n));
 					if (Objects.nonNull(numPersona)) {
-						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", n,
+						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", numPersona,
 								SearchOperation.EQUAL, Boolean.TRUE, "siniestro", Boolean.FALSE));
 					}
 				});
