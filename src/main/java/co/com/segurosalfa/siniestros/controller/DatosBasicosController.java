@@ -97,7 +97,7 @@ public class DatosBasicosController {
 		if (datoBasico == null) {
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
 		}
-		return new ResponseEntity<>(datoBasico, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(datoBasico, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Operación de servicio que consulta datos de siniestros por filtros", notes = "La operación retorna los siniestros dependiendo de los campos seleccionados")
