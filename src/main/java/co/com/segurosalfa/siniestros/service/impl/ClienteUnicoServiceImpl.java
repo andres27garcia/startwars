@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,8 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-@XRayEnabled
-public class IClienteUnicoServiceImpl implements IClienteUnicoService {
+public class ClienteUnicoServiceImpl implements IClienteUnicoService {
 
 	@Autowired
 	private ClienteRestGenerico service;
@@ -44,10 +42,9 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 			String json = mapper.writeValueAsString(response);
 			return mapper.readValue(json, ClienteUnicoDTO.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error consumiendo servicio de cliente unico por número de persona", e);
 			return null;
-		}	
+		}
 	}
 
 	@Override
@@ -63,9 +60,25 @@ public class IClienteUnicoServiceImpl implements IClienteUnicoService {
 			String json = mapper.writeValueAsString(response);
 			return mapper.readValue(json, ClienteUnicoDTO.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error consumiendo servicio de cliente unico por tipo y número de documento", e);
 			return null;
+		}
+	}
+
+	@Override
+	public String consumirRestClienteUnicoRango(Integer docIni, Integer docFin)
+			throws ServiceException, SiprenException, JsonProcessingException {
+		Object response;
+		try {
+			response = service.executeApi(null, HttpMethod.GET,
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_RANGO).getValor()
+							.replace("{docIni}", String.valueOf(docIni)).replace("{docFin}", String.valueOf(docFin)),
+					5000);
+			return response.toString();
+		} catch (Exception e) {
+			log.error("Error consumiendo servicio de cliente unico por rangos", e);
+			return "0,0";
 		}
 	}
 
