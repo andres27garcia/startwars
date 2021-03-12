@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
@@ -48,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@XRayEnabled
 public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrevisional, Long>
 		implements ISnrDatoBasicoPrevisionalService {
 

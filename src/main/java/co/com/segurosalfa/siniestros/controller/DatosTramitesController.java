@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ActualizaEstadoSiniestroDTO;
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/datosTramites")
+@XRayEnabled
 public class DatosTramitesController {
 
 	@Autowired

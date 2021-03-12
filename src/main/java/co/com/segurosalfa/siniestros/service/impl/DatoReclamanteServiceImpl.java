@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@XRayEnabled
 public class DatoReclamanteServiceImpl extends CRUDImpl<SnrDatoReclamante, Long> implements IDatoReclamanteService {
 
 	@Autowired

@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrResulPrcCreacionSiniestroRepo;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 
 @Service
+@XRayEnabled
 public class ResulPrcCreacionSiniestrosImpl extends CRUDImpl<SnrResulPrcCreacionSiniestro, Integer> implements IResulPrcCreacionSiniestroService {
 
 	@Autowired

@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<co.com.commons-util.version>release-R06</co.com.commons-util.version>
+		<co.com.commons-util.version>release-R07</co.com.commons-util.version>
 		<springfox.version>2.9.2</springfox.version>
 		<io.swagger.version>1.6.0</io.swagger.version>
 		<org.jxls.version>2.4.3</org.jxls.version>
@@ -27,9 +27,20 @@
 		<org.apache.poi.version>3.17</org.apache.poi.version>
 		<org.modelmapper.version>2.3.8</org.modelmapper.version>
 		<aws.java.sdk.secretsmanager.version>1.11.355</aws.java.sdk.secretsmanager.version>
+		<aws.spring.xray.version>2.7.1</aws.spring.xray.version>
+		<aws.xray.version>2.7.1</aws.xray.version>
 	</properties>
-
 	<dependencies>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-xray-recorder-sdk-spring</artifactId>
+			<version>${aws.spring.xray.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-xray-recorder-sdk-core</artifactId>
+			<version>${aws.xray.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>co.com.siniestros.util</groupId>
 			<artifactId>commons-util</artifactId>
@@ -82,7 +93,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -97,7 +108,7 @@
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
