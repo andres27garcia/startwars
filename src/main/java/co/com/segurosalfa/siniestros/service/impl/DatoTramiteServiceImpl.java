@@ -118,8 +118,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 			if (Objects.nonNull(dto.getTramite().getIndividual()) && !dto.getTramite().getIndividual().isEmpty()) {
 				dto.getTramite().getIndividual().stream().forEach(n -> {
-					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idTramite", n,
-							SearchOperation.EQUAL));
+					genericSprecification
+							.add(new SearchCriteria<SnrDatoTramite>("idTramite", n, SearchOperation.EQUAL));
 				});
 			}
 		}
@@ -127,16 +127,18 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 		if (Objects.nonNull(dto.getIdentificacion())) {
 			if (Objects.nonNull(dto.getIdentificacion().getRango()) && !dto.getIdentificacion().getRango().isEmpty()) {
 				dto.getIdentificacion().getRango().stream().forEach(n -> {
-					Long numPersonaI = getNumPersona(Long.valueOf(n.getDatoInicio()));
-					Long numPersonaF = getNumPersona(Long.valueOf(n.getDatoFinal()));
-					if (Objects.nonNull(numPersonaI) && Objects.nonNull(numPersonaF)) {
-						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", numPersonaI,
-								numPersonaF, SearchOperation.BETWEEN_LONG, Boolean.TRUE, "siniestro", Boolean.FALSE));
+					String[] rango = getNumPersona(n.getDatoInicio().intValue(), n.getDatoFinal().intValue())
+							.split(",");
+
+					if (Objects.nonNull(rango[0]) && Objects.nonNull(rango[1])) {
+						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", rango[0], rango[1],
+								SearchOperation.BETWEEN_LONG, Boolean.TRUE, "siniestro", Boolean.FALSE));
 					}
 				});
 			}
 
-			if (Objects.nonNull(dto.getIdentificacion().getIndividual()) && !dto.getIdentificacion().getIndividual().isEmpty()) {
+			if (Objects.nonNull(dto.getIdentificacion().getIndividual())
+					&& !dto.getIdentificacion().getIndividual().isEmpty()) {
 				dto.getIdentificacion().getIndividual().stream().forEach(n -> {
 					Long numPersona = getNumPersona(Long.valueOf(n));
 					if (Objects.nonNull(numPersona)) {
@@ -190,8 +192,8 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 			if (Objects.nonNull(dto.getSolicitudAfp().getRango()) && !dto.getSolicitudAfp().getRango().isEmpty()) {
 				dto.getSolicitudAfp().getRango().stream().forEach(n -> {
-					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp",
-							n.getDatoInicio(), n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
+					genericSprecification.add(new SearchCriteria<SnrDatoTramite>("idSolicitudAfp", n.getDatoInicio(),
+							n.getDatoFinal(), SearchOperation.BETWEEN_LONG));
 				});
 			}
 
@@ -270,6 +272,15 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 				siniestroPrevisionalService.listarPorSiniestro(snrDatoTramiteDTO.getSiniestro().getIdSiniestro()));
 	}
 
+	private String getNumPersona(Integer docIni, Integer docFin) {
+
+		try {
+			return clienteUnicoService.consumirRestClienteUnicoRango(docIni, docFin);
+		} catch (Exception e) {
+			return "0,0";
+		}
+	}
+
 	private Long getNumPersona(Long documento) {
 
 		ClienteUnicoDTO dto;
@@ -287,9 +298,9 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 			}
 
 		} catch (Exception e) {
-			return null;
+			return 0L;
 		}
-		return null;
+		return 0L;
 
 	}
 
