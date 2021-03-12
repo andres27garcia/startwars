@@ -5,12 +5,15 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrHilDatoInicialRepo;
 import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
 
 @Service
+@XRayEnabled
 public class HilDatosInicialesServiceImpl extends CRUDImpl<SnrHilDatoInicial, Long> implements IHilDatoInicialService{
 
 	@Autowired

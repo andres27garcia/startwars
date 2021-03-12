@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.entity.ClfDatosDictamenes;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IDatosDictamenesService;
@@ -18,6 +20,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/datosDictamenes")
+@XRayEnabled
 public class DatosDictamenesController {
 
 	@Autowired

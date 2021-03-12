@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.dto.SnrComentarioReclamanteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrComentarioReclamante;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
@@ -14,6 +16,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioReclamanteRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioReclamanteService;
 
 @Service
+@XRayEnabled
 public class ComentarioReclamanteServiceImpl extends CRUDImpl<SnrComentarioReclamante, Long>
 		implements IComentarioReclamanteService {
 

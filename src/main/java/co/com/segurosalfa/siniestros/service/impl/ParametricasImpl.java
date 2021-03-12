@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.dto.ProcesosDTO;
 import co.com.segurosalfa.siniestros.dto.ProgramacionJobDTO;
 import co.com.segurosalfa.siniestros.entity.SnrParametrica;
@@ -19,6 +21,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
+@XRayEnabled
 public class ParametricasImpl extends CRUDImpl<SnrParametrica, Integer> implements IParametricasService {
 
 	@Autowired

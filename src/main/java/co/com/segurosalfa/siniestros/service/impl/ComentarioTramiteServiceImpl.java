@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.dto.SnrComentarioTramiteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrComentarioTramite;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
@@ -15,6 +17,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioTramiteRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioTramiteService;
 
 @Service
+@XRayEnabled
 public class ComentarioTramiteServiceImpl extends CRUDImpl<SnrComentarioTramite, Long>
 		implements IComentarioTramiteService {
 

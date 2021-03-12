@@ -6,12 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
+
 import co.com.segurosalfa.siniestros.dto.SnrDatoReclamanteDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoReclamante;
 import co.com.sipren.common.util.ClienteRestGenerico;
 import co.com.sipren.common.util.StringUtil;
 
 @Configuration
+@XRayEnabled
 public class Beans {
 
 	@Bean
