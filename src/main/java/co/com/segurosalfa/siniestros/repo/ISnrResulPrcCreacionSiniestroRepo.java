@@ -14,7 +14,7 @@ public interface ISnrResulPrcCreacionSiniestroRepo extends IGenericRepo<SnrResul
 	@Query("FROM SnrResulPrcCreacionSiniestro gr WHERE gr.flgProceso = :proceso")
 	List<SnrResulPrcCreacionSiniestro> consultarPorProceso(@Param("proceso") String proceso);
 
-	@Query(value = "SELECT COUNT(1) TOTAL_REGISTROS_PROCESAR FROM TMP_SOLICITUDES_AFP WHERE FLG_PROCESO = 'A'", nativeQuery = true)
+	@Query(value = "SELECT COUNT(1) TOTAL_REGISTROS_PROCESAR FROM SNR_TMP_SOLICITUDES_AFP WHERE FLG_PROCESO = 'A'", nativeQuery = true)
 	Integer registProcesar();
 
 }
