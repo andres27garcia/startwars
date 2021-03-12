@@ -1,8 +1,5 @@
 package co.com.segurosalfa.siniestros.util;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
-@XRayEnabled
 public class Constants {
 	private Constants() {
 		

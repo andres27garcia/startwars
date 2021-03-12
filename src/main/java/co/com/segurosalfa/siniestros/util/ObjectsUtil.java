@@ -3,9 +3,6 @@ package co.com.segurosalfa.siniestros.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
-@XRayEnabled
 public class ObjectsUtil {
 
 	public static <T> T mergeObjects(T first, T second) throws IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {

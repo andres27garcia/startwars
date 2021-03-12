@@ -14,11 +14,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@XRayEnabled
 public class CORS implements Filter {
 
 	@Override
