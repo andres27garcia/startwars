@@ -31,16 +31,16 @@
 		<aws.xray.version>2.7.1</aws.xray.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-xray-recorder-sdk-spring</artifactId>
-			<version>${aws.spring.xray.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-xray-recorder-sdk-core</artifactId>
-			<version>${aws.xray.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.amazonaws</groupId> -->
+<!-- 			<artifactId>aws-xray-recorder-sdk-spring</artifactId> -->
+<!-- 			<version>${aws.spring.xray.version}</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.amazonaws</groupId> -->
+<!-- 			<artifactId>aws-xray-recorder-sdk-core</artifactId> -->
+<!-- 			<version>${aws.xray.version}</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>co.com.siniestros.util</groupId>
 			<artifactId>commons-util</artifactId>

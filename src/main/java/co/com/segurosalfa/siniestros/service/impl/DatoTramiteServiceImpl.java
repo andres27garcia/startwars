@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
@@ -40,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@XRayEnabled
+//@XRayEnabled
 public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> implements IDatoTramiteService {
 
 	@Autowired

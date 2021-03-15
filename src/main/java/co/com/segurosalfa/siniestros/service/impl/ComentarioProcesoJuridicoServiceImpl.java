@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.entity.SnrComentarioProcesoJur;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
@@ -14,7 +12,7 @@ import co.com.segurosalfa.siniestros.repo.ISnrComentarioProcesoJuridicoRepo;
 import co.com.segurosalfa.siniestros.service.IComentarioProcesoJuridicoService;
 
 @Service
-@XRayEnabled
+//@XRayEnabled
 public class ComentarioProcesoJuridicoServiceImpl extends CRUDImpl<SnrComentarioProcesoJur, Long> implements IComentarioProcesoJuridicoService{
 
 	@Autowired

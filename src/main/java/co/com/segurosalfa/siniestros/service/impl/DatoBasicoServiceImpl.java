@@ -7,8 +7,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBasico;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
@@ -18,7 +16,7 @@ import co.com.segurosalfa.siniestros.service.ISnrDatosBasicosService;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 
 @Service
-@XRayEnabled
+//@XRayEnabled
 public class DatoBasicoServiceImpl extends CRUDImpl<SnrDatoBasico, Long> implements ISnrDatosBasicosService {
 
 	private final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

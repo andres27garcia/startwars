@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.SnrOrigenDTO;
 import co.com.segurosalfa.siniestros.entity.SnrOrigen;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
@@ -40,7 +38,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/parametros/origenes")
-@XRayEnabled
+//@XRayEnabled
 public class OrigenesController {
 
 	@Autowired

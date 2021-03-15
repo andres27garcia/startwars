@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.SnrHilDatoInicialDTO;
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
@@ -39,7 +37,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/historiasLaborales")
-@XRayEnabled
+//@XRayEnabled
 public class DatosInicialesHlController {
 
 	@Autowired

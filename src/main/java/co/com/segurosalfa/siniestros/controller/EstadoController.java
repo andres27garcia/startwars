@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.SnrEstadoDTO;
 import co.com.segurosalfa.siniestros.entity.SnrEstado;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
@@ -39,7 +37,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/parametros/estados")
-@XRayEnabled
+//@XRayEnabled
 public class EstadoController {
 
 	@Autowired

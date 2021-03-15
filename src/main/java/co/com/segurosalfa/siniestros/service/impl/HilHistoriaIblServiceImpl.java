@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.SnrHilHistoriaIblDTO;
 import co.com.segurosalfa.siniestros.entity.SnrHilHistoriaIbl;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
@@ -21,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@XRayEnabled
+//@XRayEnabled
 public class HilHistoriaIblServiceImpl extends CRUDImpl<SnrHilHistoriaIbl, Long> implements IHilHistoriaIblService {
 
 	@Autowired

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amazonaws.xray.spring.aop.XRayEnabled;
-
 import co.com.segurosalfa.siniestros.dto.SnrDatoBonoDTO;
 import co.com.segurosalfa.siniestros.entity.SnrDatoBono;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
@@ -34,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/bonos")
-@XRayEnabled
+//@XRayEnabled
 public class DatosBonosController {
 
 	@Autowired
