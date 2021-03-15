@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableScheduling
 @EnableAsync
 @EntityScan(basePackages = { "co.com.segurosalfa.siniestros.entity" })
-@ComponentScan({  "co.com.sipren.common.events", "co.com.segurosalfa.siniestros", "co.com.sipren.common.notifications" })
+@ComponentScan({"co.com.segurosalfa.siniestros", "co.com.sipren.common.notifications"})
 public class SiniestrosApplication {
 
 	public static void main(String[] args) {

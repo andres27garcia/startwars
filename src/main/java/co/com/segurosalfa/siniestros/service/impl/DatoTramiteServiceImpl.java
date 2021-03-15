@@ -83,10 +83,16 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 
 	public void getInfoPersona(SnrDatoBasicoDTO datosBasicos)
 			throws SiprenException, ServiceException, JsonProcessingException {
-		ClienteUnicoDTO dto = clienteUnicoService
-				.consumirRestClienteUnico(String.valueOf(datosBasicos.getPersona().getNumPersona()));
 
-		datosBasicos.setClienteUnico(dto);
+		try {
+			ClienteUnicoDTO dto = clienteUnicoService
+					.consumirRestClienteUnico(String.valueOf(datosBasicos.getPersona().getNumPersona()));
+
+			datosBasicos.setClienteUnico(dto);
+		} catch (Exception e) {
+			datosBasicos.setClienteUnico(null);
+		}
+
 	}
 
 	@Override

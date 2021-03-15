@@ -83,5 +83,8 @@ public class SnrDatoBono implements Serializable {
 
 	@Column(name = "VLR_FEC_CALCULO")
 	private BigDecimal vlrFecCalculo;
+	
+	@Column(name = "BLN_FINANCIAR_CUOTA_PARTE")
+	private String blnFinanciaCuotaParte;
 
 }

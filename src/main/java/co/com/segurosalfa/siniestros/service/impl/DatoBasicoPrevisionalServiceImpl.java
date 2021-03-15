@@ -293,10 +293,15 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 	private void getInfoPersona(SnrDatoBasicoDTO datoBasico)
 			throws SiprenException, ServiceException, JsonProcessingException {
 
-		ClienteUnicoDTO dto = clienteUnicoService
-				.consumirRestClienteUnico(String.valueOf(datoBasico.getPersona().getNumPersona()));
+		try {
+			ClienteUnicoDTO dto = clienteUnicoService
+					.consumirRestClienteUnico(String.valueOf(datoBasico.getPersona().getNumPersona()));
 
-		datoBasico.setClienteUnico(dto);
+			datoBasico.setClienteUnico(dto);
+		} catch (Exception e) {
+			datoBasico.setClienteUnico(null);
+		}
+
 	}
 
 	private String getNumPersona(Integer docIni, Integer docFin) {
@@ -379,9 +384,9 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 		SnrDatoBasico siniestroBasico = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
 		siniestroBasico.setPersona(snrDatoBasicoDTO.getPersona().getNumPersona());
 		siniestroBasico = serviceDatoBasico.registrar(siniestroBasico);
-	    Long idSiniestro = serviceDatoBasico.consultaUltimoSiniestro(siniestroBasico.getPersona());
-	    SnrDatoBasico siniestroAux = new SnrDatoBasico();
-	    siniestroAux.setIdSiniestro(idSiniestro);
+		Long idSiniestro = serviceDatoBasico.consultaUltimoSiniestro(siniestroBasico.getPersona());
+		SnrDatoBasico siniestroAux = new SnrDatoBasico();
+		siniestroAux.setIdSiniestro(idSiniestro);
 		siniestroPrevisional.setSiniestro(siniestroAux);
 		repo.save(siniestroPrevisional);
 		snrDatoBasicoDTO.setIdSiniestro(idSiniestro);

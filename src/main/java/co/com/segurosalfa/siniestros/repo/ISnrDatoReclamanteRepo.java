@@ -24,7 +24,7 @@ public interface ISnrDatoReclamanteRepo extends IGenericRepo<SnrDatoReclamante, 
 
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO SNR_DATOS_RECLAMANTES (ID_TRAMITE, NUM_PERSONA, COD_ESTADO_RECLAMANTE, ID_RECLAMANTE ) VALUES(:numTramite, :numPersona, :codEstado, SQ_SNR_DATOS_RECLAMANTES.NEXTVAL)", nativeQuery = true)
+	@Query(value = "INSERT INTO SNR_DATO_RECLAMANTE (ID_TRAMITE, NUM_PERSONA, COD_ESTADO_RECLAMANTE, ID_RECLAMANTE ) VALUES(:numTramite, :numPersona, :codEstado, SQ_SNR_DATOS_RECLAMANTES.NEXTVAL)", nativeQuery = true)
 	void insertarReclamante(@Param("numTramite") Long numTramite, @Param("numPersona") Long numPersona,
 			@Param("codEstado") Integer codEstado) throws SiprenException;
 
