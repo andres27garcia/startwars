@@ -1,11 +1,13 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
+import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.IGenericRepo;
 import co.com.segurosalfa.siniestros.repo.ISnrHilDatoInicialRepo;
 import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
@@ -25,6 +27,11 @@ public class HilDatosInicialesServiceImpl extends CRUDImpl<SnrHilDatoInicial, Lo
 	@Override
 	public void actualizarRegistroInvalido(String blnRegInv, Long numPersona, LocalDate fecha) {
 		repo.actualizarRegistroInvalido(blnRegInv, numPersona, fecha);
+	}
+
+	@Override
+	public List<SnrHilDatoInicial> listarPorPersona(Long numPersona) throws SiprenException {
+		return repo.listarPorPersona(numPersona);
 	}
 
 }

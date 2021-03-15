@@ -46,6 +46,29 @@ public class DatosInicialesHlController {
 	private ModelMapper modelMapper;
 
 	/**
+	 * listar todos los registros asociados a un numero de persona
+	 *
+	 * @return
+	 * @throws SiprenException
+	 */
+	@ApiOperation(value = "Operación de servicio que consulta el listado de todos las historias laborales para una persona", notes = "La operación retorna todas las historias laborales registradas en la base de datos que coinciden con el numero de una persona")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
+			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
+			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
+	@GetMapping
+	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar(@PathVariable("numPersona") Long numPersona) throws SiprenException {
+		List<SnrHilDatoInicial> lista = service.listarPorPersona(numPersona);
+		
+		if (lista != null && lista.isEmpty())
+			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
+				
+		List<SnrHilDatoInicialDTO> listaDto = lista.stream()
+		.map(n -> this.modelMapper.map(n, SnrHilDatoInicialDTO.class)).collect(Collectors.toList());
+		
+		return new ResponseEntity<>(listaDto, HttpStatus.OK);
+	}
+	
+	/**
 	 * listar todos los registros asociados 
 	 *
 	 * @return
@@ -56,8 +79,9 @@ public class DatosInicialesHlController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar() throws SiprenException {
-		List<SnrHilDatoInicialDTO> lista = service.listar().stream()
+	public ResponseEntity<List<SnrHilDatoInicialDTO>> listarPorPersona() throws SiprenException {
+		List<SnrHilDatoInicialDTO> lista = service.listar() 
+				.stream()
 				.map(n -> this.modelMapper.map(n, SnrHilDatoInicialDTO.class)).collect(Collectors.toList());
 		if (lista != null && lista.isEmpty())
 			throw new ModeloNotFoundException(ParametrosMensajes.ERROR_NO_DATA);
