@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.segurosalfa.siniestros.dto.SnrEstadoDTO;
 import co.com.segurosalfa.siniestros.dto.SnrTipoDTO;
-import co.com.segurosalfa.siniestros.entity.SnrEstado;
 import co.com.segurosalfa.siniestros.entity.SnrTipo;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;

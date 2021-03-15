@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ObjectsUtil {
 
+	@SuppressWarnings("unchecked")
 	public static <T> T mergeObjects(T first, T second) throws IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 	    Class<?> clazz = first.getClass();
 	    Field[] fields = clazz.getDeclaredFields();
