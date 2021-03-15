@@ -55,7 +55,7 @@ public class DatosInicialesHlController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping
+	@GetMapping("/consultaPersona/{numPersona}")
 	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar(@PathVariable("numPersona") Long numPersona) throws SiprenException {
 		List<SnrHilDatoInicial> lista = service.listarPorPersona(numPersona);
 		
@@ -78,7 +78,7 @@ public class DatosInicialesHlController {
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
-	@GetMapping("/consultaPersona/{numPersona}")
+	@GetMapping
 	public ResponseEntity<List<SnrHilDatoInicialDTO>> listarPorPersona() throws SiprenException {
 		List<SnrHilDatoInicialDTO> lista = service.listar() 
 				.stream()
