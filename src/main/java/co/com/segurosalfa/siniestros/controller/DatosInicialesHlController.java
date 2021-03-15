@@ -56,7 +56,7 @@ public class DatosInicialesHlController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping("/consultaPersona/{numPersona}")
-	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar(@PathVariable("numPersona") Long numPersona) throws SiprenException {
+	public ResponseEntity<List<SnrHilDatoInicialDTO>> listarPorPersona(@PathVariable("numPersona") Long numPersona) throws SiprenException {
 		List<SnrHilDatoInicial> lista = service.listarPorPersona(numPersona);
 		
 		if (lista != null && lista.isEmpty())
@@ -79,7 +79,7 @@ public class DatosInicialesHlController {
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
 			@ApiResponse(code = 200, message = ParametrosMensajes.RESPUESTA_CORRECTA) })
 	@GetMapping
-	public ResponseEntity<List<SnrHilDatoInicialDTO>> listarPorPersona() throws SiprenException {
+	public ResponseEntity<List<SnrHilDatoInicialDTO>> listar() throws SiprenException {
 		List<SnrHilDatoInicialDTO> lista = service.listar() 
 				.stream()
 				.map(n -> this.modelMapper.map(n, SnrHilDatoInicialDTO.class)).collect(Collectors.toList());
