@@ -34,5 +34,6 @@ public class SnrDatoBonoDTO implements Serializable {
 	private BigDecimal vlrCuponPrincipalSini;
 	private BigDecimal vlrCuponPrincipalTras;
 	private BigDecimal vlrFecCalculo;
+	private String blnFinanciaCuotaParte;
 
 }
