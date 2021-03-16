@@ -14,6 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.ComparacionPersonaDTO;
+import co.com.segurosalfa.siniestros.dto.CuEpsDTO;
+import co.com.segurosalfa.siniestros.dto.CuEstadoCivilDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.repo.ISnrTmpPendienteAfiliadoRepo;
@@ -162,6 +164,19 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	@Override
 	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento)
 			throws JsonProcessingException, ServiceException, SiprenException {
+		List<ProcesarPendientesDTO> listaPendientes = repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
+		listaPendientes.stream().peek(p -> {
+			try {
+				CuEpsDTO epsDTO = clienteUnicoService.consultarEps(String.valueOf(p.getEps()));
+				CuEstadoCivilDTO estadoCivilDTO = clienteUnicoService.consultarEstadoCivil(p.getCodEstadoCivil());
+				if(Objects.nonNull(epsDTO))
+					p.setEpsDesc(epsDTO.getRazonSocial());
+				if(Objects.nonNull(estadoCivilDTO))
+					p.setEstadoCivilDesc(estadoCivilDTO.getNombre());
+			} catch (Exception e) {
+				log.error("Error consultando información adicional : ",e);
+			}
+		});
 		return repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
 
 	}

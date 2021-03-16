@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
+import co.com.segurosalfa.siniestros.dto.CuEpsDTO;
+import co.com.segurosalfa.siniestros.dto.CuEstadoCivilDTO;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
@@ -79,6 +81,40 @@ public class ClienteUnicoServiceImpl implements IClienteUnicoService {
 		} catch (Exception e) {
 			log.error("Error consumiendo servicio de cliente unico por rangos", e);
 			return "0,0";
+		}
+	}
+
+	@Override
+	public CuEpsDTO consultarEps(String codigo) throws ServiceException, SiprenException, JsonProcessingException {
+		Object response;
+		try {
+			response = service.executeApi(null, HttpMethod.GET,
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_EPS).getValor()
+							.replace("{id}", String.valueOf(codigo)),
+					5000);
+			String json = mapper.writeValueAsString(response);
+			return mapper.readValue(json, CuEpsDTO.class);
+		} catch (Exception e) {
+			log.error("Error consumiendo servicio de cliente unico para eps", e);
+			return null;
+		}
+	}
+
+	@Override
+	public CuEstadoCivilDTO consultarEstadoCivil(String codigo) {
+		Object response;
+		try {
+			response = service.executeApi(null, HttpMethod.GET,
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U).getValor(),
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_EST_CIVIL).getValor()
+							.replace("{id}", String.valueOf(codigo)),
+					5000);
+			String json = mapper.writeValueAsString(response);
+			return mapper.readValue(json, CuEstadoCivilDTO.class);
+		} catch (Exception e) {
+			log.error("Error consumiendo servicio de cliente unico para estado civil", e);
+			return null;
 		}
 	}
 

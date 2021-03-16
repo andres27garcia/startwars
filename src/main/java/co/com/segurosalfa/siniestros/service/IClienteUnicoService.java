@@ -3,6 +3,8 @@ package co.com.segurosalfa.siniestros.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
+import co.com.segurosalfa.siniestros.dto.CuEpsDTO;
+import co.com.segurosalfa.siniestros.dto.CuEstadoCivilDTO;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.sipren.common.util.ServiceException;
 
@@ -15,6 +17,12 @@ public interface IClienteUnicoService {
 			throws ServiceException, SiprenException, JsonProcessingException;
 
 	String consumirRestClienteUnicoRango(Integer docIni, Integer docFin)
+			throws ServiceException, SiprenException, JsonProcessingException;
+	
+	CuEpsDTO consultarEps(String codigo) 
+			throws ServiceException, SiprenException, JsonProcessingException;
+	
+	CuEstadoCivilDTO consultarEstadoCivil(String codigo) 
 			throws ServiceException, SiprenException, JsonProcessingException;
 
 }
