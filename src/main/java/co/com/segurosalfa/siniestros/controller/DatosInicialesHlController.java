@@ -1,6 +1,7 @@
 package co.com.segurosalfa.siniestros.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.segurosalfa.siniestros.dto.SnrHilDatoInicialDTO;
+import co.com.segurosalfa.siniestros.entity.SnrHilAportante;
 import co.com.segurosalfa.siniestros.entity.SnrHilDatoInicial;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
+import co.com.segurosalfa.siniestros.service.IHilAportanteService;
 import co.com.segurosalfa.siniestros.service.IHilDatoInicialService;
 import co.com.sipren.common.util.ParametrosMensajes;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +45,8 @@ public class DatosInicialesHlController {
 
 	@Autowired
 	private IHilDatoInicialService service;
+	@Autowired
+	private IHilAportanteService aportanteService;
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -122,6 +127,13 @@ public class DatosInicialesHlController {
 	@PostMapping
 	public ResponseEntity<SnrHilDatoInicialDTO> registrar(@Valid @RequestBody SnrHilDatoInicialDTO dto)
 			throws SiprenException {
+		SnrHilAportante aportante = aportanteService.consultarPorNit(dto.getAportante().getNidNumeroDocumento());
+		
+		if(Objects.isNull(aportante))
+			aportante = aportanteService.registrar(modelMapper.map(dto.getAportante(), SnrHilAportante.class));
+		
+		dto.getAportante().setIdAportante(aportante.getIdAportante());
+		
 		SnrHilDatoInicial objSave = service.registrar(this.modelMapper.map(dto, SnrHilDatoInicial.class));
 		SnrHilDatoInicialDTO obj = this.modelMapper.map(objSave, SnrHilDatoInicialDTO.class);
 
