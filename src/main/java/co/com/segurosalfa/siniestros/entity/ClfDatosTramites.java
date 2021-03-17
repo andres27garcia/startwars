@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "CLF_DATOS_TRAMITES")
+@Table(name = "CLF_DATO_TRAMITE")
 public class ClfDatosTramites implements Serializable {
 
 	private static final long serialVersionUID = -2223604213097853050L;

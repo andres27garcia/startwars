@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,7 +107,8 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 		List<ProcesarPendientesDTO> listPendientes = repoInfoAdicional.listarPendientesInfoAdicional();
 		listPendientes.parallelStream().peek(ia -> {
 			try {
-				ClienteUnicoDTO afiliado = clienteUnicoService.consumirRestClienteUnico(String.valueOf(ia.getNumPersona()));
+				ClienteUnicoDTO afiliado = clienteUnicoService
+						.consumirRestClienteUnico(String.valueOf(ia.getNumPersona()));
 				ia.setIdentificacionAfiliado(Long.parseLong(afiliado.getCedula()));
 				ia.setTipoDocumento(afiliado.getTipoDocumento());
 			} catch (Exception e) {
@@ -164,21 +166,23 @@ public class ProcesarPendientesServiceImpl implements IProcesarPendientesService
 	@Override
 	public List<ProcesarPendientesDTO> consultarPendientesInfoAdicionalPorCedula(Integer tipoDoc, Long documento)
 			throws JsonProcessingException, ServiceException, SiprenException {
-		List<ProcesarPendientesDTO> listaPendientes = repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
-		listaPendientes.stream().peek(p -> {
-			try {
-				CuEpsDTO epsDTO = clienteUnicoService.consultarEps(String.valueOf(p.getEps()));
-				CuEstadoCivilDTO estadoCivilDTO = clienteUnicoService.consultarEstadoCivil(p.getCodEstadoCivil());
-				if(Objects.nonNull(epsDTO))
-					p.setEpsDesc(epsDTO.getRazonSocial());
-				if(Objects.nonNull(estadoCivilDTO))
-					p.setEstadoCivilDesc(estadoCivilDTO.getNombre());
-			} catch (Exception e) {
-				log.error("Error consultando información adicional : ",e);
-			}
-		});
-		return repoInfoAdicional.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
-
+		List<ProcesarPendientesDTO> listaPendientes = repoInfoAdicional
+				.consultarPendientesInfoAdicionalPorCedula(tipoDoc, documento);
+		return listaPendientes.stream().map(n -> asignarValoresClienteUnico(n)).collect(Collectors.toList());
+	}
+	
+	private ProcesarPendientesDTO asignarValoresClienteUnico(ProcesarPendientesDTO obj) {
+		try {
+			CuEpsDTO epsDTO = clienteUnicoService.consultarEps(String.valueOf(obj.getEps()));
+			CuEstadoCivilDTO estadoCivilDTO = clienteUnicoService.consultarEstadoCivil(obj.getCodEstadoCivil());
+			if (Objects.nonNull(epsDTO))
+				obj.setEpsDesc(epsDTO.getRazonSocial());
+			if (Objects.nonNull(estadoCivilDTO))
+				obj.setEstadoCivilDesc(estadoCivilDTO.getNombre());
+		} catch (Exception e) {
+			log.error("Error consultando información adicional : ", e);
+		}
+		return obj;
 	}
 
 	@Override
