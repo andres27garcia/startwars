@@ -1,15 +1,19 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.com.segurosalfa.siniestros.dto.ClienteUnicoDTO;
 import co.com.segurosalfa.siniestros.dto.CuEpsDTO;
 import co.com.segurosalfa.siniestros.dto.CuEstadoCivilDTO;
+import co.com.segurosalfa.siniestros.dto.GnrPersonaClienteDTO;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
 import co.com.segurosalfa.siniestros.service.IClienteUnicoService;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
@@ -68,7 +72,7 @@ public class ClienteUnicoServiceImpl implements IClienteUnicoService {
 	}
 
 	@Override
-	public String consumirRestClienteUnicoRango(Integer docIni, Integer docFin)
+	public List<GnrPersonaClienteDTO> consumirRestClienteUnicoRango(Integer docIni, Integer docFin)
 			throws ServiceException, SiprenException, JsonProcessingException {
 		Object response;
 		try {
@@ -77,10 +81,12 @@ public class ClienteUnicoServiceImpl implements IClienteUnicoService {
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_CLIENTE_U_RANGO).getValor()
 							.replace("{docIni}", String.valueOf(docIni)).replace("{docFin}", String.valueOf(docFin)),
 					5000);
-			return response.toString();
+			String json = mapper.writeValueAsString(response);
+			return mapper.readValue(json, new TypeReference<List<GnrPersonaClienteDTO>>() {
+			});
 		} catch (Exception e) {
 			log.error("Error consumiendo servicio de cliente unico por rangos", e);
-			return "0,0";
+			return null;
 		}
 	}
 

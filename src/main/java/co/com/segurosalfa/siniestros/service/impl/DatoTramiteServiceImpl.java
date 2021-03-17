@@ -1,8 +1,10 @@
 package co.com.segurosalfa.siniestros.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,11 +136,11 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 				dto.getIdentificacion().getRango().stream().forEach(n -> {
 					String[] rango = getNumPersona(n.getDatoInicio().intValue(), n.getDatoFinal().intValue())
 							.split(",");
-
-					if (Objects.nonNull(rango[0]) && Objects.nonNull(rango[1])) {
-						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", rango[0], rango[1],
-								SearchOperation.BETWEEN_LONG, Boolean.TRUE, "siniestro", Boolean.FALSE));
-					}
+					List<String> listadoNumPersona = Arrays.asList(rango);
+					listadoNumPersona.stream().forEach(numPersona -> {
+						genericSprecification.addJoins(new SearchCriteria<SnrDatoBasico>("persona", numPersona,
+								SearchOperation.EQUAL, Boolean.TRUE, "siniestro", Boolean.FALSE));
+					});
 				});
 			}
 
@@ -280,7 +282,14 @@ public class DatoTramiteServiceImpl extends CRUDImpl<SnrDatoTramite, Long> imple
 	private String getNumPersona(Integer docIni, Integer docFin) {
 
 		try {
-			return clienteUnicoService.consumirRestClienteUnicoRango(docIni, docFin);
+			List<GnrPersonaClienteDTO> lista = clienteUnicoService.consumirRestClienteUnicoRango(docIni, docFin);
+
+			String listado = lista.stream().map(n -> n.getNumPersona().toString().concat(","))
+					.collect(Collectors.joining());
+
+			listado = listado.substring(0, listado.length() - 1);
+
+			return listado;
 		} catch (Exception e) {
 			return "0,0";
 		}
