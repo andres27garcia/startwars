@@ -404,8 +404,13 @@ public class DatoBasicoPrevisionalServiceImpl extends CRUDImpl<SnrDatoBasicoPrev
 
 	@Override
 	public SnrDatoBasicoDTO actualizarSiniestro(SnrDatoBasicoDTO snrDatoBasicoDTO) throws SiprenException {
+
+		SnrDatoBasicoPrevisional siniestroConsul = repo.listarPorSiniestro(snrDatoBasicoDTO.getIdSiniestro());
+
 		SnrDatoBasicoPrevisional siniestroPrevisional = modelMapper.map(snrDatoBasicoDTO,
 				SnrDatoBasicoPrevisional.class);
+
+		siniestroPrevisional.setId(siniestroConsul.getId());
 		SnrDatoBasico siniestroBasico = modelMapper.map(snrDatoBasicoDTO, SnrDatoBasico.class);
 		siniestroBasico.setPersona(snrDatoBasicoDTO.getPersona().getNumPersona());
 		serviceDatoBasico.modificar(siniestroBasico);

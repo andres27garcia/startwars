@@ -25,7 +25,7 @@ public class SnrDatoReclamante implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idSeqReclamante")
-	@SequenceGenerator(name = "idSeqReclamante", sequenceName = "SQ_SNR_DATOS_RECLAMANTES", schema = "SINIESTROS")
+	@SequenceGenerator(name = "idSeqReclamante", sequenceName = "SQ_SNR_DATOS_RECLAMANTES", allocationSize = 1)
 	@Column(name = "ID_RECLAMANTE")
 	private Long idReclamante;
 
