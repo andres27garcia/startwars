@@ -1,25 +1,18 @@
 
 package co.com.segurosalfa.siniestros.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
 
-import org.jxls.common.Context;
-import org.jxls.util.JxlsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -37,14 +29,12 @@ import co.com.segurosalfa.siniestros.dto.FiltroSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.ProcesarPendientesDTO;
 import co.com.segurosalfa.siniestros.dto.ResponsePageableDTO;
 import co.com.segurosalfa.siniestros.dto.SnrDatoBasicoDTO;
-import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
+import co.com.segurosalfa.siniestros.entity.SnrCargueArchivos;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
-import co.com.segurosalfa.siniestros.service.IParametricasService;
-import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
+import co.com.segurosalfa.siniestros.service.ICargueArchivosService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
-import co.com.sipren.common.notifications.EmailService;
-import co.com.sipren.common.notifications.EmailServiceUtil;
+import co.com.segurosalfa.siniestros.service.impl.ReprocesoAsycImpl;
 import co.com.sipren.common.util.ParametroGeneralUtil;
 import co.com.sipren.common.util.ParametrosMensajes;
 import co.com.sipren.common.util.ServiceException;
@@ -60,13 +50,10 @@ public class DatosBasicosController {
 	@Autowired
 	ISnrDatoBasicoPrevisionalService service;
 	@Autowired
-	IParametricasService paramService;
+	ReprocesoAsycImpl reprocesoService;
 	@Autowired
-	IResulPrcCreacionSiniestroService serviceSini;
-	@Autowired
-	EmailServiceUtil emailUtil;
+	ICargueArchivosService carService;
 
-	
 	@ApiOperation(value = "Operación de servicio que consulta el listado de todos los siniestros", notes = "La operación retorna todos los siniestros registradas en la base de datos")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = ParametrosMensajes.ERROR_SERVER),
 			@ApiResponse(code = 404, message = ParametrosMensajes.ERROR_NO_DATA),
@@ -81,7 +68,7 @@ public class DatosBasicosController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Listar por id.
 	 * 
@@ -147,49 +134,13 @@ public class DatosBasicosController {
 	@PostMapping("/procesarPendiente")
 	public ResponseEntity<Long> crearTramitePendiente(@Valid @RequestBody ProcesarPendientesDTO dto)
 			throws SiprenException, ParseException {
-		service.limpiarTemporalesCargue(dto.getUsuario(), ParametroGeneralUtil.CONS_ORIGEN_REPROCESAR);
-		service.crearSiniestroPendiente(dto);
 
-		List<SnrResulPrcCreacionSiniestro> lista;
+		SnrCargueArchivos entCargue = carService.getCargueActivo(ParametroGeneralUtil.CONS_ID_REPROCESO_AFILIADO);
 
-		try {
+		if (Objects.nonNull(entCargue))
+			throw new SiprenException("Reproceso en curso");
 
-			lista = serviceSini.consultarPorProceso(ParametroGeneralUtil.CONS_ORIGEN_REPROCESAR);
-
-			if (lista == null || lista.isEmpty())
-				throw new ModeloNotFoundException("No se registran siniestros reprocesados");
-
-			ByteArrayOutputStream outConv = new ByteArrayOutputStream();
-
-			InputStream isConv = EnvioCorreoController.class.getResourceAsStream(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TEMPLATE).getValor());
-
-			Context context1 = new Context();
-			context1.putVar("reporte", lista);
-			JxlsHelper.getInstance().processTemplate(isConv, outConv, context1);
-
-			MultipartFile[] multipartFiles = new MultipartFile[1];
-			String fileName = paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FILENAME)
-					.getValor();
-			multipartFiles[0] = new MockMultipartFile(fileName, fileName, ParametroGeneralUtil.CONS_CONTENT_EXCEL,
-					outConv.toByteArray());
-
-			EmailService email = new EmailService();
-			Map<String, Object> params = new HashMap<>();
-
-			email.setFrom(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_FROM).getValor());
-			email.setSubject(
-					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_SUBJECT).getValor());
-			email.setTo(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_TO).getValor());
-			email.setTemplate(ParametroGeneralUtil.CONS_PROC_REP_SIN_EMAIL_BODY);
-			params.put("user", dto.getUsuario());
-			email.setParams(params);
-			emailUtil.notification(email, multipartFiles);
-
-		} catch (Exception e) {
-			throw new SiprenException(e.getMessage());
-		}
+		reprocesoService.procesarAfiliado(dto);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}

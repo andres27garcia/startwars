@@ -8,9 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +32,11 @@ import com.google.gson.JsonObject;
 import co.com.segurosalfa.siniestros.controller.EnvioCorreoController;
 import co.com.segurosalfa.siniestros.dto.CargueSiniestrosDTO;
 import co.com.segurosalfa.siniestros.dto.SnrResulPrcCreacionSiniestroDTO;
+import co.com.segurosalfa.siniestros.entity.SnrCargueArchivos;
 import co.com.segurosalfa.siniestros.entity.SnrResulPrcCreacionSiniestro;
 import co.com.segurosalfa.siniestros.exception.ModeloNotFoundException;
 import co.com.segurosalfa.siniestros.exception.SiprenException;
+import co.com.segurosalfa.siniestros.service.ICargueArchivosService;
 import co.com.segurosalfa.siniestros.service.IParametricasService;
 import co.com.segurosalfa.siniestros.service.IResulPrcCreacionSiniestroService;
 import co.com.segurosalfa.siniestros.service.ISnrDatoBasicoPrevisionalService;
@@ -68,19 +70,34 @@ public class CargueArchivosImpl {
 	EmailServiceUtil emailUtil;
 
 	@Autowired
+	ICargueArchivosService carService;
+
+	@Autowired
 	ModelMapper modelMapper;
 
 	/**
 	 * Procesar solicitud.
 	 *
-	 * @param file the file
+	 * @param file    the file
 	 * @param usuario the usuario
 	 * @throws SiprenException the sipren exception
 	 */
 	@Async
 	public void procesarSolicitud(String file, String usuario) throws SiprenException {
+		SnrCargueArchivos entCargue = new SnrCargueArchivos();
 		try {
-			log.info("Cargue inicial: " + new Date());
+			entCargue.setEstado(ParametroGeneralUtil.CONS_EN_PROCESO);
+			entCargue.setFecEjecucion(LocalDateTime.now());
+			entCargue.setIdTipoCargue(ParametroGeneralUtil.CONS_ID_CARGUE_SINIESTROS);
+			entCargue.setSubTipoCargue(
+					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_SUB_TIPO_CARGUE).getValor());
+			entCargue.setTipoCargue(paramService.parametroPorNombre(ParametroGeneralUtil.CONS_TIPO_CARGUE).getValor());
+			entCargue.setUsuario(usuario);
+
+			carService.registrar(entCargue);
+
+			entCargue = carService.getCargueActivo(ParametroGeneralUtil.CONS_ID_CARGUE_SINIESTROS);
+
 			Object object = service.uploadFile(multipartToFile(file),
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS_CARGUE).getValor()
@@ -92,7 +109,6 @@ public class CargueArchivosImpl {
 			if (object == null) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_CARGUE);
 			}
-			log.info(object.toString());
 			JsonObject jsonO = new Gson().fromJson(object.toString(), JsonObject.class);
 
 			DetalleCargueArchivoResponse archivo = new Gson().fromJson(jsonO.get("data").toString(),
@@ -102,7 +118,6 @@ public class CargueArchivosImpl {
 					|| "".equalsIgnoreCase(archivo.getIdArchivoCargue().toString())) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_RESPUESTA_CARGUE);
 			}
-			log.info("Consulta temporal: " + new Date());
 			Thread.sleep(2000);
 			Object objectDetail = service.executeApi(null, HttpMethod.GET,
 					paramService.parametroPorNombre(ParametroGeneralUtil.CONS_URL_GESTOR_ARCHIVOS).getValor(),
@@ -112,7 +127,6 @@ public class CargueArchivosImpl {
 			if (objectDetail == null) {
 				throw new SiprenException(ParametroGeneralUtil.ERROR_CONSULTA_DETALLE);
 			}
-			log.info(objectDetail.toString());
 			String json = new Gson().toJson(objectDetail);
 
 			if (json == null || json.isEmpty()) {
@@ -145,16 +159,16 @@ public class CargueArchivosImpl {
 				throw new ModeloNotFoundException("No se registran siniestros procesados");
 
 			List<SnrResulPrcCreacionSiniestroDTO> listResults = new ArrayList<SnrResulPrcCreacionSiniestroDTO>();
-			log.info("Limpiar temporal: " + new Date());
 			serviceSiniestro.limpiarTemporalesCargue(usuario, ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-			log.info("fin limpiar temporal: " + new Date());
+
+			int cont = 0;
+
 			for (CargueSiniestrosDTO cargueSiniestrosDTO : listado) {
 				if (cargueSiniestrosDTO.getEstadoRegistro().equals("PROCESADO")
 						&& (null == cargueSiniestrosDTO.getDetalleError()
 								|| "".equals(cargueSiniestrosDTO.getDetalleError()))) {
-					log.info("Cargando lista: " + new Date());
 					serviceSiniestro.procesarCargue(cargueSiniestrosDTO);
-					log.info("Fin cargando lista: " + new Date());
+					cont++;
 				} else {
 					// Consolida en listado los registros con errores en el cargue
 					SnrResulPrcCreacionSiniestroDTO gnrResult = new SnrResulPrcCreacionSiniestroDTO();
@@ -171,9 +185,11 @@ public class CargueArchivosImpl {
 					listResults.add(gnrResult);
 				}
 			}
-			log.info("Proceso cargue: " + new Date());
+
+			entCargue.setAvance(String.valueOf(cont));
+			carService.modificar(entCargue);
+
 			serviceSiniestro.crearSiniestroCargue(usuario, ParametroGeneralUtil.CONS_ORIGEN_CARGUE);
-			log.info("Fin proceso cargue: " + new Date());
 
 			// Consolida en listado los que se procesaron en BD para crear siniestro
 			List<SnrResulPrcCreacionSiniestro> lista = serviceSini
@@ -211,7 +227,14 @@ public class CargueArchivosImpl {
 			email.setParams(params);
 			emailUtil.notification(email, multipartFiles);
 
+			entCargue = carService.getCargueActivo(ParametroGeneralUtil.CONS_ID_CARGUE_SINIESTROS);
+
+			entCargue.setEstado(ParametroGeneralUtil.CONS_PROCESADO);
+			carService.modificar(entCargue);
+
 		} catch (Exception e) {
+			entCargue.setEstado(ParametroGeneralUtil.CONS_ERROR);
+			carService.modificar(entCargue);
 			throw new SiprenException(e.getMessage());
 		}
 	}
